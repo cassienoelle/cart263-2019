@@ -13,6 +13,7 @@ to overlap another circle (food) in order to grow bigger.
 // Constants defining key quantities
 const AVATAR_SIZE_GAIN = 50;
 const AVATAR_SIZE_LOSS = 1;
+const FOOD_MAX_SPEED = 5;
 
 // Avatar is an object defined by its properties
 let avatar = {
@@ -28,6 +29,8 @@ let avatar = {
 let food = {
   x: 0,
   y: 0,
+  vx: 2,
+  vy: 2,
   size: 64,
   color: '#55cccc'
 }
