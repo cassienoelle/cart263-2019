@@ -44,8 +44,10 @@ class Food extends Agent {
     this.x = constrain(this.x,0,width);
     this.y = constrain(this.y,0,height);
 
-    if (frameCount % 60 === 0) {
-      console.log('yes');
+    let choices = [60,120,180];
+    let i = random(choices);
+
+    if (frameCount % i === 0) {
       this.vx = random(-this.maxSpeed,this.maxSpeed);
       this.vy = random(-this.maxSpeed,this.maxSpeed);
     }
