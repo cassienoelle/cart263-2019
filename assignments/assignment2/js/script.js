@@ -3,6 +3,9 @@
 /*****************
 
 OOP Circle Eater
+Cassie Smith
+
+Starter Code by
 Pippin Barr
 
 An Object-Oriented version of the Circle Eater program.
@@ -19,7 +22,7 @@ const FOOD_MIN_SIZE = 5;
 const FOOD_MAX_SIZE = 100;
 const FOOD_MAX_SPEED = 5;
 
-// Variables to store the two key objects
+// Variables to store the key objects
 let avatar;
 let food = [];
 
