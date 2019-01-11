@@ -15,7 +15,7 @@ to overlap another circle (food) in order to grow bigger.
 
 // Constants defining key quantities
 const AVATAR_SIZE_GAIN = 50;
-const AVATAR_SIZE_LOSS = 1;
+const AVATAR_SIZE_LOSS = 0.5;
 const FOOD_MAX_SPEED = 5;
 
 // Avatar is an object defined by its properties
@@ -102,8 +102,8 @@ function updateFood() {
   food.x += food.vx;
   food.y += food.vy;
 
-  // reset to random velocity every 3 seconds
-  if (frameCount % 60 === 0) {
+  // reset to random velocity every half second
+  if (frameCount % 30 === 0) {
     food.vx = random(-FOOD_MAX_SPEED, FOOD_MAX_SPEED);
     food.vy = random(-FOOD_MAX_SPEED, FOOD_MAX_SPEED);
   }
