@@ -3,6 +3,9 @@
 /*****************
 
 Circle Eater
+Cassie Smith
+
+Start code by
 Pippin Barr
 
 A simple game in which the player controls a shrinking circle with their mouse and tries
@@ -70,6 +73,7 @@ function draw() {
   // Otherwise we handle the game
   background(0);
   updateAvatar();
+  updateFood();
   checkCollision();
   displayAvatar();
   displayFood();
@@ -87,6 +91,37 @@ function updateAvatar() {
   avatar.size = constrain(avatar.size - AVATAR_SIZE_LOSS,0,avatar.maxSize);
   if (avatar.size === 0) {
     avatar.active = false;
+  }
+}
+
+// updateFood()
+//
+//
+function updateFood() {
+  // update position based on velocity
+  food.x += food.vx;
+  food.y += food.vy;
+
+  // reset to random velocity every 3 seconds
+  if (frameCount % 60 === 0) {
+    food.vx = random(-FOOD_MAX_SPEED, FOOD_MAX_SPEED);
+    food.vy = random(-FOOD_MAX_SPEED, FOOD_MAX_SPEED);
+  }
+
+  // horizontal screen wrapping
+  if (food.x > width + food.size/2) {
+    food.x -= width;
+  }
+  else if (food.x < 0 - food.size/2) {
+    food.x += width;
+  }
+
+  // vertical screen wrapping
+  if (food.y > height + food.size/2) {
+    food.y -= height;
+  }
+  else if (food.y < 0 - food.size/2) {
+    food.y += height;
   }
 }
 
@@ -135,4 +170,6 @@ function displayFood() {
 function positionFood() {
   food.x = random(0,width);
   food.y = random(0,height);
+  food.vx = random(-FOOD_MAX_SPEED, FOOD_MAX_SPEED);
+  food.vy = random(-FOOD_MAX_SPEED, FOOD_MAX_SPEED);
 }
