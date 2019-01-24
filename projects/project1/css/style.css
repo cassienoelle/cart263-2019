@@ -27,4 +27,6 @@ This is the style file for this project.
   height: 100px;
   border: 1px solid red;
   margin: auto;
+  text-align: center;
+  font-size: 3em;
 }
