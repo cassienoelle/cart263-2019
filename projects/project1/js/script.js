@@ -1,9 +1,9 @@
 /*****************
 
-Title of Project
-Author Name
+Placeholder Title
+Cassie Smith
 
-This is a template. You must fill in the title,
-author, and this description to match your project!
+An absurdist project inspired by the myth of Sisyphus.
+Navigate through the hold menu options in order to [insert goal here].
 
 ******************/
