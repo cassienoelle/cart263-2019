@@ -3,6 +3,9 @@
 /*****************
 
 Raving Redactionist
+Cassie Smith
+
+Starter Code by
 Pippin Barr
 
 You are redacting a document, but it keeps coming unredacted!
@@ -14,6 +17,9 @@ secrets become revealed!
 // A place to store the jQuery selection of all spans
 let $spans;
 
+// A variable to track how many secrets were found
+let $secretsFound = 0;
+
 // When the document is loaded we call the setup function
 $(document).ready(setup);
 
@@ -22,11 +28,14 @@ $(document).ready(setup);
 // Sets the click handler and starts the time loop
 function setup() {
   // Save the selection of all spans (since we do stuff to them multiple times)
-  $spans = $('span').not(document.getElementById('secret-count'));
+  // Exclude spans related to secrets
+  $spans = $('span').not('.secret, #secret-count');
   // Set a click handler on the spans (so we know when they're clicked)
   $spans.on('click',spanClicked);
   // Set an interval of 500 milliseconds to update the state of the page
   setInterval(update,500);
+  // Mouseover event for all of the secret words
+  $('.secret').on('mouseover', updateSecret);
 };
 
 // spanClicked()
@@ -58,6 +67,17 @@ function updateSpan() {
     $(this).removeClass('redacted');
     $(this).addClass('revealed');
   }
+}
+
+// updateSecret()
+//
+// Reveals secrets on mouseover (adds 'found' class)
+// Increases secrets counter, removes event handler
+function updateSecret() {
+  $(this).addClass('found');
+  $secretsFound ++;
+  $('#secret-count').text($secretsFound);
+  $(this).off('mouseover');
 }
 
 // A version using anonymous functions:
