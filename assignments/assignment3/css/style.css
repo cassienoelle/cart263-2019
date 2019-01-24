@@ -27,5 +27,14 @@ div {
 .revealed {
   background-color: transparent;
   text-decoration: underline;
-  color: red
+  color: red;
+}
+
+.found {
+  background-color: yellow;
+  color: blue;
+}
+
+#secret-count {
+  color: blue;
 }
