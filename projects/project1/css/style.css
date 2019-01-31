@@ -22,7 +22,7 @@ This is the style file for this project.
   justify-content: flex-start;
   margin: 0 auto;
   font-family: Helvetica;
-  width: 550px;
+  width: 400px;
 
 }
 
@@ -30,12 +30,18 @@ This is the style file for this project.
   border: 1px solid #4f5059;
   border-radius: 10px;
   display: inline-block;
-  width: 150px;
-  height: 150px;
-  margin: 15px;
+  margin: 2%;
   text-align: center;
   background-color: white;
   color: #4f5059;
+}
+
+.small {
+  width: 28.8%;
+}
+
+.large {
+  width: 100%;
 }
 
 .key:hover {
@@ -43,13 +49,19 @@ This is the style file for this project.
   color: white;
 }
 
+.key:active {
+  background-color: #4fbf53;
+  color: white;
+}
+
 h1 {
   /*  border: 1px solid green; */
-  font-size: 3em;
+  font-size: 2em;
   margin-bottom: 0;
 }
 
 p {
   /* border: 1px solid pink; */
+  font-size: 0.75em;
   margin-top: 0;
 }
