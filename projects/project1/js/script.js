@@ -54,7 +54,6 @@ function responsiveInterface() {
   $smallKey.css('height', $smallKeyHeight);
 
   // set large key height at half of small key height
-  // (sets height automatically with line-height)
   $largeKeyHeight = calcString($smallKeyHeight, 'px', 'divide', 2);
   $largeKey.css('line-height', $largeKeyHeight);
 
@@ -71,7 +70,7 @@ function responsiveInterface() {
 // perform calculations on css values represented as strings
 function calcString(value, suffix, operation, number) {
   // remove suffix from original string
-  let $subStr = value.substring(0, value.length - 2);
+  let $subStr = value.substring(0, value.length - suffix.length);
   // convert string to number
   let $newValue = Number($subStr);
 
