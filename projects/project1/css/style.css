@@ -27,13 +27,20 @@ This is the style file for this project.
 }
 
 .key {
-  border: 1px solid lightgray;
+  border: 1px solid #4f5059;
   border-radius: 10px;
   display: inline-block;
   width: 150px;
   height: 150px;
   margin: 15px;
   text-align: center;
+  background-color: white;
+  color: #4f5059;
+}
+
+.key:hover {
+  background-color: #4f5059;
+  color: white;
 }
 
 h1 {
