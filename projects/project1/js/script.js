@@ -27,13 +27,16 @@ let $largeKeyHeight;
 // variables to hold currently selected key
 let $selectedKey = undefined;
 
+// variable to track progress
+let $progress = 0;
+
 
 $(document).ready(function() {
   $key = $('.key');
   $smallKey = $('.small');
   $largeKey = $('.large');
 
-  responsiveInterface();
+  setupInterface();
 
   $key.on('click', function() {
     let $selectedKey = $(this);
@@ -42,10 +45,10 @@ $(document).ready(function() {
 });
 
 
-// responsiveInterface()
+// setupInterface()
 //
 //
-function responsiveInterface() {
+function setupInterface() {
   // set key height relative to responsive width
 
   // set small key width the same as small key height
@@ -53,21 +56,22 @@ function responsiveInterface() {
   $smallKeyHeight = $smallKeyWidth;
   $smallKey.css('height', $smallKeyHeight);
 
-  // set large key height at half of small key height
+  // set large key line-height at half of small key height
   $largeKeyHeight = calcString($smallKeyHeight, 'px', 'divide', 2);
   $largeKey.css('line-height', $largeKeyHeight);
+  $largeKey.css('height', $largeKeyHeight);
 
-
-  console.log('small width: ' + $smallKeyWidth);
-  console.log('small height: ' + $smallKeyHeight);
-  console.log('large height: ' + $largeKeyHeight);
-  console.log('line-height: ' + $largeKey.css('line-height'));
+  $(function() {
+    $('#progressbar').progressbar({
+      value: $progress
+    });
+  });
 
 }
 
 // calcString()
 //
-// perform calculations on css values represented as strings
+// perform simple calculations on css values represented as strings
 function calcString(value, suffix, operation, number) {
   // remove suffix from original string
   let $subStr = value.substring(0, value.length - suffix.length);
