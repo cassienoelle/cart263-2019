@@ -8,21 +8,34 @@ body {
   overflow: hidden;
   margin: 0;
   padding: 0;
+  font-family: Proxima Nova,Helvetica,Arial,sans-serif;
 }
 
-h1, h2 {
-  border: 1px dotted pink;
-  height: 1.5em;
+h1, h3 {
+  /* border: 1px dotted pink; */
+
 }
 
 #title {
   margin-top: 0;
   margin-bottom: 0;
   font-size: 3em;
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 1.4em;
 }
 
 #subtitle {
-  margin-top: 0.1em;
+  font-weight: 300;
+  margin-top: 0.7em;
+  margin-bottom: 1em;
+}
+
+#date-posted {
+  font-size: 0.8em;
+  color: #cfcfcf;
+  font-weight: 400;
+  margin-top: 0.3em;
 }
 
 #container {
@@ -63,7 +76,7 @@ h1, h2 {
 }
 
 #quiz-area {
-  width: 40%;
+  width: 34%;
   height: 80vh;
   flex-grow: 2;
   flex-direction: column;
@@ -72,15 +85,15 @@ h1, h2 {
 }
 
 .sidebar {
-  width: 20%;
+  width: 23%;
   height: 80vh;
   flex-grow: 1;
 }
 
 .sidebar#profile {
-  margin-left: 4%;
+  margin-left: 8%;
 }
 
 .sidebar#advert {
-  margin-right: 4%;
+  margin-right: 8%;
 }
