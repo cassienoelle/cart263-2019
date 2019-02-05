@@ -59,7 +59,8 @@ h1, h3 {
 #flex-container {
   /* border: 1px solid green; */
   display: block;
-  margin: auto;
+  padding-top: 0;
+  padding-bottom: 1em;
   width: 100vw;
   height: 93vh;
   display: flex;
@@ -67,31 +68,32 @@ h1, h3 {
 }
 
 .content {
-  border: 1px solid blue;
+  /* border: 1px solid blue; */
   display: flex;
   flex-direction: column;
-  padding: 1%;
   font-family: inherit;
+  margin: 2%;
+  padding: 0;
 }
 
-#quiz-area {
+#quizarea {
   width: 34%;
   max-width: 640px;
+  margin-right: 8em;
+  /* margin-left: 8em; */
   height: 75vh;
   flex-grow: 2;
   justify-content: flex-start;
   align-items: flex-start;
-  margin-right: 8em;
-  margin-left: 2em;
 }
 
 #sidebar {
   width: 23%;
-  max-width: 420px;
+  max-width: 480px;
+  /* margin-right: 8em; */
+  margin-left: 8em;
   height: 75vh;
   flex-grow: 1;
-  margin-left: 8em;
-  margin-right: 2em;
   position: relative;
 }
 
@@ -100,4 +102,9 @@ h1, h3 {
   position: absolute;
   bottom: 1em;
   width: 90%; /* fix this! */
+}
+
+#inspiration {
+  width: 100%;
+  height: auto;
 }
