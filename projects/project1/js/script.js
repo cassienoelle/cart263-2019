@@ -3,9 +3,20 @@
 /*****************
 
 Title of Project
-Author Name
+Cassie Smith
 
-This is a template. You must fill in the title,
-author, and this description to match your project!
+A neverending quiz to find yourself!
 
 ******************/
+
+// Array of objects representing quiz questions
+let questions = [];
+
+// Variable to hold progress bar
+let progressbar;
+
+$(document).ready(function() {
+
+
+
+});
