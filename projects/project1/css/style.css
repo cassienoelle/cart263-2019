@@ -16,10 +16,10 @@ h1, h3 {
 
 }
 
-#title {
+.title {
   margin-top: 0;
   margin-bottom: 0;
-  font-size: 3em;
+  font-size: 2.5em;
   margin-top: 0;
   margin-bottom: 0;
   line-height: 1.4em;
@@ -69,31 +69,35 @@ h1, h3 {
 .content {
   border: 1px solid blue;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin: 2%;
-  font-family: Helvetica;
+  flex-direction: column;
+  padding: 1%;
+  font-family: inherit;
 }
 
 #quiz-area {
   width: 34%;
-  height: 80vh;
+  max-width: 640px;
+  height: 75vh;
   flex-grow: 2;
-  flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+  margin-right: 8em;
+  margin-left: 2em;
 }
 
-.sidebar {
+#sidebar {
   width: 23%;
-  height: 80vh;
+  max-width: 420px;
+  height: 75vh;
   flex-grow: 1;
+  margin-left: 8em;
+  margin-right: 2em;
+  position: relative;
 }
 
-.sidebar#profile {
-  margin-left: 8%;
-}
-
-.sidebar#advert {
-  margin-right: 8%;
+#progressbar {
+  border: 1px solid lightgrey;
+  position: absolute;
+  bottom: 1em;
+  width: 90%; /* fix this! */
 }

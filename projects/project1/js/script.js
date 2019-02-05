@@ -10,13 +10,18 @@ A neverending quiz to find yourself!
 ******************/
 
 // Array of objects representing quiz questions
-let questions = [];
+let $questions = [];
 
-// Variable to hold progress bar
-let progressbar;
+// Progress bar variables
+let $progressbar;
+let $progress = 0;
 
 $(document).ready(function() {
+  $progressbar = $('#progressbar');
 
+  $progressbar.progressbar({
+    value: $progress
+  });
 
 
 });
