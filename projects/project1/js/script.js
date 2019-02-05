@@ -43,8 +43,6 @@ function setupInterface() {
     value: $progress
   });
 
-  createButton();
-
   if ($state === 'INIT') {
     // hide main sidebar content until quiz initiated
     console.log('init');
@@ -56,14 +54,14 @@ function setupInterface() {
 
 }
 
+/* fix this!
+
 function createButton() {
 
   let $playButton = $('<button id="play"></button>');
   $playButton.appendTo('#quizarea');
   $playButton.button($buttonOptions);
 
-
-  //$( ".selector" ).button( "option", { disabled: true } );
 
   let $buttonOptions = {
     disabled: true,
@@ -73,3 +71,4 @@ function createButton() {
 
 
 }
+*/
