@@ -3,3 +3,35 @@
 This is the style file for this project.
 
 **********************************************/
+
+#container {
+  border: 1px solid pink;
+  display: block;
+  margin: auto;
+  width: 95vw;
+  height: 95vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.content {
+  border: 1px solid blue;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 2%;
+  font-family: Helvetica;
+}
+
+.sidebar {
+  width: 20%;
+  height: 80vh;
+  flex-grow: 1;
+}
+
+#quiz-area {
+  width: 40%;
+  height: 80vh;
+  flex-grow: 2;
+}
