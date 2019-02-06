@@ -52,6 +52,8 @@ function setupInterface() {
     $introImage.hide();
   }
 
+  console.log($('.imgOption').css('width'));
+
 }
 
 /* fix this!

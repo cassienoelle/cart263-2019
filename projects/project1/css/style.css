@@ -5,7 +5,7 @@ This is the style file for this project.
 **********************************************/
 
 body {
-  overflow: hidden;
+  overflow-X: hidden;
   margin: 0;
   padding: 0;
   font-family: Proxima Nova,Helvetica,Arial,sans-serif;
@@ -36,6 +36,7 @@ h1, h3 {
   color: #cfcfcf;
   font-weight: 400;
   margin-top: 0.3em;
+  margin-bottom: 3em;
 }
 
 #container {
@@ -53,18 +54,19 @@ h1, h3 {
   height: 7vh;
   top: 0;
   display: block;
+  position: fixed;
   clear: both;
+  z-index: 999;
 }
 
 #flex-container {
   /* border: 1px solid green; */
   display: block;
-  padding-top: 0;
-  padding-bottom: 1em;
+  padding-top: 7vh;
   width: 100vw;
   height: 93vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .content {
@@ -72,7 +74,7 @@ h1, h3 {
   display: flex;
   flex-direction: column;
   font-family: inherit;
-  margin: 2%;
+  margin: 3%;
   padding: 0;
 }
 
@@ -81,7 +83,7 @@ h1, h3 {
   max-width: 640px;
   margin-right: 8em;
   /* margin-left: 8em; */
-  height: 75vh;
+  height: auto;
   flex-grow: 2;
   justify-content: flex-start;
   align-items: flex-start;
@@ -92,7 +94,7 @@ h1, h3 {
   max-width: 480px;
   /* margin-right: 8em; */
   margin-left: 8em;
-  height: 75vh;
+  height: auto;
   flex-grow: 1;
   position: relative;
 }
@@ -107,4 +109,35 @@ h1, h3 {
 #inspiration {
   width: 100%;
   height: auto;
+}
+
+/* ---------- QUESTIONS ------------- */
+
+#questionTextWrapper {
+  width: 100%;
+  height: auto;
+  padding: 1em 2em;
+  background-color: #4641ca;
+  color: white;
+}
+
+#questionText {
+  letter-spacing: 0.07em;
+  line-height: 1.5em;
+}
+
+#questionDiv {
+  /* border: 1px solid green; */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  height: auto;
+}
+
+.imgOption {
+  width: 32%;
+  min-width: 186px;
+  height: 32%;
+  margin-top: 2%;
+  align-items: center;
 }
