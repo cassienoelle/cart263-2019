@@ -41,6 +41,29 @@ function setupInterface() {
 }
 
 
+function setupQuestions() {
+
+  let $quizArea = $('#quizarea');
+  let $questionDiv = $('<div id="questiondiv"></div>');
+  let $textWrapper = $('<div id="textwrapper"></div>');
+  let $questionText = $('<h2 id="questiontext"></h2>');
+//  let $imgSelect = $('<div id="imgselect"></div>');
+  let $nextDiv = $('<div id="nextdiv"></div>');
+
+  $quizArea.append(
+    $questionDiv.append(
+      $textWrapper.append(
+        $questionText.append(
+          $imgSelect.append(
+            $nextDiv)
+          )
+        )
+      )
+    );
+
+}
+
+
 /* fix this!
 
 function createButton() {

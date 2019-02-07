@@ -113,7 +113,7 @@ h1, h3 {
 
 /* ---------- QUESTIONS ------------- */
 
-#questionTextWrapper {
+#textwrapper {
   width: 100%;
   height: auto;
   padding: 0;
@@ -121,13 +121,13 @@ h1, h3 {
   color: white;
 }
 
-#questionText {
+#questiontext {
   letter-spacing: 0.07em;
   line-height: 1.5em;
   padding: 1em;
 }
 
-#questionDiv {
+#questiondiv {
   /* border: 1px solid green; */
   display: flex;
   flex-wrap: wrap;
@@ -135,7 +135,24 @@ h1, h3 {
   height: auto;
 }
 
-#imgSelect {
+#nextdiv {
+  margin-top: 1em;
+  align-self: flex-end;
+}
+
+#nextbutton {
+  width: 10em;
+  height: 3em;
+  border-radius: 0;
+  border: none;
+  background-color: #ee8c21;
+  color: white;
+  font-weight: bold;
+}
+
+/* ---- IMAGE SELECT -----*/
+
+#imgselect {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -153,19 +170,10 @@ h1, h3 {
   opacity: 0.5;
 }
 
-#nextDiv {
-  margin-top: 1em;
-  align-self: flex-end;
-}
+/* ---- SLIDER -----*/
 
-#nextButton {
-  width: 10em;
-  height: 3em;
-  border-radius: 0;
-  border: none;
-  background-color: #ee8c21;
-  color: white;
-  font-weight: bold;
+#sliderquestion {
+  margin-top: 2em;
 }
 
 

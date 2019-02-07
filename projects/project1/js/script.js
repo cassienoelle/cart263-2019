@@ -12,6 +12,7 @@ A neverending quiz to find yourself!
 // Basic layout DOM elements
 let $sidebar;
 let $introImage;
+let $slider;
 
 
 $(document).ready(function() {
@@ -19,10 +20,13 @@ $(document).ready(function() {
   $progressbar = $('#progressbar');
   $introImage = $('#inspiration');
 
-  test();
-
   // Replace with setupInterface() later
   $sidebar.hide();
+
+  questionTypes();
+  createSlider();
+  //selectImage();
+  test();
 
 });
 
@@ -31,19 +35,10 @@ $(document).ready(function() {
 //
 function test() {
 
-    $('#imgSelect').selectable({
-      stop: function() {
-        console.log($(this));
-        $(this).children().not('.ui-selected').addClass('overlay');
-        $(this).selectable('disable');
-      }
-    });
-
-    $('#nextButton').button({
+    $('#nextbutton').button({
       icon: 'ui-icon-triangle-1-e',
       iconPosition: 'end',
       label: 'Next'
     });
-
 
 }

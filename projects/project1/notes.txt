@@ -11,7 +11,7 @@ figure out how to recreate generating with mainly jquery/javascript
 
 TODAY - IMAGE QUESTION CLASS
 
-1. create div / img file structure 
+1. create div / img file structure
 
 /***----------------------------***/
 
@@ -64,7 +64,7 @@ slider css properties {
 
 question elements {
   text prompt,
-  3-6 images,
+  4 images,
   ability to select,
   submit or next button
 }
