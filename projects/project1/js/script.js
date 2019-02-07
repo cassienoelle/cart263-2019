@@ -44,24 +44,22 @@ function test() {
   $(function() {
     $('#imgSelect').selectable({
       stop: function() {
-        console.log($(this).attr('class'));
+        console.log($(this));
         $(this).children().not('.ui-selected').addClass('overlay');
+        $(this).selectable('disable');
       }
     });
   });
 
-
 /*
-$(function() {
-  $('#imgSelect').selectable({
+  let selectableOptions = {
+    disabled: true,
     stop: function() {
-      console.log($(this).html());
-      $(this).not('.ui-selected').addClass('overlay');
+      console.log($(this).attr('class'));
+      $(this).children().not('.ui-selected').addClass('overlay');
     }
-  });
-});
+  }
 */
-
 }
 
 // setupInterface()
