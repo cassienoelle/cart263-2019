@@ -9,6 +9,10 @@ figure out how to recreate generating with mainly jquery/javascript
 
 - go back through and change custom css to jquery-ui classes where applicable
 
+TODAY - IMAGE QUESTION CLASS
+
+1. create div / img file structure 
+
 /***----------------------------***/
 
 - quiz area with captcha, play now button & inspiration sidebar load
