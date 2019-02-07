@@ -44,12 +44,23 @@ function test() {
   $(function() {
     $('#imgSelect').selectable({
       stop: function() {
-        console.log($(this).html());
-        $(this).not('.ui-selected').addClass('overlay');
+        console.log($(this).attr('class'));
+        $(this).children().not('.ui-selected').addClass('overlay');
       }
     });
   });
 
+
+/*
+$(function() {
+  $('#imgSelect').selectable({
+    stop: function() {
+      console.log($(this).html());
+      $(this).not('.ui-selected').addClass('overlay');
+    }
+  });
+});
+*/
 
 }
 
