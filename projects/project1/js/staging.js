@@ -22,10 +22,6 @@ let $questions = [];
 //
 //
 function setupInterface() {
-  // setup progress bar
-  $progressbar.progressbar({
-    value: $progress
-  });
 
   if ($state === 'INIT') {
     // hide main sidebar content until quiz initiated
@@ -35,8 +31,6 @@ function setupInterface() {
   else if ($state === 'ACTIVE') {
     $introImage.hide();
   }
-
-  console.log($('.imgOption').css('width'));
 
 }
 

@@ -27,6 +27,7 @@
   <script src="js/slider.js"></script>
   <script src="js/datepicker.js"></script>
   <script src="js/staging.js"></script>
+  <script src="js/titles.js"></script>
 
 </head>
 
@@ -38,8 +39,8 @@
 
       <div class="content" id="sidebar">
         <div id="wrapper">
-          <h1 class="title top" id="welcome">Hello</h1>
-          <div class="bottom" id="progressbar"></div>
+          <h1 class="title" id="welcome"></h1>
+          <div id="progressbar"></div>
         </div>
         <img id="inspiration" src="assets/images/inspire.jpg"></img>
       </div>
@@ -52,7 +53,7 @@
 
         <div id="questiondiv">
           <div id="textwrapper">
-            <h2 id="questiontext">Which jellyfish would you take ballroom dancing?</h2>
+            <h2 id="questiontext">This is some question placeholder text?</h2>
           </div>
 
           <!-- IMAGE -->
@@ -66,13 +67,28 @@
 
           <!-- SLIDER -->
 
-          <div id="sliderquestion">
+          <div class="question" id="sliderquestion">
             <img id="sliderimage" src="assets/images/slider-image.jpeg"></img>
             <div id="slider"></div>
           </div>
 
 
           <!-- DATEPICKER -->
+
+          <div class="question" id="personalinfo">
+            <form>
+              <h3>What's your name?</h3>
+              <input type="text" id="username" value=" ">
+              <h3>Tell us your birthday</h3>
+              <input type="text" id="datepicker">
+              <h3>What colour is your aura?</h3>
+              <input type="color" name="aura" value="#527bff">
+            </form>
+          </div>
+
+
+          <!--COLOR PICKER-->
+
 
           <!-- TEXT ENTRY -->
 

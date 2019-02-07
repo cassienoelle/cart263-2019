@@ -11,15 +11,23 @@ body {
   font-family: Proxima Nova,Helvetica,Arial,sans-serif;
 }
 
-h1, h3 {
+h1{
   /* border: 1px dotted pink; */
+  font-size: 2.5em;
+}
+
+#personalinfo h3 {
+  /* border: 1px dotted pink; */
+  margin-bottom: 0;
+  margin-top: 0;
+  padding-left: 0.5em;
 
 }
 
 .title {
   margin-top: 0;
   margin-bottom: 0;
-  font-size: 2.5em;
+  /* font-size: 2.5em; */
   margin-top: 0;
   margin-bottom: 0;
   line-height: 1.4em;
@@ -73,7 +81,6 @@ h1, h3 {
   /* border: 1px solid blue; */
   display: flex;
   flex-direction: column;
-  font-family: inherit;
   margin: 3%;
   padding: 0;
 }
@@ -96,14 +103,21 @@ h1, h3 {
   margin-left: 8em;
   height: auto;
   flex-grow: 1;
-  position: relative;
+}
+
+#wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 #progressbar {
   border: 1px solid lightgrey;
-  position: absolute;
+  /* position: absolute; */
   bottom: 1em;
+  margin: 0;
   width: 90%; /* fix this! */
+  border-radius: 0;
 }
 
 #inspiration {
@@ -132,7 +146,12 @@ h1, h3 {
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
+  align-self: stretch;
   height: auto;
+}
+
+.question {
+  margin-top: 1em;
 }
 
 #nextdiv {
@@ -172,13 +191,24 @@ h1, h3 {
 
 /* ---- SLIDER -----*/
 
-#sliderquestion {
-  margin-top: 2em;
-}
 
 #sliderimage {
   width: 100%;
   margin-bottom: 2em;
+}
+
+/* -------- PERSONAL INFO ------- */
+
+input {
+  font-size: 1.5em;
+  margin: 0.4em;
+}
+
+input[type="color" i] {
+  width: 75%;
+  height: 2em;
+  border: none;
+  margin: 0.2em;
 }
 
 

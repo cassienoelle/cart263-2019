@@ -1,3 +1,17 @@
+- change styling on ui buttons, sliders, etc (no blue border highlight)
+- expand datepicker section to include other personal information
+
+
+1. inspiration image shown
+   i am not a robot, hit play
+   enter personal data
+   on submit - side bar fades in
+   display astrological sign according to birthday?
+
+
+
+
+
 
 Next: create a test question object
 (image selector, jellyfish)
