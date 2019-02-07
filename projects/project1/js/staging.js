@@ -11,7 +11,7 @@ let $progress = 0;
 
 
 let $state;
-let $username = undefined;
+
 
 // Array of objects representing quiz questions
 let $questions = [];

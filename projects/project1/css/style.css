@@ -211,6 +211,11 @@ input[type="color" i] {
   margin: 0.2em;
 }
 
+#zodiac {
+  width: 100%;
+  height: auto;
+}
+
 
 /* ----------- MEDIA QUERIES ---------- */
 

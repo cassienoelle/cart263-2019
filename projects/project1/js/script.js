@@ -21,6 +21,9 @@ let $userName;
 let $userBirthday;
 let $userAura;
 let $welcomeText;
+let $zodiac;
+
+let $appearSFX = new Audio("assets/sounds/magic.flac");
 
 
 $(document).ready(function() {
@@ -33,6 +36,7 @@ $(document).ready(function() {
   $questionHeader = $('#questiontext');
   $welcomeText = $('#welcome');
   $userName = $('#username');
+  $zodiac = $('#zodiac');
 
   // Replace with setupInterface() later
   $progressbar.progressbar({
@@ -83,11 +87,30 @@ function personalInfo() {
   $questionHeader.html($titles.introTitle);
   // Initialize birthday date picker
   createDatePicker();
-  revealSidebar();
 
   $userName.change(function() {
     $welcomeText.html('Hello ' + $userName.val());
     console.log($welcomeText.html());
+  });
+
+  $datePicker.change(function() {
+    // Retrieve selected date
+    let $date = $datePicker.datepicker('getDate');
+
+    // Set birthday according to date retrieved
+    $userBirthday = {
+      day: $date.getDate(),
+      month: $date.getMonth(),
+      year: $date.getYear()
+    }
+
+    // Set zodiac sign according to birthday
+    let $src = $zodiac.attr('src');
+    $zodiac.attr('src', $src + setZodiac());
+    console.log($zodiac.attr('src'));
+
+    // Reveal greeting and zodiac image
+    revealWelcome();
   });
 
 
@@ -104,14 +127,41 @@ function createDatePicker() {
   });
 }
 
-  //-------- REVEAL SIDEBAR -------//
-function revealSidebar() {
+  //-------- REVEAL WELCOME -------//
+function revealWelcome() {
   // Hide inspirational image and show sidebar
-  $introImage.hide();
-  $sidebar.show();
+  $introImage.fadeOut(function() {
+    $welcomeText.hide();
+    $appearSFX.play();
+    $sidebar.fadeIn(function() {
+      $welcomeText.fadeIn(1000);
+    });
+  });
   // Keep progress bar hidden
   $progressbar.hide();
 }
+
+function setZodiac() {
+  switch($userBirthday.month) {
+    case 0:
+      if ($userBirthday.day < 20) {
+        return 'capricorn.jpg';
+      } else {
+        return 'aquarius.jpg';
+      }
+      break;
+    case 1:
+      if ($userBirthday.day < 19) {
+        return 'aquarius.jpg';
+      } else {
+        return 'pisces.jpg';
+      }
+      break;
+    default:
+      break;
+  }
+}
+
 
 //--------- NEXT BUTTON ---------//
 function nextButton() {
