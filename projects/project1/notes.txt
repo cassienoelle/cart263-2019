@@ -7,6 +7,8 @@ add base interactivity using DOM + test
 figure out how to recreate generating with mainly jquery/javascript
   translate into iterative object
 
+- go back through and change custom css to jquery-ui classes where applicable
+
 /***----------------------------***/
 
 - quiz area with captcha, play now button & inspiration sidebar load
@@ -17,6 +19,9 @@ figure out how to recreate generating with mainly jquery/javascript
   - first question fades in
 
 
+** build different question options with html & css inside
+divs and then hide / show as necessary and set contents?
+
 
 /***---------- MAIN QUIZ ---------***/
 
@@ -25,7 +30,7 @@ figure out how to recreate generating with mainly jquery/javascript
 3. answer logged?
 4. timer set for answer expiration
 5. progress bar updates
-6. next question 
+6. next question
 
 TYPES OF QUESTIONS
 

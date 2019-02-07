@@ -41,7 +41,6 @@ $(document).ready(function() {
 //
 function test() {
 
-  $(function() {
     $('#imgSelect').selectable({
       stop: function() {
         console.log($(this));
@@ -49,17 +48,14 @@ function test() {
         $(this).selectable('disable');
       }
     });
-  });
 
-/*
-  let selectableOptions = {
-    disabled: true,
-    stop: function() {
-      console.log($(this).attr('class'));
-      $(this).children().not('.ui-selected').addClass('overlay');
-    }
-  }
-*/
+    $('#nextButton').button({
+      icon: 'ui-icon-triangle-1-e',
+      iconPosition: 'end',
+      label: 'Next'
+    });
+
+
 }
 
 // setupInterface()

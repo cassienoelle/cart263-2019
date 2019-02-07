@@ -116,21 +116,22 @@ h1, h3 {
 #questionTextWrapper {
   width: 100%;
   height: auto;
-  padding: 1em 2em;
-  background-color: #4641ca;
+  padding: 0;
+  background-color: #ee8c21;
   color: white;
 }
 
 #questionText {
   letter-spacing: 0.07em;
   line-height: 1.5em;
+  padding: 1em;
 }
 
 #questionDiv {
   /* border: 1px solid green; */
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  flex-direction: column;
   height: auto;
 }
 
@@ -151,6 +152,24 @@ h1, h3 {
 .overlay {
   opacity: 0.5;
 }
+
+#nextDiv {
+  margin-top: 1em;
+  align-self: flex-end;
+}
+
+#nextButton {
+  width: 10em;
+  height: 3em;
+  border-radius: 0;
+  border: none;
+  background-color: #ee8c21;
+  color: white;
+  font-weight: bold;
+}
+
+
+/* ----------- MEDIA QUERIES ---------- */
 
 
 @media screen and (max-width: 991px) {
