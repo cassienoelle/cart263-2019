@@ -30,9 +30,28 @@ $(document).ready(function() {
   $introImage = $('#inspiration');
   $state = 'INIT';
 
+  test();
+
   setupInterface();
 
 });
+
+// test()
+//
+//
+function test() {
+
+  $(function() {
+    $('#imgSelect').selectable({
+      stop: function() {
+        console.log($(this).html());
+        $(this).not('.ui-selected').addClass('overlay');
+      }
+    });
+  });
+
+
+}
 
 // setupInterface()
 //
