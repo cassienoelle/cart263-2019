@@ -176,6 +176,11 @@ h1, h3 {
   margin-top: 2em;
 }
 
+#sliderimage {
+  width: 100%;
+  margin-bottom: 2em;
+}
+
 
 /* ----------- MEDIA QUERIES ---------- */
 
