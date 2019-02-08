@@ -40,6 +40,19 @@ function setupInterface() {
 
 }
 
+//--------- NEXT BUTTON ---------//
+function createNextButton() {
+
+  $nextButton.button({
+    icon: 'ui-icon-triangle-1-e',
+    iconPosition: 'end',
+    label: 'Next'
+  });
+
+  $nextButton.hide();
+
+}
+
 /*
   if ($state === 'INIT') {
     // hide main sidebar content until quiz initiated
