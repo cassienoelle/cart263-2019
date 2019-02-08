@@ -120,6 +120,10 @@ h1{
   border-radius: 0;
 }
 
+#progresstitle {
+  margin-top: 2em;
+}
+
 #inspiration {
   width: 100%;
   height: auto;
@@ -133,7 +137,7 @@ h1{
   width: 100%;
   height: auto;
   padding: 0;
-  background-color: #ee8c21;
+  background-color: #000000;
   color: white;
 }
 
@@ -166,7 +170,7 @@ h1{
   height: 3em;
   border-radius: 0;
   border: none;
-  background-color: #ee8c21;
+  background-color: #000000;
   color: white;
   font-weight: bold;
 }
@@ -199,6 +203,14 @@ h1{
   margin-bottom: 2em;
 }
 
+#slider {
+  height: 2em;
+}
+
+.ui-slider .ui-slider-handle {
+  height: 2.5em !important;
+}
+
 /* -------- PERSONAL INFO ------- */
 
 input {
@@ -214,6 +226,12 @@ input[type="color" i] {
 }
 
 #zodiac {
+  width: 100%;
+  height: auto;
+  margin-bottom: 1em;
+}
+
+#zodiacbackground {
   width: 100%;
   height: auto;
   margin-bottom: 1em;

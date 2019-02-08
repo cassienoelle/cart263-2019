@@ -46,7 +46,9 @@ $(document).ready(function() {
   //createSlider();
   selectImage();
   setupInterface()
-  createUserProfile();
+  // createUserProfile();
+  autoset();
+  createSlider();
   startQuiz();
 
 });
@@ -55,7 +57,9 @@ $(document).ready(function() {
 function startQuiz() {
   $nextButton.on('click', function() {
     $userProfile.hide();
-    $imgSelect.show();
+    $imgSelect.hide();
+    $progressbar.show();
+    $sliderQuestion.show();
   });
 }
 
@@ -74,11 +78,6 @@ function selectImage() {
 }
 
 //--------- SLIDER --------//
-
-function createSlider() {
-  $slider = $('#slider');
-  $slider.slider();
-}
 
 
 //--------- PROGRESS BAR ---------//

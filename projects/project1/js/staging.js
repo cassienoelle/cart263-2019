@@ -7,7 +7,7 @@ Hold miscellaneous pieces of code for later use
 ******************/
 // Progress bar variables
 let $progressbar;
-let $progress = 0;
+let $progress = 5;
 
 
 let $state;

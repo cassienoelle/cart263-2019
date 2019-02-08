@@ -5,7 +5,6 @@
 Quiz Intro
 Set interface according to user profile
 
-- save results in user object?
 ******************/
 
 
@@ -87,7 +86,7 @@ function setUserZodiac() {
     let $src = $zodiac.attr('src');
     // Determine zodiac sign and append corresponding
     // file name and extension to img source
-    $zodiac.attr('src', $src + getZodiac());
+    $zodiac.attr('src', $src + getZodiac() + '.png');
 
     // Then fade in zodiac image and play related sound
     // Reveal greeting
@@ -103,16 +102,16 @@ function getZodiac() {
   switch($userBirthday.month) {
     case 0:
       if ($userBirthday.day < 20) {
-        return 'capricorn.jpg';
+        return 'capricorn';
       } else {
-        return 'aquarius.jpg';
+        return 'aquarius';
       }
       break;
     case 1:
       if ($userBirthday.day < 19) {
-        return 'aquarius.jpg';
+        return 'aquarius';
       } else {
-        return 'pisces.jpg';
+        return 'pisces';
       }
       break;
     default:
@@ -162,8 +161,9 @@ function setUserStyle() {
     let $theme = $userAura.val();
     // Set styling of question div and 'next' button according to color value
     // (Class selector wasn't overriding default button styling so had to set using IDs)
-    $('#textwrapper').css('background-color', $theme);
-    $('#nextbutton').css('background-color', $theme);
+    // $('#textwrapper').css('background-color', $theme);
+    // $('#nextbutton').css('background-color', $theme);
+    $('#zodiacbackground').css('background-color', $theme);
 
     // Reveal 'next' button
     setTimeout(function() {
@@ -171,4 +171,20 @@ function setUserStyle() {
     }, 2500);
   });
 
+}
+
+// autoset()
+//
+// Skip intro sequence to test quiz
+function autoset() {
+  $('form').attr('autocomplete', 'off');
+  createDatePicker();
+  $datePicker.show();
+  $nextButton.show();
+  $welcomeText.html('Hello User');
+  let $src = $zodiac.attr('src');
+  $zodiac.attr('src', $src + 'capricorn.png');
+  $('#zodiacbackground').css('background-color', 'orange');
+  $introImage.hide();
+  $sidebar.show();
 }
