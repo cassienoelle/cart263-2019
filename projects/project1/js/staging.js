@@ -22,7 +22,25 @@ let $questions = [];
 //
 //
 function setupInterface() {
+  // Hide user profile sidebar (display inspirational image)
+  $sidebar.hide();
 
+  // Initialize sidebar progress bar
+  $progressbar.progressbar({
+    value: $progress
+  });
+
+  // Hide subsequent questions
+  $imgSelect.hide();
+  $sliderQuestion.hide();
+
+  // Create next button for question area (hidden for now)
+  createNextButton();
+
+
+}
+
+/*
   if ($state === 'INIT') {
     // hide main sidebar content until quiz initiated
     console.log('init');
@@ -31,8 +49,9 @@ function setupInterface() {
   else if ($state === 'ACTIVE') {
     $introImage.hide();
   }
+*/
 
-}
+
 
 
 function setupQuestions() {
