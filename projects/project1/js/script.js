@@ -46,8 +46,7 @@ $(document).ready(function() {
   //createSlider();
   //selectImage();
   setupInterface()
-
-  personalInfo();
+  createUserProfile();
 
 });
 
@@ -75,7 +74,7 @@ function createSlider() {
 
 //------- PERSONAL INFO ---------//
 
-function personalInfo() {
+function createUserProfile() {
   // Set question header text
   $questionHeader.html($titles.introTitle);
 
@@ -91,8 +90,7 @@ function personalInfo() {
 
   // Add input from username field to welcome message
   setUserName();
-  // Set welcome image (zodiac) according to input from date picker
-  // Reveal sidebar with welcome upon date picker input
+  // Set welcome image - user zodiac sign - according to input from birthday date picker
   setUserZodiac();
   // Set quiz styling according to colour picker value
   setUserStyle();
@@ -176,7 +174,7 @@ function setUserZodiac() {
 
 // revealWelcome()
 //
-// Hide inspirational image and show sidebar with personal welcome
+// Hide inspirational image and show sidebar with welcome message and user profile
 function revealWelcome() {
   // Keep progress bar hidden
   $progressbar.hide();
