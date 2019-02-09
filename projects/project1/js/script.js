@@ -9,6 +9,8 @@ A neverending quiz to find yourself!
 
 ******************/
 
+let $state;
+
 // Basic layout DOM elements
 let $sidebar;
 let $questionHeader;
@@ -24,6 +26,17 @@ let $welcomeText;
 let $zodiac;
 let $nextButton;
 let $userProfile;
+let $titles = {
+  introTitle: 'Personal Info question header',
+  feelingSlider: 'How does this make you feel?'
+}
+let $userProgress;
+
+let $sliderTitle = {
+  left: undefined,
+  right: undefined
+}
+let $sliderImage;
 
 let $appearSFX = new Audio("assets/sounds/magic.flac");
 
@@ -42,24 +55,37 @@ $(document).ready(function() {
   $zodiac = $('#zodiac');
   $nextButton = $('#nextbutton');
   $userProfile = $('.userprofile');
+  $sliderTitle.left = $('#label-left');
+  $sliderTitle.right = $('#label-right');
+  $sliderImage = $('#sliderimage');
+  $userProgress = $('.userprogress');
+
+  console.log('left: ' + $sliderTitle.left);
+  console.log('right: ' + $sliderTitle.right);
+
 
   //createSlider();
   selectImage();
   setupInterface()
-  // createUserProfile();
-  autoset();
-  createSlider();
-  startQuiz();
+  createUserProfile();
+  //autoset();
+
+  continueQuiz();
 
 });
 
 //-------- START REAL QUESTIONS -------//
-function startQuiz() {
+function continueQuiz() {
   $nextButton.on('click', function() {
     $userProfile.hide();
     $imgSelect.hide();
-    $progressbar.show();
+    $userProgress.show();
+    createSlider('feeling');
     $sliderQuestion.show();
+
+    $progress += 5;
+    $progressbar.progressbar('option', 'value', $progress);
+    console.log('progress: ' + $progress);
   });
 }
 

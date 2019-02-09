@@ -205,6 +205,28 @@ h1{
 
 #slider {
   height: 2em;
+  margin-bottom: 2em;
+}
+
+#sliderlabels {
+  /* border: 1px dotted orange; */
+  display: flex;
+  justify-content: center;
+  font-size: 1.2em;
+  color: grey;
+  font-weight: 300;
+}
+
+.sliderlabel#label-left {
+  /* border: 1px dotted blue; */
+  text-align: left;
+  width: 100%;
+}
+
+.sliderlabel#label-right {
+  /* border: 1px dotted green; */
+  text-align: right;
+  width: 100%;
 }
 
 .ui-slider .ui-slider-handle {

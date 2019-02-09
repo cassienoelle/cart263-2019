@@ -1,3 +1,16 @@
+
+1. 
+
+
+
+
+
+
+
+
+
+
+
 - change styling on ui buttons, sliders, etc (no blue border highlight)
 - expand datepicker section to include other personal information
 

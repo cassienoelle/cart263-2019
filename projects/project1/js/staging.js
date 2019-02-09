@@ -10,11 +10,12 @@ let $progressbar;
 let $progress = 5;
 
 
-let $state;
+
 
 
 // Array of objects representing quiz questions
 let $questions = [];
+
 
 
 

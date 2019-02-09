@@ -125,7 +125,7 @@ function getZodiac() {
 // Hide inspirational image and show sidebar with welcome message and user profile
 function revealWelcome() {
   // Keep progress bar hidden
-  $progressbar.hide();
+  $userProgress.hide();
   // Hide welcome message initially
   $welcomeText.hide();
 
