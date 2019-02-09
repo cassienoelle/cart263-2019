@@ -83,6 +83,7 @@ function continueQuiz() {
     createSlider('feeling');
     $sliderQuestion.show();
 
+
     $progress += 5;
     $progressbar.progressbar('option', 'value', $progress);
     console.log('progress: ' + $progress);

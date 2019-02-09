@@ -58,8 +58,6 @@ function setSliderTitles(type) {
         $sliderTitle.left.html($left);
         $sliderTitle.right.html($right);
       });
-      // If labels are emojis, increase font size
-      $('#sliderlabels').css('font-size', '2em');
       break;
 
     default:

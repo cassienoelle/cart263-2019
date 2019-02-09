@@ -114,6 +114,76 @@ function getZodiac() {
         return 'pisces';
       }
       break;
+    case 2:
+      if ($userBirthday.day < 21) {
+        return 'pisces';
+      } else {
+        return 'aries';
+      }
+      break;
+    case 3:
+      if ($userBirthday.day < 20) {
+        return 'aries';
+      } else {
+        return 'taurus';
+      }
+      break;
+    case 4:
+      if ($userBirthday.day < 21) {
+        return 'taurus';
+      } else {
+        return 'gemini';
+      }
+      break;
+    case 5:
+      if ($userBirthday.day < 21) {
+        return 'gemini';
+      } else {
+        return 'cancer';
+      }
+      break;
+    case 6:
+      if ($userBirthday.day < 23) {
+        return 'cancer';
+      } else {
+        return 'leo';
+      }
+      break;
+    case 7:
+      if ($userBirthday.day < 23) {
+        return 'leo';
+      } else {
+        return 'virgo';
+      }
+      break;
+    case 8:
+      if ($userBirthday.day < 23) {
+        return 'virgo';
+      } else {
+        return 'libra';
+      }
+      break;
+    case 9:
+      if ($userBirthday.day < 23) {
+        return 'libra';
+      } else {
+        return 'scorpio';
+      }
+      break;
+    case 10:
+      if ($userBirthday.day < 22) {
+        return 'scorpio';
+      } else {
+        return 'sagittarius';
+      }
+      break;
+    case 11:
+      if ($userBirthday.day < 22) {
+        return 'sagittarius';
+      } else {
+        return 'capricorn';
+        }
+      break;
     default:
       break;
   }
@@ -168,7 +238,7 @@ function setUserStyle() {
     // Reveal 'next' button
     setTimeout(function() {
       $nextButton.fadeIn();
-    }, 2500);
+    }, 2000);
   });
 
 }
