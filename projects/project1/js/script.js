@@ -10,6 +10,7 @@ A neverending quiz to find yourself!
 ******************/
 
 let $state;
+let $i = 0;
 
 // Basic layout DOM elements
 let $sidebar;
@@ -27,11 +28,17 @@ let $zodiac;
 let $imageOption
 let $nextButton;
 let $userProfile;
-let $titles = {}
+let $titles = [];
 let $userProgress;
 let $imagePreload;
 let $keyword;
 let $keywordNext;
+let $imageKeyword;
+let $messageKeyword;
+let $currentTitle;
+let $nextImageTitle;
+let $nextSliderTitle;
+let $message;
 let $toggleFirst = false;
 
 let $questionType = 'IMAGE';
@@ -67,46 +74,46 @@ $(document).ready(function() {
   $slider = $('#slider');
   $imageOption = $('.imgOption');
   $imagePreload = $('.imgPreload');
+  $message = $('#message');
 
   console.log('left: ' + $sliderTitle.left);
   console.log('right: ' + $sliderTitle.right);
 
-
-  //createSlider();
   selectImage();
   setupInterface()
   //createUserProfile();
   autoset();
 
   continueQuiz();
-
+  encourageUser();
 });
 
 //-------- START REAL QUESTIONS -------//
 
-
-
 function continueQuiz() {
   $nextButton.on('click', function() {
-    if (!$toggleFirst) {
       $userProfile.hide();
       $userProgress.show();
-      createImages();
-    }
-    else if ($toggleFirst) {
+      // Run each time to preload images
 
-          if ($questionType === 'IMAGE') {
-            $sliderQuestion.hide();
-            displayImages();
-          }
-          else if ($questionType === 'SLIDER') {
-            $imgSelect.hide();
-            createSlider('feeling');
-            $sliderQuestion.show();
-
-          }
-    }
-
+      if ($questionType === 'IMAGE') {
+        $questionType = 'SLIDER';
+      }
+      else if ($questionType === 'SLIDER') {
+        $questionType = 'IMAGE';
+      }
+      ///////////
+      if ($questionType === 'IMAGE') {
+          displayImageQuestion();
+          $sliderQuestion.hide();
+          createSlider('feeling');
+      }
+      else if ($questionType === 'SLIDER') {
+          displaySliderQuestion();
+          $imgSelect.hide();
+          createImages();
+          resetSelectImage();
+      }
 
     // Advance progress bar
     $progress += 5;
@@ -129,7 +136,21 @@ function selectImage() {
 
 }
 
-//--------- SLIDER --------//
+function resetSelectImage() {
+
+  $imgSelect.children().removeClass('overlay');
+  $imgSelect.selectable('enable');
+
+}
+
+//--------- ENCOURAGEMENT --------//
+function encourageUser() {
+  setInterval(function() {
+    $messageKeyword = $wisdom[randomIndex(0,$wisdom.length - 1)]
+    let $nextMessage = setTitles('MESSAGE', $messageKeyword);
+    $message.html($nextMessage);
+  }, 10000);
+}
 
 
 //--------- PROGRESS BAR ---------//
@@ -141,4 +162,15 @@ function endlessProgress() {
   if ($progress > 90) {
     $progressbar.progressbar( 'option', {value: false} );
   }
+}
+
+//--------- TOOLS --------//
+
+// randomIndex
+//
+// return an integer between two values inclusive
+function randomIndex(min,max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min +1)) + min;
 }

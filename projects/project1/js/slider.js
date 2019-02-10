@@ -16,10 +16,14 @@ function createSlider(type) {
     value: 50
   });
 
+  // Get random keyword
+  let $sliderKeyword = $animals[randomIndex(0,$animals.length - 1)];
+  // Set title according to keyword
+  $nextSliderTitle = setTitles('SLIDER', $sliderKeyword);
+  console.log('next slider: ' + $nextSliderTitle);
 
   // Set slider image source, prevent caching
-  let $i = 0;
-  $sliderImage.attr('src','https://picsum.photos/800/400/?random=' + $i);
+  $sliderImage.attr('src','https://loremflickr.com/800/400/weird/?random=' + $i);
   $i++;
 
   if (type === 'feeling') {
@@ -69,11 +73,7 @@ function setSliderTitles(type) {
 
 }
 
-// randomIndex
-//
-// return an integer between two values inclusive
-function randomIndex(min,max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min +1)) + min;
+function displaySliderQuestion() {
+  $questionHeader.html($nextSliderTitle);
+  $sliderQuestion.show();
 }

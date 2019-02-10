@@ -6,13 +6,46 @@ Question titles
 
 ******************/
 
-function setTitles(keyword) {
+function setTitles(type, keyword) {
 
-  $titles = {
-    introTitle: 'Personal Info question header',
-    feelingSlider: 'How does this make you feel?',
-    imageSelect: 'If you were a ' + keyword + ' ,which ' + keyword + ' would you be?',
-    imageSelectAction: 'Which ' + keyword + ' is your ideal partner?'
+  let $article = 'a';
+  let $vowels = 'aeiou';
+  let $str = keyword;
+  console.log('$str = ' + $str);
+  for (let i = 0; i < $vowels.length; i++) {
+    if ($str.charAt(0) === $vowels.charAt(i)) {
+      $article = 'an';
+    }
+    console.log('article: ' + $article);
   }
+
+  let $verb = $
+
+  switch(type) {
+    case 'IMAGE':
+      $titles = [
+        'If you were ' + $article + ' ' + keyword + ', which ' + keyword + ' would you be?',
+        'Which ' + keyword + ' is your ideal partner?',
+      ];
+      break;
+
+    case 'SLIDER':
+      $titles = [
+        'How does this make you feel?',
+        'React to this image:'
+      ];
+      break;
+
+    case 'MESSAGE':
+      $titles = [
+        'Keep going! Remember: \n' + keyword
+      ]
+
+    default:
+      break;
+  }
+
+  let $result = $titles[randomIndex(0,$titles.length - 1)];
+  return $result;
 
 }

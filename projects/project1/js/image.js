@@ -7,30 +7,27 @@ Create image selection questions
 ******************/
 
 function createImages() {
+  // Get random image array
+  let $a = $imageArrays[randomIndex(0,$imageArrays.length - 1)];
   // Get random keyword
-  $keyword = $animals[randomIndex(0,$animals.length - 1)];
-  $keywordNext = $animals[randomIndex(0,$animals.length - 1)];
-
-  setTitles($keyword);
-  $questionHeader.html($titles.imageSelectAction);
+  let $imageKeyword = $a[randomIndex(0,$a.length - 1)];
+  // Set title according to keyword
+  $nextImageTitle = setTitles('IMAGE', $imageKeyword);
+  console.log('next image: ' + $nextImageTitle);
 
   // Set image sources, prevent caching
-  // Preload using hidden image elements
   $imageOption.each(function(i) {
-    if ($(this).hasClass('hide')) {
-        $(this).attr('src', 'https://loremflickr.com/400/400/' + $keywordNext + '?random=' + i);
-    }
-    else {
-      $(this).attr('src', 'https://loremflickr.com/400/400/' + $keyword + '?random=' + i);
-    }
+    $(this).attr('src', 'https://loremflickr.com/640/480/' + $imageKeyword + '?random=' + i);
   });
 
-  $imgSelect.show();
-
-  $toggleFirst = true;
-  console.log('toggle: ' + $toggleFirst);
-
 }
+
+function displayImageQuestion() {
+  $questionHeader.html($nextImageTitle);
+  $imgSelect.show();
+}
+
+/*
 
 function displayImages() {
   // Get random keyword
@@ -46,3 +43,4 @@ function displayImages() {
 
 
 }
+*/
