@@ -11,10 +11,16 @@ Create slider questions
 // Initialize slider widget and set initial value to half-way
 function createSlider(type) {
 
-  $slider = $('#slider');
+
   $slider.slider({
     value: 50
   });
+
+
+  // Set slider image source, prevent caching
+  let $i = 0;
+  $sliderImage.attr('src','https://picsum.photos/800/400/?random=' + $i);
+  $i++;
 
   if (type === 'feeling') {
     // Apply a random css filter to the slider image
@@ -26,7 +32,6 @@ function createSlider(type) {
     let $t = ['emoji', 'kaomoji'];
     setSliderTitles($t[randomIndex(0, $t.length - 1)]);
   }
-
 
 }
 
@@ -41,29 +46,26 @@ function setSliderTitles(type) {
   switch(type) {
 
     case 'kaomoji':
-      $.getJSON('assets/words/emoji/cute_kaomoji.json', function(jd) {
-        $left = jd.cuteKaomoji[randomIndex(0,jd.cuteKaomoji.length - 1)];
-        $right = jd.cuteKaomoji[randomIndex(0,jd.cuteKaomoji.length - 1)];
+      $left = $cuteKaomoji[randomIndex(0,$cuteKaomoji.length - 1)];
+      $right = $cuteKaomoji[randomIndex(0,$cuteKaomoji.length - 1)];
 
-        $sliderTitle.left.html($left);
-        $sliderTitle.right.html($right);
-      });
+      $('#sliderlabels').css('font-size', '1.5em');
       break;
 
     case 'emoji':
-      $.getJSON('assets/words/emoji/emoji.json', function(jd) {
-        $left = jd.emoji[randomIndex(588,664)];
-        $right = jd.emoji[randomIndex(588,664)];
+      $left = $emoji[randomIndex(588,664)];
+      $right = $emoji[randomIndex(588,664)];
 
-        $sliderTitle.left.html($left);
-        $sliderTitle.right.html($right);
-      });
+      $('#sliderlabels').css('font-size', '2em');
       break;
 
     default:
       break;
 
   }
+
+  $sliderTitle.left.html($left);
+  $sliderTitle.right.html($right);
 
 }
 
@@ -75,14 +77,3 @@ function randomIndex(min,max) {
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min +1)) + min;
 }
-
-
-// emoji 588-664
-
-
-/*
-<div class="question" id="sliderquestion">
-  <img id="sliderimage" src="assets/images/slider-image.jpeg"></img>
-  <div id="slider"></div>
-</div>
-*/

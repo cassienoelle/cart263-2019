@@ -24,13 +24,17 @@ let $userBirthday;
 let $userAura;
 let $welcomeText;
 let $zodiac;
+let $imageOption
 let $nextButton;
 let $userProfile;
-let $titles = {
-  introTitle: 'Personal Info question header',
-  feelingSlider: 'How does this make you feel?'
-}
+let $titles = {}
 let $userProgress;
+let $imagePreload;
+let $keyword;
+let $keywordNext;
+let $toggleFirst = false;
+
+let $questionType = 'IMAGE';
 
 let $sliderTitle = {
   left: undefined,
@@ -45,6 +49,7 @@ $(document).ready(function() {
   $sidebar = $('#wrapper');
   $progressbar = $('#progressbar');
   $introImage = $('#inspiration');
+
   $slider = $('#slider');
   $sliderQuestion = $('#sliderquestion');
   $imgSelect = $('#imgselect');
@@ -59,6 +64,9 @@ $(document).ready(function() {
   $sliderTitle.right = $('#label-right');
   $sliderImage = $('#sliderimage');
   $userProgress = $('.userprogress');
+  $slider = $('#slider');
+  $imageOption = $('.imgOption');
+  $imagePreload = $('.imgPreload');
 
   console.log('left: ' + $sliderTitle.left);
   console.log('right: ' + $sliderTitle.right);
@@ -67,23 +75,40 @@ $(document).ready(function() {
   //createSlider();
   selectImage();
   setupInterface()
-  createUserProfile();
-  //autoset();
+  //createUserProfile();
+  autoset();
 
   continueQuiz();
 
 });
 
 //-------- START REAL QUESTIONS -------//
+
+
+
 function continueQuiz() {
   $nextButton.on('click', function() {
-    $userProfile.hide();
-    $imgSelect.hide();
-    $userProgress.show();
-    createSlider('feeling');
-    $sliderQuestion.show();
+    if (!$toggleFirst) {
+      $userProfile.hide();
+      $userProgress.show();
+      createImages();
+    }
+    else if ($toggleFirst) {
+
+          if ($questionType === 'IMAGE') {
+            $sliderQuestion.hide();
+            displayImages();
+          }
+          else if ($questionType === 'SLIDER') {
+            $imgSelect.hide();
+            createSlider('feeling');
+            $sliderQuestion.show();
+
+          }
+    }
 
 
+    // Advance progress bar
     $progress += 5;
     $progressbar.progressbar('option', 'value', $progress);
     console.log('progress: ' + $progress);
