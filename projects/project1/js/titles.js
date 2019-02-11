@@ -8,18 +8,17 @@ Question titles
 
 function setTitles(type, keyword) {
 
+  // Use correct grammar
   let $article = 'a';
   let $vowels = 'aeiou';
   let $str = keyword;
-  console.log('$str = ' + $str);
   for (let i = 0; i < $vowels.length; i++) {
     if ($str.charAt(0) === $vowels.charAt(i)) {
       $article = 'an';
     }
-    console.log('article: ' + $article);
   }
 
-  let $verb = $
+
 
   switch(type) {
     case 'IMAGE':
@@ -38,7 +37,8 @@ function setTitles(type, keyword) {
 
     case 'MESSAGE':
       $titles = [
-        'Keep going! Remember: \n' + keyword
+        'Remember, ' +  keyword.toLowerCase(),
+
       ]
 
     default:

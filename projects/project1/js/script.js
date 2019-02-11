@@ -119,6 +119,8 @@ function continueQuiz() {
     $progress += 5;
     $progressbar.progressbar('option', 'value', $progress);
     console.log('progress: ' + $progress);
+
+    encourageUser();
   });
 }
 
@@ -145,11 +147,12 @@ function resetSelectImage() {
 
 //--------- ENCOURAGEMENT --------//
 function encourageUser() {
-  setInterval(function() {
-    $messageKeyword = $wisdom[randomIndex(0,$wisdom.length - 1)]
-    let $nextMessage = setTitles('MESSAGE', $messageKeyword);
-    $message.html($nextMessage);
-  }, 10000);
+  $messageKeyword = $wisdom[randomIndex(0,$wisdom.length - 1)]
+  let $nextMessage = setTitles('MESSAGE', $messageKeyword);
+  $message.html($nextMessage);
+
+  // let $src = ('assets/images/' + $inspiration[randomIndex(0,$inspiration.length - 1)])
+  // $zodiac.attr('src', $src);
 }
 
 

@@ -2316,3 +2316,8 @@ let $imageArrays = [
   $vegetables,
   $bodyParts
 ]
+
+let $inspiration = [
+  'keep-going.gif',
+  'worm.gif'
+]

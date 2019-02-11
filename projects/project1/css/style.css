@@ -98,7 +98,7 @@ h1{
 
 #sidebar {
   width: 23%;
-  max-width: 480px;
+  max-width: 400px;
   /* margin-right: 8em; */
   margin-left: 8em;
   height: auto;
@@ -122,6 +122,11 @@ h1{
 
 #progresstitle {
   margin-top: 2em;
+}
+
+#message {
+  font-size: 1.5em;
+  color: red;
 }
 
 #inspiration {
@@ -265,6 +270,16 @@ input[type="color" i] {
 
 /* ----------- MEDIA QUERIES ---------- */
 
+
+@media screen and (max-width: 1440px) {
+  #quizarea {
+    margin-right: 12em;
+  }
+
+  #sidebar {
+    margin-left: 10em;
+  }
+}
 
 @media screen and (max-width: 991px) {
 

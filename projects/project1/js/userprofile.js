@@ -82,11 +82,10 @@ function setUserZodiac() {
     }
 
     // Set zodiac sign according to birthday
-    // Get source folder from html element
-    let $src = $zodiac.attr('src');
+    let $srcFolder = 'assets/images/zodiac/';
     // Determine zodiac sign and append corresponding
     // file name and extension to img source
-    $zodiac.attr('src', $src + getZodiac() + '.png');
+    $zodiac.attr('src', $srcFolder + getZodiac() + '.png');
 
     // Then fade in zodiac image and play related sound
     // Reveal greeting
@@ -217,6 +216,8 @@ function revealWelcome() {
     });
   });
 },100);
+
+  // Set inspirational image to gif for later
 
 }
 
