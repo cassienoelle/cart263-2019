@@ -147,7 +147,7 @@ function resetSelectImage() {
 
 //--------- ENCOURAGEMENT --------//
 function encourageUser() {
-  $messageKeyword = $wisdom[randomIndex(0,$wisdom.length - 1)]
+  $messageKeyword = $affirmations[randomIndex(0,$affirmations.length - 1)]
   let $nextMessage = setTitles('MESSAGE', $messageKeyword);
   $message.html($nextMessage);
 
