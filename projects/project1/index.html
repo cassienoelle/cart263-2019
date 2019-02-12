@@ -20,6 +20,8 @@
   integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
   crossorigin="anonymous"></script>
 
+  <script src='https://code.responsivevoice.org/responsivevoice.js'></script>
+
   <!-- My script(s) -->
   <script src="js/script.js"></script>
   <script src="js/image.js"></script>
@@ -46,6 +48,7 @@
           </div>
           <h1 class="title" id="welcome"></h1>
           <div id="affirmation"><img class="trending" src="assets/images/win.png"></img><span id="message"></span></div>
+          <input type='button' value='▶ Play Affirmation' id="playAffirmation"/>
           <div class="userprogress"><h3 id="progresstitle">% Self Actualization Achieved:</h3></div>
           <div class="userprogress" id="progressbar"></div>
         </div>
@@ -111,7 +114,11 @@
           </div>
 
 
-          <!-- TEXT ENTRY -->
+          <!-- DIALOG -->
+
+          <div id="dialog" title="Error 404 Not Found">
+            <p>We're sorry, some of your answers are no longer valid. Please continue the quiz to resume your search for self-actualization.</p>
+          </div>
 
         </div>
         <div id="nextdiv"><button id="nextbutton"></button></div>

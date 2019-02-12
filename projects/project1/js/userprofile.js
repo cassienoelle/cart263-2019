@@ -51,7 +51,7 @@ function setUserName() {
 
   // Update on input
   $userName.change(function() {
-    $welcomeText.html('Hello ' + $userName.val());
+    $welcomeText.html('Hello ' + $userName.val() + '!');
     console.log($welcomeText.html());
 
     // Reveal next profile question
@@ -198,6 +198,7 @@ function revealWelcome() {
   // Hide welcome message initially
   $welcomeText.hide();
   $affirmation.hide();
+  $playButton.hide();
 
   // Fade out inspirational image
   setTimeout(function() {$introImage.fadeOut(function() {
@@ -212,7 +213,6 @@ function revealWelcome() {
           console.log('last one!');
           $userProfile.filter('h3').filter(':nth-child(5)').fadeIn();
           $userAura.fadeIn();
-          $affirmation.fadeIn();
         }, 500);
       });
     });
@@ -232,12 +232,17 @@ function setUserStyle() {
   $userAura.change(function() {
     // Save color picker value
     let $theme = $userAura.val();
+    $appearSFX2.play();
     // Set styling of question div and 'next' button according to color value
     // (Class selector wasn't overriding default button styling so had to set using IDs)
     $('#textwrapper').css('background-color', $theme).css('filter', 'hue-rotate(-40deg)');
     $('#nextbutton').css('background-color', $theme).css('filter', 'hue-rotate(-40deg)');
     $('#zodiacbackground').css('background-color', $theme);
+    $playButton.css('background-color', $theme);
     $wordOption.css('background-color', $theme);
+
+    $affirmation.fadeIn();
+    $playButton.fadeIn();
 
     // Reveal 'next' button
     setTimeout(function() {

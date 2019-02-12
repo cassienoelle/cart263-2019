@@ -44,6 +44,8 @@ let $affirmation;
 let $nextWordTitle;
 let $wordChoice;
 let $wordOption;
+let $dialog;
+let $playButton;
 
 let $questionType = 'IMAGE';
 
@@ -54,6 +56,9 @@ let $sliderTitle = {
 let $sliderImage;
 
 let $appearSFX = new Audio("assets/sounds/magic.flac");
+let $appearSFX2 = new Audio("assets/sounds/magic2.wav");
+let $errorSFX = new Audio("assets/sounds/error.wav");
+let $disappearSFX = new Audio("assets/sounds/disappear.wav");
 
 
 $(document).ready(function() {
@@ -82,6 +87,8 @@ $(document).ready(function() {
   $wordChoice = $('#word-choice');
   $wordOption = $('.wordOption');
   $affirmation = $('#affirmation');
+  $dialog = $('#dialog');
+  $playButton = $('#playAffirmation');
 
   console.log('left: ' + $sliderTitle.left);
   console.log('right: ' + $sliderTitle.right);
@@ -188,6 +195,16 @@ function encourageUser() {
     duration: 500,
   });
 
+  $playButton.button();
+  $playButton.on('click', function() {
+    console.log('speak: ' + $nextMessage);
+    responsiveVoice.speak($message.html(), "US English Female", {
+      onend: function() {
+        responsiveVoice.cancel();
+      }
+    });
+  });
+
   $encouragement ++;
 
   /*
@@ -219,15 +236,33 @@ function encourageUser() {
 // If progress approaches complete, set progress to indeterminate
 function endlessProgress() {
 
-  if ($progress > 50) {
+  if ($progress > 90) {
     console.log('endless');
-    $progressbar.progressbar( 'option', 'value', false );
-
+    $dialog.dialog({
+      draggable: true,
+      buttons: [
+         {
+           text: 'Ok',
+           icon: 'ui-icon-person',
+           click: function() {
+             $disappearSFX.play();
+             $(this).dialog( "close" );
+             $progressbar.animate({
+                 opacity: 'toggle'
+             },700, function() {
+               console.log('complete');
+               $progress = 0;
+               $progressbar.progressbar('option', 'value', $progress);
+               $progressbar.show();
+             });
+           }
+         }]
+    });
+    $dialog.children('p').show();
+    $errorSFX.play();
   }
-  else {
-    $progressbar.progressbar('option', 'value', $progress);
-  }
 
+  $progressbar.progressbar('option', 'value', $progress);
   console.log($progress);
 }
 

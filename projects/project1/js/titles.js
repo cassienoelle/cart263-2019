@@ -74,7 +74,7 @@ function setTitles(type, keyword, array) {
 
     case 'MESSAGE':
       $titles = [
-        '\'<em>' + keyword + '</em>\''
+        keyword
       ];
       break;
 

@@ -30,6 +30,7 @@ function setupInterface() {
   $progressbar.progressbar({
     value: $progress
   });
+  $('.ui-progressbar-value').css('background', '#ffeb00');
 
   // Hide subsequent questions
   $imgSelect.hide();
@@ -40,6 +41,9 @@ function setupInterface() {
   createNextButton();
   createImages();
   createSlider();
+
+
+  $dialog.children('p').hide();
 
 
 }
