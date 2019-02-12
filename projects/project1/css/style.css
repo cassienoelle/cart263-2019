@@ -158,6 +158,15 @@ h1{
   height: auto;
 }
 
+.products img {
+  width: 60%;
+  height: auto;
+}
+
+.products h4 {
+  margin-top: 3em;
+}
+
 /* ---------- QUESTIONS ------------- */
 
 

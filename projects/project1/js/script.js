@@ -12,6 +12,7 @@ A neverending quiz to find yourself!
 let $state;
 let $i = 0;
 let $encouragement = 0;
+let $productsShown = false;
 
 // Basic layout DOM elements
 let $sidebar;
@@ -65,7 +66,6 @@ $(document).ready(function() {
   $sidebar = $('#wrapper');
   $progressbar = $('#progressbar');
   $introImage = $('#inspiration');
-
   $slider = $('#slider');
   $sliderQuestion = $('#sliderquestion');
   $imgSelect = $('#imgselect');
@@ -100,6 +100,7 @@ $(document).ready(function() {
 
   continueQuiz();
   encourageUser();
+
 });
 
 //-------- START REAL QUESTIONS -------//
@@ -201,6 +202,9 @@ function encourageUser() {
     responsiveVoice.speak($message.html(), "US English Female", {
       onend: function() {
         responsiveVoice.cancel();
+        if (!$productsShown) {
+          showProducts();
+        }
       }
     });
   });

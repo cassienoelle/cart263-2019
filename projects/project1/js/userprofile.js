@@ -6,7 +6,7 @@ Quiz Intro
 Set interface according to user profile
 
 ******************/
-
+let i = 1;
 
 function createUserProfile() {
   // Set question header text
@@ -22,7 +22,7 @@ function createUserProfile() {
   // Initialize birthday date picker (hidden for now)
   createDatePicker();
 
-  // Add input from username field to welcome message
+  // Add input from username field to welcome
   setUserName();
   // Set welcome image - user zodiac sign - according to input from birthday date picker
   setUserZodiac();
@@ -199,6 +199,7 @@ function revealWelcome() {
   $welcomeText.hide();
   $affirmation.hide();
   $playButton.hide();
+  $('.products').hide();
 
   // Fade out inspirational image
   setTimeout(function() {$introImage.fadeOut(function() {
@@ -243,6 +244,7 @@ function setUserStyle() {
 
     $affirmation.fadeIn();
     $playButton.fadeIn();
+    suggestedProducts();
 
     // Reveal 'next' button
     setTimeout(function() {
@@ -251,6 +253,31 @@ function setUserStyle() {
   });
 
 }
+
+// suggestedProducts()
+//
+// Basic image slider of suggested self-help books in the sidebar
+function suggestedProducts() {
+  $('.products').children('h4').html('10 Products That Are Actually Perfect For You');
+
+  setInterval(function() {
+    $('.products').children('img').attr('src','/assets/images/products/' + i + '.jpg');
+    i++;
+    console.log($('.products').children('img').attr('src'));
+    if (i === 9) {
+      i = 1;
+    }
+  },4000);
+}
+
+// showProducts()
+//
+//
+function showProducts() {
+  $productsShown = true;
+  $('.products').fadeIn();
+}
+
 
 // autoset()
 //
