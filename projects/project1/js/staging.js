@@ -34,6 +34,7 @@ function setupInterface() {
   // Hide subsequent questions
   $imgSelect.hide();
   $sliderQuestion.hide();
+  $wordChoice.hide();
 
   // Create next button for question area (hidden for now)
   createNextButton();

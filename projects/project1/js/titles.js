@@ -31,16 +31,16 @@ function setTitles(type, keyword, array) {
       }
       else if (array === $vegetables) {
         $titles = [
-          'Pick the most delicious ' + keyword,
+          'Pick the most delicious ' + keyword + '.',
           'Choose a midnight snack!'
-        ]
+        ];
       }
       else if (array === $bodyParts) {
         $titles = [
           'Which ' + keyword + ' is the ' + keyword + ' of your dreams?',
           'Pick the sexiest ' + keyword + ".",
           'Pick your fave ' + keyword + ".",
-          'Match a ' + keyword + ' with your ' + $person + '\'s ' + keyword + ".",
+          'Which ' + keyword + ' reminds you of your ' + $person + '\'s ' + keyword + ".",
           'Which ' + keyword + ' is most like yours?'
         ]
       }
@@ -53,10 +53,19 @@ function setTitles(type, keyword, array) {
       ];
       break;
 
+    case 'WORD':
+      $titles = [
+        'How would you describe yourself?',
+        'By my next birthday, I hope to be more...\' ',
+        'On an average day, I\'m pretty...',
+        'My friends would describe me as...'
+      ];
+      break;
+
     case 'MESSAGE':
       $titles = [
         '\'<em>' + keyword + '</em>\''
-      ]
+      ];
       break;
 
     default:

@@ -197,7 +197,7 @@ function revealWelcome() {
   $userProgress.hide();
   // Hide welcome message initially
   $welcomeText.hide();
-  $message.hide();
+  $affirmation.hide();
 
   // Fade out inspirational image
   setTimeout(function() {$introImage.fadeOut(function() {
@@ -212,6 +212,7 @@ function revealWelcome() {
           console.log('last one!');
           $userProfile.filter('h3').filter(':nth-child(5)').fadeIn();
           $userAura.fadeIn();
+          $affirmation.fadeIn();
         }, 500);
       });
     });

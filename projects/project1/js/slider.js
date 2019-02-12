@@ -23,7 +23,7 @@ function createSlider(type) {
   console.log('next slider: ' + $nextSliderTitle);
 
   // Set slider image source, prevent caching
-  $sliderImage.attr('src','https://loremflickr.com/800/400/weird/?random=' + $i);
+  $sliderImage.attr('src','https://loremflickr.com/800/400/silly/?random=' + $i);
   $i++;
 
   if (type === 'feeling') {

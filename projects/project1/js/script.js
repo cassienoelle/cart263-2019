@@ -11,6 +11,7 @@ A neverending quiz to find yourself!
 
 let $state;
 let $i = 0;
+let $encouragement = 0;
 
 // Basic layout DOM elements
 let $sidebar;
@@ -39,6 +40,10 @@ let $currentTitle;
 let $nextImageTitle;
 let $nextSliderTitle;
 let $message;
+let $affirmation;
+let $nextWordTitle;
+let $wordChoice;
+let $wordOption;
 let $toggleFirst = false;
 
 let $questionType = 'IMAGE';
@@ -75,6 +80,9 @@ $(document).ready(function() {
   $imageOption = $('.imgOption');
   $imagePreload = $('.imgPreload');
   $message = $('#message');
+  $wordChoice = $('#word-choice');
+  $wordOption = $('.wordOption');
+  $affirmation = $('#affirmation');
 
   console.log('left: ' + $sliderTitle.left);
   console.log('right: ' + $sliderTitle.right);
@@ -101,17 +109,32 @@ function continueQuiz() {
         $questionType = 'SLIDER';
       }
       else if ($questionType === 'SLIDER') {
+        $questionType = 'WORD';
+      }
+      else if ($questionType === 'WORD') {
         $questionType = 'IMAGE';
       }
       ///////////
       if ($questionType === 'IMAGE') {
           displayImageQuestion();
           $sliderQuestion.hide();
+          $wordChoice.hide();
           createSlider('feeling');
+          createWordChoice();
       }
       else if ($questionType === 'SLIDER') {
           displaySliderQuestion();
           $imgSelect.hide();
+          $wordChoice.hide();
+          createImages();
+          createWordChoice();
+          resetSelectImage();
+      }
+      else if ($questionType === 'WORD') {
+          displayWordQuestion();
+          $imgSelect.hide();
+          $sliderQuestion.hide();
+          createSlider('feeling');
           createImages();
           resetSelectImage();
       }
@@ -145,6 +168,9 @@ function resetSelectImage() {
 }
 
 //--------- ENCOURAGEMENT --------//
+// encourageUser()
+//
+// Display a new affirmation in the sidebar with each question
 function encourageUser() {
   $messageKeyword = $affirmations[randomIndex(0,$affirmations.length - 1)]
   let $nextMessage = setTitles('MESSAGE', $messageKeyword);
@@ -155,9 +181,28 @@ function encourageUser() {
     duration: 500,
   });
 
-  // let $src = ('assets/images/' + $inspiration[randomIndex(0,$inspiration.length - 1)])
-  // $zodiac.attr('src', $src);
+  $encouragement ++;
+
+  /*
+  if ($encouragement % 5 === 0) {
+    let $ogsrc = $zodiac.attr('src');
+    let $ogbc = $('#zodiacbackground').css('background-color');
+
+    let $src = ('assets/images/' + $inspiration[randomIndex(0,$inspiration.length - 1)])
+    $zodiac.attr('src', $src);
+    $('#zodiacbackground').css('background-color', '#ffffff');
+
+    setTimeout(function() {
+       $zodiac.fadeOut();
+       $zodiac.attr('src', $ogsrc);
+       $('#zodiacbackground').css('background-color', $ogbc);
+       $zodiac.fadeIn();
+    }, 10000);
+  }
+  */
 }
+
+
 
 
 //--------- PROGRESS BAR ---------//
