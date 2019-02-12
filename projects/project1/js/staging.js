@@ -52,8 +52,6 @@ function setupInterface() {
 function createNextButton() {
 
   $nextButton.button({
-    icon: 'ui-icon-triangle-1-e',
-    iconPosition: 'end',
     label: 'Next'
   });
 
