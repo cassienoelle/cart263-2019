@@ -81,8 +81,8 @@ $(document).ready(function() {
 
   selectImage();
   setupInterface()
-  //createUserProfile();
-  autoset();
+  createUserProfile();
+  //autoset();
 
   continueQuiz();
   encourageUser();
@@ -94,6 +94,7 @@ function continueQuiz() {
   $nextButton.on('click', function() {
       $userProfile.hide();
       $userProgress.show();
+      encourageUser();
       // Run each time to preload images
 
       if ($questionType === 'IMAGE') {
@@ -119,8 +120,6 @@ function continueQuiz() {
     $progress += 5;
     $progressbar.progressbar('option', 'value', $progress);
     console.log('progress: ' + $progress);
-
-    encourageUser();
   });
 }
 
@@ -149,7 +148,12 @@ function resetSelectImage() {
 function encourageUser() {
   $messageKeyword = $affirmations[randomIndex(0,$affirmations.length - 1)]
   let $nextMessage = setTitles('MESSAGE', $messageKeyword);
+  $message.hide();
   $message.html($nextMessage);
+
+  $message.fadeIn({
+    duration: 500,
+  });
 
   // let $src = ('assets/images/' + $inspiration[randomIndex(0,$inspiration.length - 1)])
   // $zodiac.attr('src', $src);

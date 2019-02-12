@@ -12,7 +12,7 @@ function createImages() {
   // Get random keyword
   let $imageKeyword = $a[randomIndex(0,$a.length - 1)];
   // Set title according to keyword
-  $nextImageTitle = setTitles('IMAGE', $imageKeyword);
+  $nextImageTitle = setTitles('IMAGE', $imageKeyword, $a);
   console.log('next image: ' + $nextImageTitle);
 
   // Set image sources, prevent caching

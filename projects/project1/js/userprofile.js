@@ -197,6 +197,7 @@ function revealWelcome() {
   $userProgress.hide();
   // Hide welcome message initially
   $welcomeText.hide();
+  $message.hide();
 
   // Fade out inspirational image
   setTimeout(function() {$introImage.fadeOut(function() {
@@ -232,8 +233,8 @@ function setUserStyle() {
     let $theme = $userAura.val();
     // Set styling of question div and 'next' button according to color value
     // (Class selector wasn't overriding default button styling so had to set using IDs)
-    // $('#textwrapper').css('background-color', $theme);
-    // $('#nextbutton').css('background-color', $theme);
+    $('#textwrapper').css('background-color', $theme).css('filter', 'hue-rotate(-40deg)');
+    $('#nextbutton').css('background-color', $theme).css('filter', 'hue-rotate(-40deg)');
     $('#zodiacbackground').css('background-color', $theme);
 
     // Reveal 'next' button
