@@ -39,7 +39,7 @@ function setupInterface() {
   // Create next button for question area (hidden for now)
   createNextButton();
   createImages();
-  createSlider('feeling');
+  createSlider();
 
 
 }

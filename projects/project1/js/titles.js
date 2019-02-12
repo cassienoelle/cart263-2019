@@ -32,14 +32,16 @@ function setTitles(type, keyword, array) {
       else if (array === $vegetables) {
         $titles = [
           'Pick the most delicious ' + keyword + '.',
-          'Choose a midnight snack!'
+          'Choose a midnight snack:',
+          'Which ' + keyword + ' would you eat for dinner?',
+          'If you were ' + $article + ' ' + keyword + ', which ' + keyword + ' would you be?',
+
         ];
       }
       else if (array === $bodyParts) {
         $titles = [
-          'Which ' + keyword + ' is the ' + keyword + ' of your dreams?',
+          'Which ' + keyword + ' belongs to a celebrity?',
           'Pick the sexiest ' + keyword + ".",
-          'Pick your fave ' + keyword + ".",
           'Which ' + keyword + ' reminds you of your ' + $person + '\'s ' + keyword + ".",
           'Which ' + keyword + ' is most like yours?'
         ]
@@ -53,10 +55,18 @@ function setTitles(type, keyword, array) {
       ];
       break;
 
+    case 'AGREESLIDER':
+      $titles = [
+        'The aesthetic of this piece is distinctly reminiscent of early ' + keyword + '.',
+        'The aesthetic of this piece is distinctly reminiscent of later ' + keyword + '.',
+        'This exemplary work of ' + keyword + ' belongs in a museum.',
+      ]
+      break;
+
     case 'WORD':
       $titles = [
         'How would you describe yourself?',
-        'By my next birthday, I hope to be more...\' ',
+        'In the future, I hope to be more...',
         'On an average day, I\'m pretty...',
         'My friends would describe me as...'
       ];
@@ -69,7 +79,7 @@ function setTitles(type, keyword, array) {
       break;
 
     default:
-      break;
+      break;s
   }
 
   let $result = $titles[randomIndex(0,$titles.length - 1)];

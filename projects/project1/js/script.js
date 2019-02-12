@@ -44,7 +44,6 @@ let $affirmation;
 let $nextWordTitle;
 let $wordChoice;
 let $wordOption;
-let $toggleFirst = false;
 
 let $questionType = 'IMAGE';
 
@@ -87,7 +86,7 @@ $(document).ready(function() {
   console.log('left: ' + $sliderTitle.left);
   console.log('right: ' + $sliderTitle.right);
 
-  selectImage();
+  selectOption();
   setupInterface()
   createUserProfile();
   //autoset();
@@ -116,10 +115,11 @@ function continueQuiz() {
       }
       ///////////
       if ($questionType === 'IMAGE') {
+          resetSelect();
           displayImageQuestion();
           $sliderQuestion.hide();
           $wordChoice.hide();
-          createSlider('feeling');
+          createSlider();
           createWordChoice();
       }
       else if ($questionType === 'SLIDER') {
@@ -128,27 +128,23 @@ function continueQuiz() {
           $wordChoice.hide();
           createImages();
           createWordChoice();
-          resetSelectImage();
       }
       else if ($questionType === 'WORD') {
+          resetSelect();
           displayWordQuestion();
           $imgSelect.hide();
           $sliderQuestion.hide();
-          createSlider('feeling');
+          createSlider();
           createImages();
-          resetSelectImage();
       }
-
-    // Advance progress bar
-    $progress += 5;
-    $progressbar.progressbar('option', 'value', $progress);
-    console.log('progress: ' + $progress);
+  $progress += 5;
+  endlessProgress();
   });
 }
 
 //--------- IMAGE --------//
 
-function selectImage() {
+function selectOption() {
 
   $imgSelect.selectable({
     stop: function() {
@@ -158,12 +154,23 @@ function selectImage() {
     }
   });
 
+  $wordChoice.selectable({
+    stop: function() {
+      console.log($(this));
+      $(this).children().not('.ui-selected').addClass('overlay');
+      $(this).selectable('disable');
+    }
+  });
+
 }
 
-function resetSelectImage() {
+function resetSelect() {
 
   $imgSelect.children().removeClass('overlay');
   $imgSelect.selectable('enable');
+
+  $wordChoice.children().removeClass('overlay');
+  $wordChoice.selectable('enable');
 
 }
 
@@ -211,9 +218,17 @@ function encourageUser() {
 //
 // If progress approaches complete, set progress to indeterminate
 function endlessProgress() {
-  if ($progress > 90) {
-    $progressbar.progressbar( 'option', {value: false} );
+
+  if ($progress > 50) {
+    console.log('endless');
+    $progressbar.progressbar( 'option', 'value', false );
+
   }
+  else {
+    $progressbar.progressbar('option', 'value', $progress);
+  }
+
+  console.log($progress);
 }
 
 //--------- TOOLS --------//

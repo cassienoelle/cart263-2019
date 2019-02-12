@@ -237,6 +237,7 @@ function setUserStyle() {
     $('#textwrapper').css('background-color', $theme).css('filter', 'hue-rotate(-40deg)');
     $('#nextbutton').css('background-color', $theme).css('filter', 'hue-rotate(-40deg)');
     $('#zodiacbackground').css('background-color', $theme);
+    $wordOption.css('background-color', $theme);
 
     // Reveal 'next' button
     setTimeout(function() {
