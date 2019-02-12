@@ -9,92 +9,63 @@ A neverending quiz to find yourself!
 
 ******************/
 
-let $state;
 let $i = 0;
-let $encouragement = 0;
 let $productsShown = false;
-
-// Basic layout DOM elements
-let $sidebar;
-let $questionHeader;
-let $introImage;
-let $slider;
-let $sliderQuestion;
-let $imgSelect;
-let $datePicker;
-let $userName;
-let $userBirthday;
-let $userAura;
-let $welcomeText;
-let $zodiac;
-let $imageOption
-let $nextButton;
-let $userProfile;
-let $titles = [];
-let $userProgress;
-let $imagePreload;
-let $keyword;
-let $keywordNext;
-let $imageKeyword;
-let $messageKeyword;
-let $currentTitle;
-let $nextImageTitle;
-let $nextSliderTitle;
-let $message;
-let $affirmation;
-let $nextWordTitle;
-let $wordChoice;
-let $wordOption;
-let $dialog;
-let $playButton;
-
 let $questionType = 'IMAGE';
 
-let $sliderTitle = {
+/*----Basic layout DOM elements ---*/
+
+/*--- Sidebar ---*/
+let $sidebar, $questionHeader, $introImage, $welcomeText;
+let $userProfile, $userName;
+let $datePicker, $userBirthday, $zodiac, $userAura;
+let $affirmation, $message, $playButton;;
+let $userProgress, $progressbar;
+let $progress = 0;
+
+/*--- Main Quiz Area ---*/
+
+// Slider questions
+let $sliderQuestion, $sliderImage, $slider;
+let $nextSliderTitle;
+let $sliderLabels = {
   left: undefined,
   right: undefined
 }
-let $sliderImage;
+// Image questions
+let $imageChoiceQuestion;
+let $imageOption;
+let $nextImageTitle;
+// Word choice questions
+let $wordChoiceQuestion;
+let $wordOption;
+let $nextWordTitle;
 
+// Keywords for generating next question text
+let $keyword;
+let $messageKeyword;
+let $imageKeyword;
+let $sliderKeyword;
+// Array of possible titles to generate
+let $titles = [];
+// Next button
+let $nextButton
+// Dialog box to reset progress bar
+let $dialog;
+
+// Sound effects
 let $appearSFX = new Audio("assets/sounds/magic.flac");
 let $appearSFX2 = new Audio("assets/sounds/magic2.wav");
 let $errorSFX = new Audio("assets/sounds/error.wav");
 let $disappearSFX = new Audio("assets/sounds/disappear.wav");
 
 
+
+
 $(document).ready(function() {
-  $sidebar = $('#wrapper');
-  $progressbar = $('#progressbar');
-  $introImage = $('#inspiration');
-  $slider = $('#slider');
-  $sliderQuestion = $('#sliderquestion');
-  $imgSelect = $('#imgselect');
-  $questionHeader = $('#questiontext');
-  $welcomeText = $('#welcome');
-  $userName = $('#username');
-  $userAura = $('#aura');
-  $zodiac = $('#zodiac');
-  $nextButton = $('#nextbutton');
-  $userProfile = $('.userprofile');
-  $sliderTitle.left = $('#label-left');
-  $sliderTitle.right = $('#label-right');
-  $sliderImage = $('#sliderimage');
-  $userProgress = $('.userprogress');
-  $slider = $('#slider');
-  $imageOption = $('.imgOption');
-  $imagePreload = $('.imgPreload');
-  $message = $('#message');
-  $wordChoice = $('#word-choice');
-  $wordOption = $('.wordOption');
-  $affirmation = $('#affirmation');
-  $dialog = $('#dialog');
-  $playButton = $('#playAffirmation');
 
-  console.log('left: ' + $sliderTitle.left);
-  console.log('right: ' + $sliderTitle.right);
-
-  selectOption();
-  setupInterface()
+  setDOMselectors();
+  setupInterface();
   createUserProfile();
   //autoset();
 
@@ -103,8 +74,84 @@ $(document).ready(function() {
 
 });
 
-//-------- START REAL QUESTIONS -------//
+// setDOMselectors()
+//
+//
+function setDOMselectors() {
+  // Sidebar
+  $introImage = $('#inspiration');
+  $sidebar = $('#wrapper');
+  // User Profile
+  $userProfile = $('.userprofile');
+  $userName = $('#username');
+  $userAura = $('#aura');
+  $zodiac = $('#zodiac');
+  $welcomeText = $('#welcome');
+  // Affirmation
+  $message = $('#message');
+  $affirmation = $('#affirmation');
+  $playButton = $('#playAffirmation');
+  // Progress
+  $progressbar = $('#progressbar');
+  $userProgress = $('.userprogress');
 
+  // Main Quiz
+  $questionHeader = $('#questiontext');
+  $nextButton = $('#nextbutton');
+  // Slider Questions
+  $sliderQuestion = $('#sliderquestion');
+  $slider = $('#slider');
+  $sliderImage = $('#sliderimage');
+  $sliderLabels.left = $('#label-left');
+  $sliderLabels.right = $('#label-right');
+  // Image Choice Questions
+  $imageChoiceQuestion = $('#imgselect');
+  $imageOption = $('.imgOption');
+  // Word Choice Questions
+  $wordChoiceQuestion = $('#word-choice');
+  $wordOption = $('.wordOption');
+  // Dialog box to reset progress
+  $dialog = $('#dialog');
+
+}
+
+// setupInterface()
+//
+//
+function setupInterface() {
+  // Create Next button
+  $nextButton.button({
+    label: 'Next'
+  });
+  // Initialize sidebar progress bar
+  $progressbar.progressbar({
+    value: $progress
+  });
+  $('.ui-progressbar-value').css('background', '#ffeb00');
+
+
+  // Hide user profile and main quiz
+  $sidebar.hide();
+  $nextButton.hide();
+  $imageChoiceQuestion.hide();
+  $sliderQuestion.hide();
+  $wordChoiceQuestion.hide();
+  // Hide dialog box (progress reset) text
+  $dialog.children('p').hide();
+
+  // Create initial questions of all types
+  createImageQuestion();
+  createSliderQuestion();
+  createWordQuestion();
+
+  // Initialize selectable for Image and Word choice questions
+  selectOption();
+
+}
+
+// continueQuiz()
+//
+// Main quiz interactivity and question generation
 function continueQuiz() {
   $nextButton.on('click', function() {
       $userProfile.hide();
@@ -126,63 +173,33 @@ function continueQuiz() {
           resetSelect();
           displayImageQuestion();
           $sliderQuestion.hide();
-          $wordChoice.hide();
-          createSlider();
-          createWordChoice();
+          $wordChoiceQuestion.hide();
+          createSliderQuestion();
+          createWordQuestion();
       }
       else if ($questionType === 'SLIDER') {
           displaySliderQuestion();
-          $imgSelect.hide();
-          $wordChoice.hide();
-          createImages();
-          createWordChoice();
+          $imageChoiceQuestion.hide();
+          $wordChoiceQuestion.hide();
+          createImageQuestion();
+          createWordQuestion();
       }
       else if ($questionType === 'WORD') {
           resetSelect();
           displayWordQuestion();
-          $imgSelect.hide();
+          $imageChoiceQuestion.hide();
           $sliderQuestion.hide();
-          createSlider();
-          createImages();
+          createSliderQuestion();
+          createImageQuestion();
       }
+
+  // Update progress
   $progress += 5;
   endlessProgress();
   });
 }
 
-//--------- IMAGE --------//
 
-function selectOption() {
-
-  $imgSelect.selectable({
-    stop: function() {
-      console.log($(this));
-      $(this).children().not('.ui-selected').addClass('overlay');
-      $(this).selectable('disable');
-    }
-  });
-
-  $wordChoice.selectable({
-    stop: function() {
-      console.log($(this));
-      $(this).children().not('.ui-selected').addClass('overlay');
-      $(this).selectable('disable');
-    }
-  });
-
-}
-
-function resetSelect() {
-
-  $imgSelect.children().removeClass('overlay');
-  $imgSelect.selectable('enable');
-
-  $wordChoice.children().removeClass('overlay');
-  $wordChoice.selectable('enable');
-
-}
-
-//--------- ENCOURAGEMENT --------//
 // encourageUser()
 //
 // Display a new affirmation in the sidebar with each question
@@ -209,35 +226,13 @@ function encourageUser() {
     });
   });
 
-  $encouragement ++;
 
-  /*
-  if ($encouragement % 5 === 0) {
-    let $ogsrc = $zodiac.attr('src');
-    let $ogbc = $('#zodiacbackground').css('background-color');
-
-    let $src = ('assets/images/' + $inspiration[randomIndex(0,$inspiration.length - 1)])
-    $zodiac.attr('src', $src);
-    $('#zodiacbackground').css('background-color', '#ffffff');
-
-    setTimeout(function() {
-       $zodiac.fadeOut();
-       $zodiac.attr('src', $ogsrc);
-       $('#zodiacbackground').css('background-color', $ogbc);
-       $zodiac.fadeIn();
-    }, 10000);
-  }
-  */
 }
 
 
-
-
-//--------- PROGRESS BAR ---------//
-
 // endlessProgress()
 //
-// If progress approaches complete, set progress to indeterminate
+// If progress approaches complete, display dialog box, reset progress
 function endlessProgress() {
 
   if ($progress > 90) {
@@ -270,11 +265,49 @@ function endlessProgress() {
   console.log($progress);
 }
 
-//--------- TOOLS --------//
 
-// randomIndex
+// selectOption()
 //
-// return an integer between two values inclusive
+// Make Word and Image questions selectable
+// Change styling and disable upon selection
+function selectOption() {
+
+  $imageChoiceQuestion.selectable({
+    stop: function() {
+      console.log($(this));
+      $(this).children().not('.ui-selected').addClass('overlay');
+      $(this).selectable('disable');
+    }
+  });
+
+  $wordChoiceQuestion.selectable({
+    stop: function() {
+      console.log($(this));
+      $(this).children().not('.ui-selected').addClass('overlay');
+      $(this).selectable('disable');
+    }
+  });
+
+}
+
+// resetSelect()
+//
+// Revert styling on Word and Image questions and
+// re-enable selectable responses
+function resetSelect() {
+
+  $imageChoiceQuestion.children().removeClass('overlay');
+  $imageChoiceQuestion.selectable('enable');
+
+  $wordChoiceQuestion.children().removeClass('overlay');
+  $wordChoiceQuestion.selectable('enable');
+
+}
+
+// randomIndex(min,max)
+//
+// Return an integer between two values inclusive
+// Use to generate a random index of an aray
 function randomIndex(min,max) {
   min = Math.ceil(min);
   max = Math.floor(max);

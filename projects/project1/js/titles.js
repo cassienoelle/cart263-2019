@@ -6,6 +6,10 @@ Question titles
 
 ******************/
 
+// setTitles()
+//
+// Using keyword generate semi-random question text
+// depending on question type
 function setTitles(type, keyword, array) {
 
   // Use correct grammar
@@ -57,8 +61,8 @@ function setTitles(type, keyword, array) {
 
     case 'AGREESLIDER':
       $titles = [
-        'The aesthetic of this piece is distinctly reminiscent of early ' + keyword + '.',
-        'The aesthetic of this piece is distinctly reminiscent of later ' + keyword + '.',
+        'The aesthetic of this piece feels distinctly reminiscent of early ' + keyword + '.',
+        'The aesthetic of this piece feels distinctly reminiscent of later ' + keyword + '.',
         'This exemplary work of ' + keyword + ' belongs in a museum.',
       ]
       break;

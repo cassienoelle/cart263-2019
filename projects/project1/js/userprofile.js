@@ -8,6 +8,9 @@ Set interface according to user profile
 ******************/
 let i = 1;
 
+// createUserProfile()
+//
+//
 function createUserProfile() {
   // Set question header text
   $questionHeader.html($titles.introTitle);
@@ -272,7 +275,8 @@ function suggestedProducts() {
 
 // showProducts()
 //
-//
+// Display suggested products
+// Called when affirmations button is clicked by user
 function showProducts() {
   $productsShown = true;
   $('.products').fadeIn();

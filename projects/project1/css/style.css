@@ -167,6 +167,10 @@ h1{
   margin-top: 3em;
 }
 
+.products div {
+  height: 400px;
+}
+
 /* ---------- QUESTIONS ------------- */
 
 
