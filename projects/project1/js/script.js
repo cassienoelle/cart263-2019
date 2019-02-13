@@ -2,11 +2,16 @@
 
 /*****************
 
-Title of Project
+Quizyphus
 Cassie Smith
 CART263b, Winter 2019
 
 A neverending quiz to find yourself!
+Create your profile, then answer the questions
+and track your progress in the sidebar.
+
+If you get discouraged, play one of the positive
+affirmations generated just for you!
 
 ******************/
 
