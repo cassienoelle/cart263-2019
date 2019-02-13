@@ -263,7 +263,7 @@ function suggestedProducts() {
   $('.products').children('h4').html('10 Products That Are Actually Perfect For You');
 
   setInterval(function() {
-    $('.products').children('img').attr('src','/assets/images/products/' + $p + '.jpg');
+    $('.products').children('img').attr('src','assets/images/products/' + $p + '.jpg');
     $p++;
     console.log($('.products').children('img').attr('src'));
     if ($p === 9) {
