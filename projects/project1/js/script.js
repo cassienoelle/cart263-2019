@@ -16,6 +16,7 @@ affirmations generated just for you!
 ******************/
 
 let $i = 0;
+let $p = 1;
 let $productsShown = false;
 let $questionType = 'IMAGE';
 

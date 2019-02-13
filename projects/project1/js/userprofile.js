@@ -6,7 +6,6 @@ Quiz Intro
 Set interface according to user profile
 
 ******************/
-let i = 1;
 
 // createUserProfile()
 //
@@ -264,11 +263,11 @@ function suggestedProducts() {
   $('.products').children('h4').html('10 Products That Are Actually Perfect For You');
 
   setInterval(function() {
-    $('.products').children('img').attr('src','/assets/images/products/' + i + '.jpg');
-    i++;
+    $('.products').children('img').attr('src','/assets/images/products/' + $p + '.jpg');
+    $p++;
     console.log($('.products').children('img').attr('src'));
-    if (i === 9) {
-      i = 1;
+    if ($p === 9) {
+      $p = 1;
     }
   },4000);
 }
