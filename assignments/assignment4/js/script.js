@@ -3,7 +3,9 @@
 /*****************
 
 Eat Up
-Pippin Barr
+Cassie Smith
+
+Start code by Pippin Barr
 
 Using jQuery UI's draggable and droppable methods to
 feed a hungry mouth!
@@ -11,12 +13,14 @@ feed a hungry mouth!
 Sounds:
 Buzzing: https://freesound.org/people/soundmary/sounds/194931/
 Chewing: https://freesound.org/people/InspectorJ/sounds/412068/
+Gagging: https://freesound.org/people/Turroe22/sounds/135415/
 
 ******************/
 
 // Sound effects for the experience
 let buzzSFX = new Audio("assets/sounds/buzz.mp3");
 let crunchSFX = new Audio("assets/sounds/crunch.wav");
+let hmphSFX = new Audio("assets/sounds/hmph.wav");
 
 // Variable to hold our two key elements
 let $mouth;
@@ -33,25 +37,26 @@ function setup() {
 
   // Make the mouth droppable
   $mouth.droppable({
-    // Accept the fly and call flyDropped on drop
+    // Accept the fly only and call flyDropped on drop
     accept: $fly,
     drop: flyDropped
-  });
+  })
 
-
-  // Get the fly element from the page
-
-  // Make it draggable
+  // Make fly  draggable
   $fly.draggable();
 
-  // Get the candy element from the page
-
-  // Make it draggable and revert it's position when dropped
+  // Make candy draggable and revert it's position when dropped
+  // Play hmph sound when user moves it and close mouth firmly
+  // until candy is released
   $candy.draggable({
     revert: true,
-    stop: function ({
-
-    })
+    start: function(event,ui) {
+      hmphSFX.play();
+      $mouth.attr('src','assets/images/mouth-firmly-closed.png')
+    },
+    stop: function(event,ui) {
+      $mouth.attr('src','assets/images/mouth-open.png')
+    }
   });
 
   // Start up the buzzing of the fly
