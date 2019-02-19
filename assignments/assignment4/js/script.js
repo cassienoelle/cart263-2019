@@ -26,28 +26,39 @@ let $candy;
 $(document).ready(setup);
 
 function setup() {
-  // Get the mouth element from the page
+  // Get elements from page
   $mouth = $('#mouth');
-  // Make it droppable
+  $fly = $('#fly');
+  $candy = $('#candy');
+
+  // Make the mouth droppable
   $mouth.droppable({
-    // The drop option specifies a function to call when a drop is completed
+    // Accept the fly and call flyDropped on drop
+    accept: $fly,
     drop: flyDropped
   });
 
+
   // Get the fly element from the page
-  $fly = $('#fly');
+
   // Make it draggable
   $fly.draggable();
 
   // Get the candy element from the page
-  $candy = $('#candy');
-  // Make it draggable
-  $candy.draggable();
+
+  // Make it draggable and revert it's position when dropped
+  $candy.draggable({
+    revert: true,
+    stop: function ({
+
+    })
+  });
 
   // Start up the buzzing of the fly
   buzzSFX.loop = true;
   buzzSFX.play();
 }
+
 
 // flyDropped(event,ui)
 //
