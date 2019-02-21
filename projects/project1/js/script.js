@@ -15,8 +15,8 @@ affirmations generated just for you!
 
 ******************/
 
-let $i = 0;
-let $p = 1;
+let i = 0;
+let p = 1;
 let $productsShown = false;
 let $questionType = 'IMAGE';
 
@@ -27,6 +27,7 @@ let $sidebar, $questionHeader, $introImage, $welcomeText;
 let $userProfile, $userName;
 let $datePicker, $userBirthday, $zodiac, $userAura;
 let $affirmation, $message, $nextMessage, $playButton;
+let $products;
 let $userProgress, $progressbar;
 let $progress = 0;
 
@@ -72,12 +73,12 @@ let $disappearSFX = new Audio("assets/sounds/disappear.wav");
 $(document).ready(function() {
 
   setDOMselectors();
+  encourageUser();
   setupInterface();
   createUserProfile();
-  //autoset();
-
+  // autoset();
   continueQuiz();
-  encourageUser();
+
 
 });
 
@@ -98,6 +99,7 @@ function setDOMselectors() {
   $message = $('#message');
   $affirmation = $('#affirmation');
   $playButton = $('#playAffirmation');
+  $products = $('.products');
   // Progress
   $progressbar = $('#progressbar');
   $userProgress = $('.userprogress');
@@ -126,16 +128,29 @@ function setDOMselectors() {
 //
 //
 function setupInterface() {
-  // Create Next button
+  // Create Next button and Play button
   $nextButton.button({
     label: 'Next'
   });
+  $playButton.button();
   // Initialize sidebar progress bar
   $progressbar.progressbar({
     value: $progress
   });
-  $('.ui-progressbar-value').css('background', '#ffeb00');
+  $playButton.on('click', function() {
+    console.log('SPEECH HERE');
+    console.log('speak: ' + $nextMessage);
+    responsiveVoice.speak($message.text(), "US English Female", {
+      onend: function() {
+        //responsiveVoice.cancel();
+        if (!$productsShown) {
+          showProducts();
+        }
+      }
+    })
+  });
 
+  $('.ui-progressbar-value').css('background', '#ffeb00');
 
   // Hide user profile and main quiz
   $sidebar.hide();
@@ -211,29 +226,17 @@ function continueQuiz() {
 //
 // Display a new affirmation in the sidebar with each question
 function encourageUser() {
+  console.log('encourage User called');
   $messageKeyword = $affirmations[randomIndex(0,$affirmations.length - 1)]
   $nextMessage = setTitles('MESSAGE', $messageKeyword);
   $message.hide();
-  $message.html($nextMessage);
+  $message.text($nextMessage);
 
   $message.fadeIn({
     duration: 500,
   });
-
-  $playButton.button();
-  $playButton.on('click', function() {
-    console.log('speak: ' + $nextMessage);
-    responsiveVoice.speak($nextMessage, "US English Female", {
-      onend: function() {
-        if (!$productsShown) {
-          showProducts();
-        }
-      }
-    });
-  });
-
-
 }
+
 
 
 // endlessProgress()

@@ -23,13 +23,17 @@ function createUserProfile() {
 
   // Initialize birthday date picker (hidden for now)
   createDatePicker();
-
   // Add input from username field to welcome
   setUserName();
   // Set welcome image - user zodiac sign - according to input from birthday date picker
   setUserZodiac();
-
+  // Set stylesheet according to aura
   setUserStyle();
+
+  // Initialize product carousel and hide for now
+  suggestedProducts();
+  $products.hide();
+
 }
 
 // createDatePicker()
@@ -201,7 +205,6 @@ function revealWelcome() {
   $welcomeText.hide();
   $affirmation.hide();
   $playButton.hide();
-  $('.products').hide();
 
   // Fade out inspirational image
   setTimeout(function() {$introImage.fadeOut(function() {
@@ -246,7 +249,6 @@ function setUserStyle() {
 
     $affirmation.fadeIn();
     $playButton.fadeIn();
-    suggestedProducts();
 
     // Reveal 'next' button
     setTimeout(function() {
@@ -260,16 +262,17 @@ function setUserStyle() {
 //
 // Basic image slider of suggested self-help books in the sidebar
 function suggestedProducts() {
-  $('.products').children('h4').html('10 Products That Are Actually Perfect For You');
+  $products.children('h4').html('10 Products That Are Actually Perfect For You');
 
   setInterval(function() {
-    $('.products').children('img').attr('src','assets/images/products/' + $p + '.jpg');
-    $p++;
-    console.log($('.products').children('img').attr('src'));
-    if ($p === 9) {
-      $p = 1;
+    $products.children('img').attr('src','assets/images/products/' + p + '.jpg');
+    p++;
+    // console.log($products.children('img').attr('src'));
+    // console.log(p);
+    if (p === 9) {
+      p = 1;
     }
-  },4000);
+  }, 4000);
 }
 
 // showProducts()
@@ -278,7 +281,7 @@ function suggestedProducts() {
 // Called when affirmations button is clicked by user
 function showProducts() {
   $productsShown = true;
-  $('.products').fadeIn();
+  $products.fadeIn();
 }
 
 
@@ -296,4 +299,5 @@ function autoset() {
   $('#zodiacbackground').css('background-color', 'orange');
   $introImage.hide();
   $sidebar.show();
+
 }

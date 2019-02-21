@@ -23,8 +23,8 @@ function createSliderQuestion() {
   if ($sliderType === 'feeling') {
     $nextSliderTitle = setTitles('SLIDER', 'slider');
     // Set slider image source, prevent caching
-    $sliderImage.attr('src','https://loremflickr.com/800/400/silly/?random=' + $i);
-    $i++;
+    $sliderImage.attr('src','https://loremflickr.com/800/400/silly/?random=' + i);
+    i++;
     // Apply a random css filter to the slider image
     let $f = ['grayscale(100%)', 'contrast(200%)', 'hue-rotate(90deg)', 'hue-rotate(180deg)'];
     $sliderImage.css('filter', $f[randomIndex(0, $f.length - 1)]);
@@ -38,13 +38,13 @@ function createSliderQuestion() {
     // Set title according to keyword
     $nextSliderTitle = setTitles('AGREESLIDER', $sliderKeyword);
     // Set slider image source, prevent caching
-    $sliderImage.attr('src','https://loremflickr.com/800/400/art/?random=' + $i);
-    $i++;
+    $sliderImage.attr('src','https://loremflickr.com/800/400/art/?random=' + i);
+    i++;
     setSliderLabels('agree');
 
   }
 
-  console.log('next slider: ' + $nextSliderTitle);
+  // console.log('next slider: ' + $nextSliderTitle);
 
 }
 
@@ -72,7 +72,7 @@ function setSliderLabels(type) {
       $('#sliderlabels').css('font-size', '2em');
       break;
 
-    // If slider type is 'agree', set labels to Agree and Disagree 
+    // If slider type is 'agree', set labels to Agree and Disagree
     case 'agree':
       $left = 'Agree';
       $right = 'Disagree';
@@ -110,7 +110,7 @@ function createImageQuestion() {
   let $imageKeyword = $a[randomIndex(0,$a.length - 1)];
   // Set title according to keyword
   $nextImageTitle = setTitles('IMAGE', $imageKeyword, $a);
-  console.log('next image: ' + $nextImageTitle);
+  // console.log('next image: ' + $nextImageTitle);
 
   // Set image sources, prevent caching
   $imageOption.each(function(i) {
@@ -134,13 +134,13 @@ function createWordQuestion() {
   let $wordKeyword = $adjectives[randomIndex(0,$adjectives.length - 1)];
   // Set title according to keyword
   $nextWordTitle = setTitles('WORD', $wordKeyword);
-  console.log('next word: ' + $nextWordTitle);
+  // console.log('next word: ' + $nextWordTitle);
 
   // Set word options to random adjectives
   $wordOption.each(function(i) {
     $wordKeyword = $adjectives[randomIndex(0,$adjectives.length - 1)];
     $(this).html($wordKeyword);
-    console.log('word: ' + $(this).html());
+    // console.log('word: ' + $(this).html());
   });
 
 }
