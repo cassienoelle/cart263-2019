@@ -26,7 +26,7 @@ let $questionType = 'IMAGE';
 let $sidebar, $questionHeader, $introImage, $welcomeText;
 let $userProfile, $userName;
 let $datePicker, $userBirthday, $zodiac, $userAura;
-let $affirmation, $message, $playButton;;
+let $affirmation, $message, $nextMessage, $playButton;
 let $userProgress, $progressbar;
 let $progress = 0;
 
@@ -212,7 +212,7 @@ function continueQuiz() {
 // Display a new affirmation in the sidebar with each question
 function encourageUser() {
   $messageKeyword = $affirmations[randomIndex(0,$affirmations.length - 1)]
-  let $nextMessage = setTitles('MESSAGE', $messageKeyword);
+  $nextMessage = setTitles('MESSAGE', $messageKeyword);
   $message.hide();
   $message.html($nextMessage);
 
@@ -223,9 +223,8 @@ function encourageUser() {
   $playButton.button();
   $playButton.on('click', function() {
     console.log('speak: ' + $nextMessage);
-    responsiveVoice.speak($message.html(), "US English Female", {
+    responsiveVoice.speak($nextMessage, "US English Female", {
       onend: function() {
-        responsiveVoice.cancel();
         if (!$productsShown) {
           showProducts();
         }
