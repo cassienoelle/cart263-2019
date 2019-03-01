@@ -2,10 +2,11 @@ body {
   height: 100%;
   width: 100%;
   /* overflow: hidden; */
+  font-family: Helvetica;
 }
 
 #click-to-begin {
   font-size: 2em;
   font-weight: bold;
-  text-align: center; 
+  text-align: center;
 }
