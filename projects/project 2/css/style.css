@@ -3,3 +3,7 @@
 This is the style file for this project.
 
 **********************************************/
+
+* {
+  padding: 0; margin: 0
+}
