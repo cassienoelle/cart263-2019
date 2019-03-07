@@ -11,8 +11,8 @@ class Button {
     this.x = x;
     this.y = y;
     this.z = z;
-    this.width = width/2;
-    this.height = height/2;
+    this.width = width/6;
+    this.height = height/6;
     this.r = r;
     this.g = g;
     this.b = b;
@@ -23,16 +23,14 @@ class Button {
   display() {
     noStroke();
     push();
-    fill(this.r,this.g,this.b,this.a);
     translate(this.x,this.y,this.z);
-    box(this.width,this.height,50);
+    sphere(this.width,50,50);
     pop();
   }
 
   flash() {
-    let x = this.x + this.width;
-    let y = this.y + this.height;
-    pointLight(250, 250, 250, x, y);
+    pointLight(250, 250, 250, this.x, this.y, 50);
+    specularMaterial(this.r,this.g,this.b);
   }
 
 }
