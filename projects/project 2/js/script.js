@@ -38,6 +38,8 @@ let yellow = 0x54bf4f;
 let rectWidth = width/2;
 let rectHeight = height/2;
 
+let light;
+
 //----------------------------
 
 function preload () {
@@ -59,4 +61,8 @@ function create () {
   graphicsTwo.fillRectShape(rectTwo);
   graphicsThree.fillRectShape(rectThree);
   graphicsFour.fillRectShape(rectFour);
+
+  rectOne.setPipeline('Light2D');q
+  light = this.lights.addLight(0 + rectWidth/2, 0 + rectHeight/2, 200);
+  this.lights.enable().setAmbientColor(0x555555);
 };
