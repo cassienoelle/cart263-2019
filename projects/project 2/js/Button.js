@@ -7,30 +7,24 @@ Button Class
 
 class Button {
 
-  constructor(x, y, z, r, g, b, keyword) {
-    this.x = x;
-    this.y = y;
-    this.z = z;
-    this.width = width/6;
-    this.height = height/6;
-    this.r = r;
-    this.g = g;
-    this.b = b;
-    this.keyword = keyword;
-    this.a = 255;
+  constructor(x,y,color,keyword) {
+    this.x = x,
+    this.y = y,
+    this.color = color,
+    this.arc = new PIXI.Graphics(),
+    this.line1 = new PIXI.Graphics(),
+    this.line2 = new PIXI.Graphics()
   }
 
-  display() {
-    noStroke();
-    push();
-    translate(this.x,this.y,this.z);
-    sphere(this.width,50,50);
-    pop();
-  }
-
-  flash() {
-    pointLight(250, 250, 250, this.x, this.y, 50);
-    specularMaterial(this.r,this.g,this.b);
+  draw() {
+    console.log('run');
+    this.arc.lineStyle(5, this.color, 1);
+    this.arc.arc(this.x, this.y, 100, Math.PI, 2 * Math.PI);
+    app.stage.addChild(this.arc);
   }
 
 }
+
+/*
+arc (cx, cy, radius, startAngle, endAngle, anticlockwise)
+*/

@@ -35,23 +35,40 @@ window.onload = function() {
 
 
 //------------------------------
+// Draw the base circle
 
 let circle = new PIXI.Graphics();
-let rad;
+let radius;
 
 if (window.innerWidth >= window.innerHeight) {
-  rad = (window.innerHeight * 0.9) / 2;
+  radius = (window.innerHeight * 0.9) / 2;
 } else if (window.innerHeight > window.innerWidth) {
-  rad = (window.innerHeight * 0.9) / 2;
+  radius = (window.innerHeight * 0.9) / 2;
 }
 
 circle.beginFill(0xE9EBEE);
-circle.drawCircle(0, 0, rad);
+circle.drawCircle(0, 0, radius);
 circle.x = window.innerWidth;
 circle.y = window.innerHeight;
 circle.endFill();
 
 app.stage.addChild(circle);
+
+// Draw an arc
+let arc = new PIXI.Graphics();
+let border = 20;
+let quarter = 1.570796326797;
+
+
+
+arc.lineStyle(5, 0xAA00BB);
+arc.moveTo(window.innerWidth/2, window.innerHeight/2);
+arc.arcTo(
+  circle.x, circle.y,
+  circle.x, circle.y,
+  radius
+);
+app.stage.addChild(arc);
 
 //-------------------------------
 
