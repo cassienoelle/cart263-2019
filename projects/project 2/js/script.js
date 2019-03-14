@@ -59,23 +59,32 @@ PIXI.loader
 
 // Declare global variables
 let state; // game state
-let nudibranch; // nudibranch sprite
+let Graphics = PIXI.Graphics; // graphics class alias
+
+// Circle base for gameboard
+let circle = new Graphics();
+let radius;
+
+// Quarter-circle quadrants
+let topLeft = new Graphics();
+let topRight = new Graphics();
+let bottomLeft = new Graphics();
+let bottomRight = new Graphics();
+// Colour variables to hold hex codes
+let green = 0x6CD362;
+let red = 0xE23D31;
+let blue = 0x2A88E0;
+let yellow = 0xF4EC2F;
+
 
 // setup()
 //
 //
 function setup() {
   console.log('setup');
-  // Create new nudibranch sprite
-  nudibranch = new PIXI.Sprite(
-    PIXI.loader.resources.nudibranchImage.texture);
 
-  // Scale sprite and position at center canvas
-  nudibranch.scale.set(0.15,0.15);
-  nudibranch.x = width/2 - nudibranch.width/2;
-  nudibranch.y = height/2 - nudibranch.height/2;
-  // Append to stage
-  app.stage.addChild(nudibranch);
+  drawCircle();
+  drawQuadrants();
 
   // Set game state
   state = play;
@@ -96,5 +105,101 @@ function gameLoop(delta) {
 //
 //
 function play(delta) {
-  nudibranch.x += 1;
+
+}
+
+function drawCircle() {
+  // Set radius so circle fits to window with slight margin
+  // adapt for portrait or landscape orientation
+  if (width >= height) {
+    radius = (height * 0.9) / 2;
+  } else if (height > width) {
+    radius = (height * 0.9) / 2;
+  }
+  // Draw circle at center of canvas
+  circle.beginFill(0xE9EBEE);
+  circle.drawCircle(0, 0, radius);
+  circle.x = width/2;
+  circle.y = height/2;
+  circle.endFill();
+  app.stage.addChild(circle);
+}
+
+
+function drawQuadrants() {
+  // Determine outer edges of circle
+  let board = circle.getBounds();
+  // Set vertices for four ajacent triangles
+  // at circle center and edges
+  let vertex = {
+    // center
+    cx: circle.x,
+    cy: circle.y,
+    // top
+    tx: circle.x,
+    ty: board.top,
+    // right
+    rx: board.right,
+    ry: circle.y,
+    // left
+    lx: board.left,
+    ly: circle.y,
+    // bottom
+    bx: circle.x,
+    by: board.bottom
+  }
+
+/*
+  Removed this code after replacing arc() with arcTo()
+
+  // Slice the circle in four using radians
+  let radians = 1.570796326797 // equals one quarter circle
+  let rads = {
+    top: radians * 3, // 12 o'clock position
+    right: 0, // 3 o'clock position
+    bottom: radians, // 6 o'clock position
+    left: radians * 2 // 9 o'clock position
+  }
+*/
+
+
+  // Draw four triangles with an arc over their hypoteneuse
+  // aka, four quarter-circles or pie pieces
+
+  // TOP LEFT
+  topLeft.beginFill(green, 1);
+  topLeft.moveTo(vertex.tx, vertex.ty);
+  topLeft.lineTo(vertex.cx, vertex.cy);
+  topLeft.lineTo(vertex.lx, vertex.ly);
+  topLeft.arcTo(vertex.lx, vertex.ty, vertex.tx, vertex.ty, radius);
+  topLeft.endFill();
+  app.stage.addChild(topLeft);
+
+  // TOP RIGHT
+  topRight.beginFill(red, 1);
+  topRight.moveTo(vertex.tx, vertex.ty);
+  topRight.lineTo(vertex.cx, vertex.cy);
+  topRight.lineTo(vertex.rx, vertex.ry);
+  topRight.arcTo(vertex.rx, vertex.ty, vertex.tx, vertex.ty, radius);
+  topRight.endFill();
+  app.stage.addChild(topRight);
+
+  // BOTTOM RIGHT
+  bottomRight.beginFill(blue, 1);
+  bottomRight.moveTo(vertex.bx, vertex.by);
+  bottomRight.lineTo(vertex.cx, vertex.cy);
+  bottomRight.lineTo(vertex.rx, vertex.ry);
+  bottomRight.arcTo(vertex.rx, vertex.by, vertex.bx, vertex.by, radius);
+  bottomRight.endFill();
+  app.stage.addChild(bottomRight);
+
+  // BOTTOM LEFT
+  bottomLeft.beginFill(yellow, 1);
+  bottomLeft.moveTo(vertex.bx, vertex.by);
+  bottomLeft.lineTo(vertex.cx, vertex.cy);
+  bottomLeft.lineTo(vertex.lx, vertex.ly);
+  bottomLeft.arcTo(vertex.lx, vertex.by, vertex.bx, vertex.by, radius);
+  bottomLeft.endFill();
+  app.stage.addChild(bottomLeft);
+
 }

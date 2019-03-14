@@ -1,8 +1,13 @@
 QUESTIONS
 
 1. Why is my document returning null without window.onload (none of the examples or tutorials mention this problem)
-2. How does the loop work? Functions seem to run without being explicitly called so how do I best organize the code?
+
+// 2. How does the loop work? Functions seem to run without being explicitly called so how do I best organize the code?
+
 3. How do I properly extend the PIXI classes to use OOP to instantiate the buttons (extend Graphics class?)
+*** can I add buttons as children?
+*** should I construct one basic pie piece with a single orientation using a function and feeding parameters then rotate it depending on one of the parameters? (ie top, left)?
+
 4. when using requestAnimationFrame instead of ticker why do I get this error message even though the code still works (why would nudibranch suddently be undefined?)
 script.js:90 Uncaught TypeError: Cannot read property 'x' of undefined
     at gameLoop (script.js:90)
@@ -12,11 +17,71 @@ gameLoop @ script.js:90
 
 
 
-
 TO DO
 // 1. take out circle params from resize() function
 2. use aliases where appropriate
+3. take out nudibranch from loader
 
 
 USEFUL INFO TO REMEMBER
 1. A WEBGL-ready image is called a texture
+
+
+
+
+
+
+
+//------------------------//
+
+// Load sprite texture
+PIXI.loader
+  .add('nudibranchImage','assets/images/purple-nudibranch.png')
+  .on('progress', loadProgressHandler)
+  .load(setup);
+
+  function loadProgressHandler() {
+    console.log('loading');
+  }
+
+// Declare global variables
+let state; // game state
+let nudibranch; // nudibranch sprite
+
+// setup()
+//
+//
+function setup() {
+  console.log('setup');
+  // Create new nudibranch sprite
+  nudibranch = new PIXI.Sprite(
+    PIXI.loader.resources.nudibranchImage.texture);
+
+  // Scale sprite and position at center canvas
+  nudibranch.scale.set(0.15,0.15);
+  nudibranch.x = width/2 - nudibranch.width/2;
+  nudibranch.y = height/2 - nudibranch.height/2;
+  // Append to stage
+  app.stage.addChild(nudibranch);
+
+  // Set game state
+  state = play;
+
+  // Start game loop
+  app.ticker.add(delta => gameLoop(delta));
+}
+
+// gameLoop()
+//
+//
+function gameLoop(delta) {
+  // Update current game state
+  state(delta);
+}
+
+// play()
+//
+//
+function play(delta) {
+  nudibranch.x += 1;
+}
