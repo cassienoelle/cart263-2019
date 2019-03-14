@@ -8,13 +8,11 @@ This is a template. You must fill in the title,
 author, and this description to match your project!
 
 ******************/
-// Get class references
+// Class references
 const {Application, Graphics, Sprite, Container, lights, display} = PIXI;
-const {diffuseGroup, normalGroup, lightGroup} = lights;
 const {Layer, Stage} = display;
 
 // Setup Pixi application
-// combo renderer, ticker, root container
 let app  = new PIXI.Application({
     width: 800,
     height: 600,
@@ -28,10 +26,7 @@ window.onload = function() {
   document.body.appendChild(app.view);
 }
 
-// Use Pixi-Layers stage instead of default container
-app.stage = new Stage();
-
-// Alias variables for window width and height
+// Aliases for window width and height
 let width;
 let height;
 
@@ -48,8 +43,6 @@ function resize() {
   // Set canvas width and height variables each time window is resized
   width = window.innerWidth;
   height = window.innerHeight;
-  //circle.x = window.innerWidth/2;
-  //circle.y = window.innerHeight/2;
 }
 
 /*** -------------------------------------- ***/
@@ -70,16 +63,16 @@ let state; // game state
 // Circle base for gameboard
 let circle = new Graphics();
 let radius;
+// Variables to hold circle bounding box and
+// coordinates for vertices of Quadrant base triangles
 let board;
 let vertex;
-
 
 // Quarter-circle quadrants
 let topLeft;
 let topRight;
 let bottomLeft;
 let bottomRight;
-
 
 // Quadrant relative position
 let position = {
@@ -93,6 +86,10 @@ let green = 0x6CD362;
 let red = 0xE23D31;
 let blue = 0x2A88E0;
 let yellow = 0xF4EC2F;
+let white = 0xFFFFFF;
+
+// Quadrant backlights
+let topLeftLight;
 
 // setup()
 //
@@ -134,7 +131,7 @@ function drawCircle() {
     radius = (height * 0.9) / 2;
   }
   // Draw circle at center of canvas
-  circle.beginFill(0xFFFFFF);
+  circle.beginFill(0x000000);
   circle.drawCircle(0, 0, radius);
   circle.x = width/2;
   circle.y = height/2;
@@ -166,6 +163,10 @@ function drawQuadrants() {
     by: board.bottom
   }
 
+  // Test display light
+  topLeftLight = new Light(circle.x,circle.y,200,200,white,100);
+  topLeftLight.create();
+
   topLeft = new Quadrant(position.LEFT,position.TOP,radius,green,undefined);
   topRight = new Quadrant(position.RIGHT,position.TOP,radius,red,undefined);
   bottomRight = new Quadrant(position.RIGHT,position.BOTTOM,radius,blue,undefined);
@@ -178,7 +179,7 @@ function drawQuadrants() {
 
 
 /*
-  Removed this code after replacing arc() with arcTo()
+  Radian calculations for arc()
 
   // Slice the circle in four using radians
   let radians = 1.570796326797 // equals one quarter circle
@@ -188,49 +189,6 @@ function drawQuadrants() {
     bottom: radians, // 6 o'clock position
     left: radians * 2 // 9 o'clock position
   }
-*/
-
-/*
-
-  // Draw four triangles with an arc over their hypoteneuse
-  // aka, four quarter-circles or pie pieces
-
-  // TOP LEFT
-  topLeft.beginFill(green, 1);
-  topLeft.moveTo(vertex.tx, vertex.ty);
-  topLeft.lineTo(vertex.cx, vertex.cy);
-  topLeft.lineTo(vertex.lx, vertex.ly);
-  topLeft.arcTo(vertex.lx, vertex.ty, vertex.tx, vertex.ty, radius);
-  topLeft.endFill();
-  app.stage.addChild(topLeft);
-
-  // TOP RIGHT
-  topRight.beginFill(red, 1);
-  topRight.moveTo(vertex.tx, vertex.ty);
-  topRight.lineTo(vertex.cx, vertex.cy);
-  topRight.lineTo(vertex.rx, vertex.ry);
-  topRight.arcTo(vertex.rx, vertex.ty, vertex.tx, vertex.ty, radius);
-  topRight.endFill();
-  app.stage.addChild(topRight);
-
-  // BOTTOM RIGHT
-  bottomRight.beginFill(blue, 1);
-  bottomRight.moveTo(vertex.bx, vertex.by);
-  bottomRight.lineTo(vertex.cx, vertex.cy);
-  bottomRight.lineTo(vertex.rx, vertex.ry);
-  bottomRight.arcTo(vertex.rx, vertex.by, vertex.bx, vertex.by, radius);
-  bottomRight.endFill();
-  app.stage.addChild(bottomRight);
-
-  // BOTTOM LEFT
-  bottomLeft.beginFill(yellow, 1);
-  bottomLeft.moveTo(vertex.bx, vertex.by);
-  bottomLeft.lineTo(vertex.cx, vertex.cy);
-  bottomLeft.lineTo(vertex.lx, vertex.ly);
-  bottomLeft.arcTo(vertex.lx, vertex.by, vertex.bx, vertex.by, radius);
-  bottomLeft.endFill();
-  app.stage.addChild(bottomLeft);
-
 */
 
 }

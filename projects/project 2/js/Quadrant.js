@@ -3,7 +3,7 @@
 
 Quadrant Class
 
-Draws pie pieces / individual circle quadrants
+Draws individual quadrants of a circle
 Extends PIXI.Graphics()
 
 ******************/
@@ -16,7 +16,7 @@ class Quadrant extends Graphics {
     this.radius = radius,
     this.color = color,
     this.keyword = keyword,
-    this.a = 1,
+    this.a = 0,
     this.vx = undefined,
     this.vy = undefined,
     this.hx = undefined,

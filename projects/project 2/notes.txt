@@ -21,6 +21,7 @@ TO DO
 // 1. take out circle params from resize() function
 2. use aliases where appropriate
 3. take out nudibranch from loader
+4. either use Layers and Lights or remove constants with class references at top and any other related extraneous code
 
 
 USEFUL INFO TO REMEMBER
