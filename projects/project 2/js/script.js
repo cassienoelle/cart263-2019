@@ -8,6 +8,10 @@ This is a template. You must fill in the title,
 author, and this description to match your project!
 
 ******************/
+// Get class references
+const {Application, Graphics, Sprite, Container, lights, display} = PIXI;
+const {diffuseGroup, normalGroup, lightGroup} = lights;
+const {Layer, Stage} = display;
 
 // Setup Pixi application
 // combo renderer, ticker, root container
@@ -23,6 +27,9 @@ let app  = new PIXI.Application({
 window.onload = function() {
   document.body.appendChild(app.view);
 }
+
+// Use Pixi-Layers stage instead of default container
+app.stage = new Stage();
 
 // Alias variables for window width and height
 let width;
@@ -59,23 +66,33 @@ PIXI.loader
 
 // Declare global variables
 let state; // game state
-let Graphics = PIXI.Graphics; // graphics class alias
 
 // Circle base for gameboard
 let circle = new Graphics();
 let radius;
+let board;
+let vertex;
+
 
 // Quarter-circle quadrants
-let topLeft = new Graphics();
-let topRight = new Graphics();
-let bottomLeft = new Graphics();
-let bottomRight = new Graphics();
-// Colour variables to hold hex codes
+let topLeft;
+let topRight;
+let bottomLeft;
+let bottomRight;
+
+
+// Quadrant relative position
+let position = {
+  TOP: 'top',
+  BOTTOM: 'bottom',
+  LEFT: 'left',
+  RIGHT: 'right'
+}
+// Quadrant colours
 let green = 0x6CD362;
 let red = 0xE23D31;
 let blue = 0x2A88E0;
 let yellow = 0xF4EC2F;
-
 
 // setup()
 //
@@ -117,7 +134,7 @@ function drawCircle() {
     radius = (height * 0.9) / 2;
   }
   // Draw circle at center of canvas
-  circle.beginFill(0xE9EBEE);
+  circle.beginFill(0xFFFFFF);
   circle.drawCircle(0, 0, radius);
   circle.x = width/2;
   circle.y = height/2;
@@ -128,10 +145,10 @@ function drawCircle() {
 
 function drawQuadrants() {
   // Determine outer edges of circle
-  let board = circle.getBounds();
+  board = circle.getBounds();
   // Set vertices for four ajacent triangles
   // at circle center and edges
-  let vertex = {
+  vertex = {
     // center
     cx: circle.x,
     cy: circle.y,
@@ -149,6 +166,17 @@ function drawQuadrants() {
     by: board.bottom
   }
 
+  topLeft = new Quadrant(position.LEFT,position.TOP,radius,green,undefined);
+  topRight = new Quadrant(position.RIGHT,position.TOP,radius,red,undefined);
+  bottomRight = new Quadrant(position.RIGHT,position.BOTTOM,radius,blue,undefined);
+  bottomLeft = new Quadrant(position.LEFT,position.BOTTOM,radius,yellow,undefined);
+
+  topLeft.display();
+  topRight.display();
+  bottomRight.display();
+  bottomLeft.display();
+
+
 /*
   Removed this code after replacing arc() with arcTo()
 
@@ -162,6 +190,7 @@ function drawQuadrants() {
   }
 */
 
+/*
 
   // Draw four triangles with an arc over their hypoteneuse
   // aka, four quarter-circles or pie pieces
@@ -201,5 +230,7 @@ function drawQuadrants() {
   bottomLeft.arcTo(vertex.lx, vertex.by, vertex.bx, vertex.by, radius);
   bottomLeft.endFill();
   app.stage.addChild(bottomLeft);
+
+*/
 
 }
