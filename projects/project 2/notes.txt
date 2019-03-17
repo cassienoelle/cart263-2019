@@ -22,6 +22,8 @@ TO DO
 2. use aliases where appropriate
 3. take out nudibranch from loader
 4. either use Layers and Lights or remove constants with class references at top and any other related extraneous code
+5. take test Lights code out of setup
+6. take out drawLights()
 
 
 USEFUL INFO TO REMEMBER

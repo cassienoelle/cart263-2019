@@ -9,12 +9,13 @@ Extends PIXI.Graphics()
 ******************/
 
 class Quadrant extends Graphics {
-  constructor(xPlacement,yPlacement,radius,color,alpha,keyword) {
+  constructor(xPlacement,yPlacement,radius,color,lightColor,alpha,keyword) {
     super();
     this.xPlacement = xPlacement,
     this.yPlacement = yPlacement,
     this.radius = radius,
     this.color = color,
+    this.lightColor = lightColor,
     this.keyword = keyword,
     this.a = alpha,
     this.vx = undefined,
@@ -22,8 +23,7 @@ class Quadrant extends Graphics {
     this.hx = undefined,
     this.hy = undefined,
     this.cx = vertex.cx,
-    this.cy = vertex.cy,
-    this.bounds = undefined
+    this.cy = vertex.cy
   }
 
   setPosition() {
@@ -45,23 +45,26 @@ class Quadrant extends Graphics {
     }
   }
 
-  draw(mask) {
+  draw() {
+    // Determine relative placement of this quadrant
     this.setPosition();
 
-    // Draw shape
-    if (mask) {
-      this.beginFill(this.color, 0);
-    }
-    else if (!mask) {
-      this.beginFill(this.color, this.a);
-    }
+    // Draw a bright quadrant (to display when quadrant is lit up)
+    this.beginFill(this.lightColor, 1);
     this.moveTo(this.vx, this.vy);
     this.lineTo(this.cx, this.cy);
     this.lineTo(this.hx, this.hy);
     this.arcTo(this.hx, this.vy, this.vx, this.vy, this.radius);
     this.endFill();
+    // Draw a darker coloured quadrant overtop (this is unlit)
+    this.beginFill(this.color, this.a);
+    this.moveTo(this.vx, this.vy);
+    this.lineTo(this.cx, this.cy);
+    this.lineTo(this.hx, this.hy);
+    this.arcTo(this.hx, this.vy, this.vx, this.vy, this.radius);
+    this.endFill();
+    // Add to stage
     app.stage.addChild(this);
-    this.bounds = this.getBounds();
   }
 
 

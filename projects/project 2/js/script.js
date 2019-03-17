@@ -84,10 +84,14 @@ let position = {
   RIGHT: 'right'
 }
 // Quadrant colours
-let green = 0x6CD362;
-let red = 0xE23D31;
-let blue = 0x2A88E0;
-let yellow = 0xF4EC2F;
+let green = 0x007E2D;
+let brightGreen = 0x2AFC16;
+let red = 0X8A0900;
+let brightRed = 0xFF3D00;
+let blue = 0x0859A5;
+let brightBlue = 0x0084FF;
+let yellow = 0xB89B07;
+let brightYellow = 0xFFF500;
 let white = 0xFFFFFF;
 let black = 0x000000;
 
@@ -114,7 +118,7 @@ function setup() {
   // testLight.display();
 
   //------------
-  drawLights();
+  //drawLights();
   drawQuadrants();
   drawOutlines();
 
@@ -150,7 +154,7 @@ function drawBoard() {
     radius = (height * 0.9) / 2;
   }
   // Draw circle at center of canvas
-  circle.beginFill(white, 0.3);
+  circle.beginFill(black);
   circle.drawCircle(0, 0, radius);
   circle.x = width/2;
   circle.y = height/2;
@@ -186,15 +190,15 @@ function getVertices() {
 function drawQuadrants() {
   getVertices();
 
-  topLeft = new Quadrant(position.LEFT,position.TOP,radius,green,1,undefined);
-  topRight = new Quadrant(position.RIGHT,position.TOP,radius,red,1,undefined);
-  bottomRight = new Quadrant(position.RIGHT,position.BOTTOM,radius,blue,1,undefined);
-  bottomLeft = new Quadrant(position.LEFT,position.BOTTOM,radius,yellow,1,undefined);
+  topLeft = new Quadrant(position.LEFT,position.TOP,radius,green,brightGreen,0,undefined);
+  topRight = new Quadrant(position.RIGHT,position.TOP,radius,red,brightRed,1,undefined);
+  bottomRight = new Quadrant(position.RIGHT,position.BOTTOM,radius,blue,brightBlue,1,undefined);
+  bottomLeft = new Quadrant(position.LEFT,position.BOTTOM,radius,yellow,brightYellow,1,undefined);
 
-  topLeft.draw(false);
-  topRight.draw(false);
-  bottomRight.draw(false);
-  bottomLeft.draw(false);
+  topLeft.draw();
+  topRight.draw();
+  bottomRight.draw();
+  bottomLeft.draw();
 
 
 /*
@@ -212,6 +216,7 @@ function drawQuadrants() {
 
 }
 
+/*
 function drawLights() {
   getVertices();
 
@@ -229,13 +234,14 @@ function drawLights() {
   anotherLight.drawCircle(0,0,w/4,h/4);
   anotherLight.x = x;
   anotherLight.y = y;
-  anotherLight.filters = [new PIXI.filters.BlurFilter(50)];
+  anotherLight.filters = [new PIXI.filters.BlurFilter(40)];
   anotherLight.endFill();
   app.stage.addChild(anotherLight);
 
   anotherLight.mask = testLight;
 
 }
+*/
 
 function drawOutlines() {
   outlines.lineStyle(30, black, 1, 0.5)
