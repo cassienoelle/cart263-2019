@@ -8,6 +8,65 @@ This is a template. You must fill in the title,
 author, and this description to match your project!
 
 ******************/
+let cover = new Graphics();
+
+cover.beginFill(black);
+cover.drawRect(0, 0, width, height);
+cover.beginHole();
+cover.drawCircle(circle.x, circle.y, radius);
+cover.endFill();
+app.stage.addChild(cover);
+//------------------------
+function drawLights() {
+
+  testLight = new Quadrant(position.LEFT,position.TOP,radius,white,1,undefined);
+
+  testLight.draw(true);
+  let bounds = testLight.getBounds();
+  let w = bounds.right - bounds.left;
+  let h = bounds.bottom - bounds.top;
+  let x = bounds.left + w/2;
+  let y = bounds.top + h/2;
+
+  let anotherLight = new Graphics;
+  anotherLight.beginFill(white);
+  anotherLight.drawCircle(0,0,w/4,h/4);
+  anotherLight.x = x;
+  anotherLight.y = y;
+  anotherLight.filters = [new PIXI.filters.BlurFilter(50)];
+  anotherLight.endFill();
+  app.stage.addChild(anotherLight);
+
+  anotherLight.mask = testLight;
+
+}
+
+//-------------
+testRect = new Graphics();
+testRect.beginFill(red);
+testRect.drawRect(0,0,150,150);
+testRect.x = width/2 - testRect.width/2;
+testRect.y = height/2 - testRect.height/2;
+testRect.endFill();
+app.stage.addChild(testRect);
+console.log(testRect.x);
+
+
+  testLight = new Graphics();
+  console.log('light');
+  console.log(circle.x + ' ' + circle.y);
+  testLight.beginFill(white);
+  testLight.drawCircle(circle.x,circle.y,100,100);
+  testLight.filters = [new PIXI.filters.BlurFilter(20)];
+  testLight.endFill();
+  app.stage.addChild(testLight);
+
+testLight.mask = testRect;
+
+
+
+
+//-----------
 let type = "WebGL";
 if(!PIXI.utils.isWebGLSupported()){
   type = "canvas"

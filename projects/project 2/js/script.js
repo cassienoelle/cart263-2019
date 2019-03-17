@@ -67,6 +67,8 @@ let radius;
 // coordinates for vertices of Quadrant base triangles
 let board;
 let vertex;
+// Black overlay to complete board
+let outlines = new Graphics();
 
 // Quarter-circle quadrants
 let topLeft;
@@ -87,9 +89,12 @@ let red = 0xE23D31;
 let blue = 0x2A88E0;
 let yellow = 0xF4EC2F;
 let white = 0xFFFFFF;
+let black = 0x000000;
 
 // Quadrant backlights
-let topLeftLight;
+let testLight;
+let testRect;
+let alpha = 1;
 
 // setup()
 //
@@ -97,8 +102,22 @@ let topLeftLight;
 function setup() {
   console.log('setup');
 
-  drawCircle();
+  drawBoard();
+
+  //-------------
+
+  // Test display light
+
+
+  //
+  // testLight = new Light(circle.x,circle.y,200,200,white,100);
+  // testLight.display();
+
+  //------------
+  drawLights();
   drawQuadrants();
+  drawOutlines();
+
 
   // Set game state
   state = play;
@@ -122,7 +141,7 @@ function play(delta) {
 
 }
 
-function drawCircle() {
+function drawBoard() {
   // Set radius so circle fits to window with slight margin
   // adapt for portrait or landscape orientation
   if (width >= height) {
@@ -131,16 +150,16 @@ function drawCircle() {
     radius = (height * 0.9) / 2;
   }
   // Draw circle at center of canvas
-  circle.beginFill(0x000000);
+  circle.beginFill(white, 0.3);
   circle.drawCircle(0, 0, radius);
   circle.x = width/2;
   circle.y = height/2;
   circle.endFill();
   app.stage.addChild(circle);
+
 }
 
-
-function drawQuadrants() {
+function getVertices() {
   // Determine outer edges of circle
   board = circle.getBounds();
   // Set vertices for four ajacent triangles
@@ -162,20 +181,20 @@ function drawQuadrants() {
     bx: circle.x,
     by: board.bottom
   }
+}
 
-  // Test display light
-  topLeftLight = new Light(circle.x,circle.y,200,200,white,100);
-  topLeftLight.create();
+function drawQuadrants() {
+  getVertices();
 
-  topLeft = new Quadrant(position.LEFT,position.TOP,radius,green,undefined);
-  topRight = new Quadrant(position.RIGHT,position.TOP,radius,red,undefined);
-  bottomRight = new Quadrant(position.RIGHT,position.BOTTOM,radius,blue,undefined);
-  bottomLeft = new Quadrant(position.LEFT,position.BOTTOM,radius,yellow,undefined);
+  topLeft = new Quadrant(position.LEFT,position.TOP,radius,green,1,undefined);
+  topRight = new Quadrant(position.RIGHT,position.TOP,radius,red,1,undefined);
+  bottomRight = new Quadrant(position.RIGHT,position.BOTTOM,radius,blue,1,undefined);
+  bottomLeft = new Quadrant(position.LEFT,position.BOTTOM,radius,yellow,1,undefined);
 
-  topLeft.display();
-  topRight.display();
-  bottomRight.display();
-  bottomLeft.display();
+  topLeft.draw(false);
+  topRight.draw(false);
+  bottomRight.draw(false);
+  bottomLeft.draw(false);
 
 
 /*
@@ -191,4 +210,41 @@ function drawQuadrants() {
   }
 */
 
+}
+
+function drawLights() {
+  getVertices();
+
+  testLight = new Quadrant(position.LEFT,position.TOP,radius,white,1,undefined);
+
+  testLight.draw(true);
+  let bounds = testLight.getBounds();
+  let w = bounds.right - bounds.left;
+  let h = bounds.bottom - bounds.top;
+  let x = bounds.left + w * 0.6;
+  let y = bounds.top + h * 0.6;
+
+  let anotherLight = new Graphics;
+  anotherLight.beginFill(white);
+  anotherLight.drawCircle(0,0,w/4,h/4);
+  anotherLight.x = x;
+  anotherLight.y = y;
+  anotherLight.filters = [new PIXI.filters.BlurFilter(50)];
+  anotherLight.endFill();
+  app.stage.addChild(anotherLight);
+
+  anotherLight.mask = testLight;
+
+}
+
+function drawOutlines() {
+  outlines.lineStyle(30, black, 1, 0.5)
+  outlines.beginFill(black);
+  outlines.drawCircle(circle.x, circle.y, radius/2.5);
+  outlines.moveTo(board.left, circle.y);
+  outlines.lineTo(board.right, circle.y);
+  outlines.moveTo(circle.x, board.top);
+  outlines.lineTo(circle.x, board.bottom);
+  outlines.endFill();
+  app.stage.addChild(outlines);
 }

@@ -20,13 +20,14 @@ class Light extends Graphics {
     this.blur = blur;
   }
 
-  create() {
+  display() {
     // Draw light underneath
     console.log('light');
     console.log(this.x + ' ' + this.y);
-    this.beginFill(this.color)
+    this.beginFill(this.color);
     this.drawCircle(this.x,this.y,this.width,this.height);
     this.filters = [new PIXI.filters.BlurFilter(blur)];
+    this.endFill();
     app.stage.addChild(this);
   }
 }
