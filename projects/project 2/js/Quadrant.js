@@ -47,6 +47,8 @@ class Quadrant extends Graphics {
   }
 
   draw() {
+    console.log('running');
+    console.log('alpha: ' + this.a);
     // Determine relative placement of this quadrant
     this.setPosition();
 
@@ -66,6 +68,18 @@ class Quadrant extends Graphics {
     this.endFill();
     // Add to stage
     app.stage.addChild(this);
+  }
+
+  lightUp() {
+    if (!this.lit) {
+      this.a = 0;
+      setTimeout(function() {
+        console.log('timer set');
+        this.a = 1;
+        this.lit = true;
+      },1000);
+    }
+
   }
 
 

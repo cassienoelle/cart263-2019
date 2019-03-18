@@ -109,6 +109,8 @@ function setup() {
 
   drawBoard();
   setupQuadrants();
+  topLeft.interactive = true;
+  topLeft.on('click', onClick);
   //-------------
 
   // Test display light
@@ -141,10 +143,14 @@ function gameLoop(delta) {
 //
 //
 function play(delta) {
-  //topLeft.lightUp();
   drawQuadrants();
   drawOutlines();
 
+}
+
+function onClick () {
+  console.log('clicked');
+  topLeft.lightUp();
 }
 
 function drawBoard() {
@@ -200,12 +206,10 @@ function setupQuadrants() {
 
 function drawQuadrants() {
 
-
   topLeft.draw();
   topRight.draw();
   bottomRight.draw();
   bottomLeft.draw();
-
 
 /*
   Radian calculations for arc()
@@ -222,34 +226,8 @@ function drawQuadrants() {
 
 }
 
-/*
-function drawLights() {
-  getVertices();
-
-  testLight = new Quadrant(position.LEFT,position.TOP,radius,white,1,undefined);
-
-  testLight.draw(true);
-  let bounds = testLight.getBounds();
-  let w = bounds.right - bounds.left;
-  let h = bounds.bottom - bounds.top;
-  let x = bounds.left + w * 0.6;
-  let y = bounds.top + h * 0.6;
-
-  let anotherLight = new Graphics;
-  anotherLight.beginFill(white);
-  anotherLight.drawCircle(0,0,w/4,h/4);
-  anotherLight.x = x;
-  anotherLight.y = y;
-  anotherLight.filters = [new PIXI.filters.BlurFilter(40)];
-  anotherLight.endFill();
-  app.stage.addChild(anotherLight);
-
-  anotherLight.mask = testLight;
-
-}
-*/
-
 function drawOutlines() {
+
   outlines.lineStyle(30, colors.black, 1, 0.5)
   outlines.beginFill(colors.black);
   outlines.drawCircle(circle.x, circle.y, radius/2.5);
@@ -259,4 +237,5 @@ function drawOutlines() {
   outlines.lineTo(circle.x, board.bottom);
   outlines.endFill();
   app.stage.addChild(outlines);
+
 }
