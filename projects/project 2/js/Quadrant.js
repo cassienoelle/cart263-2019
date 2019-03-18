@@ -11,20 +11,20 @@ Extends PIXI.Graphics()
 class Quadrant extends Graphics {
   constructor(xPlacement,yPlacement,radius,color,lightColor,alpha,keyword) {
     super();
-    this.xPlacement = xPlacement,
-    this.yPlacement = yPlacement,
-    this.radius = radius,
-    this.color = color,
-    this.lightColor = lightColor,
-    this.keyword = keyword,
-    this.a = alpha,
-    this.vx = undefined,
-    this.vy = undefined,
-    this.hx = undefined,
-    this.hy = undefined,
-    this.cx = vertex.cx,
-    this.cy = vertex.cy,
-    this.lit = false
+    this.xPlacement = xPlacement;
+    this.yPlacement = yPlacement;
+    this.radius = radius;
+    this.color = color;
+    this.lightColor = lightColor;
+    this.keyword = keyword;
+    this.a = alpha;
+    this.vx = undefined;
+    this.vy = undefined;
+    this.hx = undefined;
+    this.hy = undefined;
+    this.cx = vertex.cx;
+    this.cy = vertex.cy;
+    this.control = 0;
   }
 
   setPosition() {
@@ -71,14 +71,7 @@ class Quadrant extends Graphics {
   }
 
   lightUp() {
-    if (!this.lit) {
-      this.a = 0;
-      setTimeout(function() {
-        console.log('timer set');
-        this.a = 1;
-        this.lit = true;
-      },1000);
-    }
+
 
   }
 
