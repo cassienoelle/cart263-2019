@@ -69,14 +69,16 @@ class Quadrant extends Graphics {
 
 
 
-  // light() {
-  //
-  //   console.log('light');
-  //   console.log(circle.x + ' ' + circle.y);
-  //   testLight.beginFill(white);
-  //   testLight.drawCircle(circle.x,circle.y,200,200);
-  //   testLight.filters = [new PIXI.filters.BlurFilter(100)];
-  //   testLight.endFill();
-  //   app.stage.addChild(testLight);
-  // }
+  lightUp() {
+    if (this.a > 0) {
+      for (let i = this.a; this.a > 0; i -= 0.10) {
+        this.a = i;
+      }
+    }
+    else if (this.a === 0) {
+      for (let i = 0; this.a < 1; i += 0.10) {
+        this.a = i;
+      }
+    }
+  }
 }

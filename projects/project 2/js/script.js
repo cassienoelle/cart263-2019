@@ -107,7 +107,7 @@ function setup() {
   console.log('setup');
 
   drawBoard();
-
+  setupQuadrants();
   //-------------
 
   // Test display light
@@ -119,8 +119,6 @@ function setup() {
 
   //------------
   //drawLights();
-  drawQuadrants();
-  drawOutlines();
 
 
   // Set game state
@@ -142,6 +140,9 @@ function gameLoop(delta) {
 //
 //
 function play(delta) {
+  topLeft.lightUp();
+  drawQuadrants();
+  drawOutlines();
 
 }
 
@@ -187,13 +188,17 @@ function getVertices() {
   }
 }
 
-function drawQuadrants() {
+function setupQuadrants() {
   getVertices();
 
-  topLeft = new Quadrant(position.LEFT,position.TOP,radius,green,brightGreen,0,undefined);
+  topLeft = new Quadrant(position.LEFT,position.TOP,radius,green,brightGreen,1,undefined);
   topRight = new Quadrant(position.RIGHT,position.TOP,radius,red,brightRed,1,undefined);
   bottomRight = new Quadrant(position.RIGHT,position.BOTTOM,radius,blue,brightBlue,1,undefined);
   bottomLeft = new Quadrant(position.LEFT,position.BOTTOM,radius,yellow,brightYellow,1,undefined);
+}
+
+function drawQuadrants() {
+
 
   topLeft.draw();
   topRight.draw();
