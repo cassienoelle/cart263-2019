@@ -10,7 +10,6 @@ author, and this description to match your project!
 ******************/
 // Class references
 const {Application, Graphics, Sprite, Container, lights, display} = PIXI;
-const {Layer, Stage} = display;
 
 // Setup Pixi application
 let app  = new PIXI.Application({
@@ -84,16 +83,18 @@ let position = {
   RIGHT: 'right'
 }
 // Quadrant colours
-let green = 0x007E2D;
-let brightGreen = 0x2AFC16;
-let red = 0X8A0900;
-let brightRed = 0xFF3D00;
-let blue = 0x0859A5;
-let brightBlue = 0x0084FF;
-let yellow = 0xB89B07;
-let brightYellow = 0xFFF500;
-let white = 0xFFFFFF;
-let black = 0x000000;
+let colors = {
+  green: 0x007E2D,
+  brightGreen: 0x2AFC16,
+  red: 0X8A0900,
+  brightRed: 0xFF3D00,
+  blue: 0x0859A5,
+  brightBlue: 0x0084FF,
+  yellow: 0xB89B07,
+  brightYellow: 0xFFF500,
+  white: 0xFFFFFF,
+  black: 0x000000
+}
 
 // Quadrant backlights
 let testLight;
@@ -140,7 +141,7 @@ function gameLoop(delta) {
 //
 //
 function play(delta) {
-  topLeft.lightUp();
+  //topLeft.lightUp();
   drawQuadrants();
   drawOutlines();
 
@@ -155,7 +156,7 @@ function drawBoard() {
     radius = (height * 0.9) / 2;
   }
   // Draw circle at center of canvas
-  circle.beginFill(black);
+  circle.beginFill(colors.black);
   circle.drawCircle(0, 0, radius);
   circle.x = width/2;
   circle.y = height/2;
@@ -191,10 +192,10 @@ function getVertices() {
 function setupQuadrants() {
   getVertices();
 
-  topLeft = new Quadrant(position.LEFT,position.TOP,radius,green,brightGreen,1,undefined);
-  topRight = new Quadrant(position.RIGHT,position.TOP,radius,red,brightRed,1,undefined);
-  bottomRight = new Quadrant(position.RIGHT,position.BOTTOM,radius,blue,brightBlue,1,undefined);
-  bottomLeft = new Quadrant(position.LEFT,position.BOTTOM,radius,yellow,brightYellow,1,undefined);
+  topLeft = new Quadrant(position.LEFT,position.TOP,radius,colors.green,colors.brightGreen,1,undefined);
+  topRight = new Quadrant(position.RIGHT,position.TOP,radius,colors.red,colors.brightRed,1,undefined);
+  bottomRight = new Quadrant(position.RIGHT,position.BOTTOM,radius,colors.blue,colors.brightBlue,1,undefined);
+  bottomLeft = new Quadrant(position.LEFT,position.BOTTOM,radius,colors.yellow,colors.brightYellow,1,undefined);
 }
 
 function drawQuadrants() {
@@ -249,8 +250,8 @@ function drawLights() {
 */
 
 function drawOutlines() {
-  outlines.lineStyle(30, black, 1, 0.5)
-  outlines.beginFill(black);
+  outlines.lineStyle(30, colors.black, 1, 0.5)
+  outlines.beginFill(colors.black);
   outlines.drawCircle(circle.x, circle.y, radius/2.5);
   outlines.moveTo(board.left, circle.y);
   outlines.lineTo(board.right, circle.y);

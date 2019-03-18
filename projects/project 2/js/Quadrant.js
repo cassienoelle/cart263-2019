@@ -23,7 +23,8 @@ class Quadrant extends Graphics {
     this.hx = undefined,
     this.hy = undefined,
     this.cx = vertex.cx,
-    this.cy = vertex.cy
+    this.cy = vertex.cy,
+    this.lit = false
   }
 
   setPosition() {
@@ -68,17 +69,4 @@ class Quadrant extends Graphics {
   }
 
 
-
-  lightUp() {
-    if (this.a > 0) {
-      for (let i = this.a; this.a > 0; i -= 0.10) {
-        this.a = i;
-      }
-    }
-    else if (this.a === 0) {
-      for (let i = 0; this.a < 1; i += 0.10) {
-        this.a = i;
-      }
-    }
-  }
 }
