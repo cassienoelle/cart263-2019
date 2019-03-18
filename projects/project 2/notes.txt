@@ -24,12 +24,16 @@ TO DO
 4. either use Layers and Lights or remove constants with class references at top and any other related extraneous code
 5. take test Lights code out of setup
 6. take out drawLights()
+7. implement arrow functions
 
 
 USEFUL INFO TO REMEMBER
 1. A WEBGL-ready image is called a texture
 
-
+ROUNDS
+1. cognitive dissonance
+2. screaming obscenities
+3.
 
 
 

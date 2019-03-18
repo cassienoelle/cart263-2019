@@ -18,12 +18,13 @@ class Quadrant extends Graphics {
     this.lightColor = lightColor;
     this.keyword = keyword;
     this.a = alpha;
-    this.vx = undefined;
-    this.vy = undefined;
-    this.hx = undefined;
-    this.hy = undefined;
+    this.vx;
+    this.vy;
+    this.hx;
+    this.hy;
     this.cx = vertex.cx;
     this.cy = vertex.cy;
+    this.currentTime;
     this.interval = 500;
   }
 
@@ -50,30 +51,50 @@ class Quadrant extends Graphics {
     // Determine relative placement of this quadrant
     this.setPosition();
 
-    // Draw a bright quadrant (to display when quadrant is lit up)
+    this.clear();
+
+    // Draw a BRIGHT quadrant (show when quadrant is lit up)
     this.beginFill(this.lightColor, 1);
     this.moveTo(this.vx, this.vy);
     this.lineTo(this.cx, this.cy);
     this.lineTo(this.hx, this.hy);
     this.arcTo(this.hx, this.vy, this.vx, this.vy, this.radius);
     this.endFill();
-    // Draw a darker coloured quadrant overtop (this is unlit)
+    // Draw a DARK coloured quadrant overlay (unlit)
     this.beginFill(this.color, this.a);
     this.moveTo(this.vx, this.vy);
     this.lineTo(this.cx, this.cy);
     this.lineTo(this.hx, this.hy);
     this.arcTo(this.hx, this.vy, this.vx, this.vy, this.radius);
     this.endFill();
+
+    /*
+      Radian calculations for arc()
+
+      // Slice the circle in four using radians
+      let radians = 1.570796326797 // equals one quarter circle
+      let rads = {
+        top: radians * 3, // 12 o'clock position
+        right: 0, // 3 o'clock position
+        bottom: radians, // 6 o'clock position
+        left: radians * 2 // 9 o'clock position
+      }
+    */
+  }
+
+  display() {
     // Add to stage
     app.stage.addChild(this);
   }
 
   lightUp() {
-    console.log('light');
-      topLeft.a = 0;
+    // Reduce opacity of DARK overlay to
+    // reveal BRIGHT quadrant underneath (lit)
+    topLeft.a = 0;
+    // After interval increase overlay opacity again (unlit)
     setTimeout(function() {
-      console.log('darken');
       topLeft.a = 1;
+      drawOutlines();
     }, this.interval);
 
   }

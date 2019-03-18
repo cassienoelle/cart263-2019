@@ -8,6 +8,8 @@ This is a template. You must fill in the title,
 author, and this description to match your project!
 
 ******************/
+const {Layer, Stage} = display;
+
 let cover = new Graphics();
 
 cover.beginFill(black);
@@ -151,7 +153,7 @@ graphics.lineStyle(10, 0xFF0000, 0.8);
 graphics.beginFill(0xFF700B, 1);
 
 // Draw a shape
-graphics.moveTo()
+graphics.moveTo();
 
 
 // graphics.moveTo(210,300);

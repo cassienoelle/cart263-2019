@@ -96,11 +96,6 @@ let colors = {
   black: 0x000000
 }
 
-// Quadrant backlights
-let testLight;
-let testRect;
-let alpha = 1;
-
 // setup()
 //
 //
@@ -109,6 +104,12 @@ function setup() {
 
   drawBoard();
   setupQuadrants();
+  drawQuadrants();
+  displayQuadrants();
+
+  drawOutlines();
+  displayOutlines();
+
   topLeft.interactive = true;
   topLeft.on('click', onClick);
   //-------------
@@ -141,11 +142,11 @@ function gameLoop(delta) {
 
 // play()
 //
-//
+// Loop; Main state while game is in play
 function play(delta) {
   drawQuadrants();
   drawOutlines();
-
+  console.log('delta: ' + app.ticker.deltaTime);
 }
 
 function onClick () {
@@ -205,29 +206,21 @@ function setupQuadrants() {
 }
 
 function drawQuadrants() {
-
   topLeft.draw();
   topRight.draw();
   bottomRight.draw();
   bottomLeft.draw();
+}
 
-/*
-  Radian calculations for arc()
-
-  // Slice the circle in four using radians
-  let radians = 1.570796326797 // equals one quarter circle
-  let rads = {
-    top: radians * 3, // 12 o'clock position
-    right: 0, // 3 o'clock position
-    bottom: radians, // 6 o'clock position
-    left: radians * 2 // 9 o'clock position
-  }
-*/
-
+function displayQuadrants() {
+  topLeft.display();
+  topRight.display();
+  bottomRight.display();
+  bottomLeft.display();
 }
 
 function drawOutlines() {
-
+  outlines.clear();
   outlines.lineStyle(30, colors.black, 1, 0.5)
   outlines.beginFill(colors.black);
   outlines.drawCircle(circle.x, circle.y, radius/2.5);
@@ -236,6 +229,8 @@ function drawOutlines() {
   outlines.moveTo(circle.x, board.top);
   outlines.lineTo(circle.x, board.bottom);
   outlines.endFill();
-  app.stage.addChild(outlines);
+}
 
+function displayOutlines() {
+  app.stage.addChild(outlines);
 }
