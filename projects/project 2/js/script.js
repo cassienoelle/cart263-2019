@@ -150,10 +150,7 @@ function play(delta) {
 
 function onClick () {
   console.log('clicked');
-  topLeft.a = 0;
-  setTimeout(function() {
-    topLeft.a = 1;
-  },1000);
+  topLeft.lightUp();
 }
 
 function drawBoard() {

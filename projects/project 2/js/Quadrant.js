@@ -24,7 +24,7 @@ class Quadrant extends Graphics {
     this.hy = undefined;
     this.cx = vertex.cx;
     this.cy = vertex.cy;
-    this.control = 0;
+    this.interval = 500;
   }
 
   setPosition() {
@@ -47,8 +47,6 @@ class Quadrant extends Graphics {
   }
 
   draw() {
-    console.log('running');
-    console.log('alpha: ' + this.a);
     // Determine relative placement of this quadrant
     this.setPosition();
 
@@ -71,7 +69,12 @@ class Quadrant extends Graphics {
   }
 
   lightUp() {
-
+    console.log('light');
+      topLeft.a = 0;
+    setTimeout(function() {
+      console.log('darken');
+      topLeft.a = 1;
+    }, this.interval);
 
   }
 
