@@ -58,10 +58,6 @@ let sound = PIXI.sound.add({
   beep: 'assets/sounds/beep.wav'
 });
 
-// Sound filters
-let panLeft = new PIXI.sound.filters.StereoFilter(-1);
-let panRight = new PIXI.sound.filters.StereoFilter(1);
-
 // Declare global variables
 let state; // game state
 
@@ -136,6 +132,13 @@ let currentChoice;
 let correct = 0;
 let incorrect = 0;
 let result;
+
+// Sound filters
+sound.beep.filters = [
+  new PIXI.sound.filters.TelephoneFilter(),
+  new PIXI.sound.filters.DistortionFilter(1),
+  new PIXI.sound.filters.ReverbFilter(3, 15)
+];
 
 /*------ MAIN METHODS ------*/
 
@@ -248,11 +251,6 @@ function lightPattern(length) {
   let pattern = setInterval(() => {
     currentLight = quadrants[Math.floor(Math.random() * quadrants.length)];
     currentLight.lightUp();
-    if (currentLight.xPlacement === position.LEFT) {
-      sound.filters = panLeft;
-    } else {
-      sound.filters = panRight;
-    }
     PIXI.sound.play('beep');
     currentPattern.push(currentLight.keyword);
     counter ++;
