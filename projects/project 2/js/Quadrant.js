@@ -51,7 +51,6 @@ class Quadrant extends Graphics {
     this.setPosition();
 
     this.clear();
-    console.log('drawing, alpha: ' + this.a);
     // Draw a BRIGHT quadrant (show when quadrant is lit up)
     this.beginFill(this.lightColor, 1);
     this.moveTo(this.vx, this.vy);

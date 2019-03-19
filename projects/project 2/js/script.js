@@ -142,24 +142,24 @@ function play(delta) {
 
 function onClick () {
   console.log('clicked');
-  currentLight = quadrants[Math.floor(Math.random() * quadrants.length)];
-  currentLight.lightUp();
-  // lightPattern(5);
+  // currentLight = quadrants[Math.floor(Math.random() * quadrants.length)];
+  // currentLight.lightUp();
+  lightPattern(5);
 }
 
-// function lightPattern(length) {
-//   let counter = 0;
-//   let currentLight = quadrants[Math.floor(Math.random() * quadrants.length)];
-//   let i = currentLight.interval * 2;
-//   let pattern = setInterval(function() {
-//     currentLight.lightUp();
-//     currentLight = quadrants[Math.floor(Math.random() * quadrants.length)];
-//     counter ++;
-//     if (counter >= length) {
-//       clearInterval(pattern);
-//     }
-//   }, i);
-// }
+function lightPattern(length) {
+  let counter = 0;
+  let currentLight = quadrants[Math.floor(Math.random() * quadrants.length)];
+  let i = currentLight.interval * 2;
+  let pattern = setInterval(function() {
+    currentLight.lightUp();
+    currentLight = quadrants[Math.floor(Math.random() * quadrants.length)];
+    counter ++;
+    if (counter >= length) {
+      clearInterval(pattern);
+    }
+  }, i);
+}
 
 function drawBoard() {
   // Set radius so circle fits to window with slight margin
