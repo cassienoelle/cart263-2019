@@ -24,7 +24,6 @@ class Quadrant extends Graphics {
     this.hy;
     this.cx = vertex.cx;
     this.cy = vertex.cy;
-    this.currentTime;
     this.interval = 500;
   }
 
@@ -52,7 +51,7 @@ class Quadrant extends Graphics {
     this.setPosition();
 
     this.clear();
-
+    console.log('drawing, alpha: ' + this.a);
     // Draw a BRIGHT quadrant (show when quadrant is lit up)
     this.beginFill(this.lightColor, 1);
     this.moveTo(this.vx, this.vy);
@@ -87,16 +86,16 @@ class Quadrant extends Graphics {
     app.stage.addChild(this);
   }
 
+
   lightUp() {
     // Reduce opacity of DARK overlay to
     // reveal BRIGHT quadrant underneath (lit)
-    topLeft.a = 0;
+    this.a = 0;
     // After interval increase overlay opacity again (unlit)
-    setTimeout(function() {
-      topLeft.a = 1;
-      drawOutlines();
+    setTimeout(() => {
+      console.log('timeout called');
+      this.a = 1;
     }, this.interval);
-
   }
 
 

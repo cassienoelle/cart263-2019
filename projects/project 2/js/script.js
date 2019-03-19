@@ -74,6 +74,10 @@ let topLeft;
 let topRight;
 let bottomLeft;
 let bottomRight;
+// Array to hold quadrants for random selection
+let quadrants = [];
+// Currently lit quadrant
+let currentLight;
 
 // Quadrant relative position
 let position = {
@@ -106,24 +110,11 @@ function setup() {
   setupQuadrants();
   drawQuadrants();
   displayQuadrants();
-
   drawOutlines();
   displayOutlines();
 
   topLeft.interactive = true;
   topLeft.on('click', onClick);
-  //-------------
-
-  // Test display light
-
-
-  //
-  // testLight = new Light(circle.x,circle.y,200,200,white,100);
-  // testLight.display();
-
-  //------------
-  //drawLights();
-
 
   // Set game state
   state = play;
@@ -146,13 +137,29 @@ function gameLoop(delta) {
 function play(delta) {
   drawQuadrants();
   drawOutlines();
-  console.log('delta: ' + app.ticker.deltaTime);
+  // console.log('delta: ' + app.ticker.deltaTime);
 }
 
 function onClick () {
   console.log('clicked');
-  topLeft.lightUp();
+  currentLight = quadrants[Math.floor(Math.random() * quadrants.length)];
+  currentLight.lightUp();
+  // lightPattern(5);
 }
+
+// function lightPattern(length) {
+//   let counter = 0;
+//   let currentLight = quadrants[Math.floor(Math.random() * quadrants.length)];
+//   let i = currentLight.interval * 2;
+//   let pattern = setInterval(function() {
+//     currentLight.lightUp();
+//     currentLight = quadrants[Math.floor(Math.random() * quadrants.length)];
+//     counter ++;
+//     if (counter >= length) {
+//       clearInterval(pattern);
+//     }
+//   }, i);
+// }
 
 function drawBoard() {
   // Set radius so circle fits to window with slight margin
@@ -199,10 +206,12 @@ function getVertices() {
 function setupQuadrants() {
   getVertices();
 
-  topLeft = new Quadrant(position.LEFT,position.TOP,radius,colors.green,colors.brightGreen,1,undefined);
-  topRight = new Quadrant(position.RIGHT,position.TOP,radius,colors.red,colors.brightRed,1,undefined);
-  bottomRight = new Quadrant(position.RIGHT,position.BOTTOM,radius,colors.blue,colors.brightBlue,1,undefined);
-  bottomLeft = new Quadrant(position.LEFT,position.BOTTOM,radius,colors.yellow,colors.brightYellow,1,undefined);
+  // Create quadrant objects and populate array
+  quadrants[0] = topLeft = new Quadrant(position.LEFT,position.TOP,radius,colors.green,colors.brightGreen,1,undefined);
+  quadrants[1] = topRight = new Quadrant(position.RIGHT,position.TOP,radius,colors.red,colors.brightRed,1,undefined);
+  quadrants[2] = bottomRight = new Quadrant(position.RIGHT,position.BOTTOM,radius,colors.blue,colors.brightBlue,1,undefined);
+  quadrants[3] = bottomLeft = new Quadrant(position.LEFT,position.BOTTOM,radius,colors.yellow,colors.brightYellow,1,undefined);
+
 }
 
 function drawQuadrants() {
@@ -229,6 +238,7 @@ function drawOutlines() {
   outlines.moveTo(circle.x, board.top);
   outlines.lineTo(circle.x, board.bottom);
   outlines.endFill();
+
 }
 
 function displayOutlines() {
