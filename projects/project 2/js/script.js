@@ -417,10 +417,9 @@ function setupSprites() {
 }
 
 function moveEye() {
-  console.log('move');
+  console.log('moving');
   eye.x -= eye.vx;
   eye.y -= eye.vy;
-
 
 /*
   switch(currentLight) {
