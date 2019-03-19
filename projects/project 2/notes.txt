@@ -25,6 +25,9 @@ TO DO
 5. take test Lights code out of setup
 6. take out drawLights()
 7. implement arrow functions
+8. Fix sprites / eye / ear
+9. structure ROUNDS
+10. update and uncomment copy me voice prompt
 
 
 USEFUL INFO TO REMEMBER

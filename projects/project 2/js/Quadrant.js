@@ -9,7 +9,7 @@ Extends PIXI.Graphics()
 ******************/
 
 class Quadrant extends Graphics {
-  constructor(xPlacement,yPlacement,radius,color,lightColor,alpha,interval,keyword) {
+  constructor(xPlacement,yPlacement,radius,color,lightColor,alpha,interval,keyword,sound) {
     super();
     this.xPlacement = xPlacement;
     this.yPlacement = yPlacement;
@@ -25,6 +25,7 @@ class Quadrant extends Graphics {
     this.cx = vertex.cx;
     this.cy = vertex.cy;
     this.interval = interval;
+    this.sound = sound;
   }
 
   setPosition() {
@@ -92,7 +93,6 @@ class Quadrant extends Graphics {
     this.a = 0;
     // After interval increase overlay opacity again (unlit)
     setTimeout(() => {
-      console.log('timeout called');
       this.a = 1;
     }, this.interval);
   }

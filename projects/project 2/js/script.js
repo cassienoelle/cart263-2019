@@ -51,39 +51,37 @@ PIXI.loader
   .add('assets/images/ear.png')
   .add('assets/images/eye.png')
   .add('assets/images/eyeball.png')
-  .on('progress', loadProgressHandler)
   .load(setup);
 
-  function loadProgressHandler() {
-    console.log('loading');
-  }
+// Load sounds
+let sound = PIXI.sound.add({
+  beep: 'assets/sounds/beep.wav'
+});
+
+// Sound filters
+let panLeft = new PIXI.sound.filters.StereoFilter(-1);
+let panRight = new PIXI.sound.filters.StereoFilter(1);
 
 // Declare global variables
 let state; // game state
 
-// Circle base for gameboard
+/*------- GAME BOARD ------*/
+
+// Base circle shape
 let circle = new Graphics();
 let radius;
 // Variables to hold circle bounding box and
 // coordinates for vertices of Quadrant base triangles
 let board;
 let vertex;
-// Black overlay to complete board
-let outlines = new Graphics();
 
-// Quarter-circle quadrants
+// Quarter-circle quadrants and
+// Array to hold quadrants for random selection
+let quadrants = [];
 let topLeft;
 let topRight;
 let bottomLeft;
 let bottomRight;
-// Array to hold quadrants for random selection
-let quadrants = [];
-// Currently lit quadrant
-let currentLight;
-// Most recent light pattern
-let currentPattern = [];
-// Interval for light flash
-const INTERVAL = 500;
 
 // Quadrant relative position
 let position = {
@@ -92,7 +90,7 @@ let position = {
   LEFT: 'left',
   RIGHT: 'right'
 };
-// Quadrant colours
+// Quadrant colours and colour keywords
 let colors = {
   green: 0x007E2D,
   brightGreen: 0x2AFC16,
@@ -103,25 +101,43 @@ let colors = {
   yellow: 0xB89B07,
   brightYellow: 0xFFF500,
   white: 0xFFFFFF,
-  black: 0x000000
+  black: 0x000000,
+
+  keys: {
+    green: 'green',
+    red: 'red',
+    blue: 'blue',
+    yellow: 'yellow'
+  }
 };
 
-let colorKeys = {
-  green: 'green',
-  red: 'red',
-  blue: 'blue',
-  yellow: 'yellow'
-};
+// Black overlay (center circle and stroke) to complete board
+let outlines = new Graphics();
 
-let currentChoice;
-let choices = [];
+// Sprites
+let ear, eye, eyeball, eyeBounds, eyeballBounds;
+
+
+/*------ BASIC INTERACTION ------*/
+
+// Interval for light flash
+const INTERVAL = 500;
+// Currently lit quadrant
+let currentLight;
+// Most recent light pattern
+let currentPattern = [];
+// Pattern length (number of flashes)
+let patternLength = 1;
+
+// User input
 let input = false;
+let choices = [];
+let currentChoice;
 let correct = 0;
 let incorrect = 0;
 let result;
 
-// Sprites
-let ear, eye, eyeball, eyeBounds, eyeballBounds;
+/*------ MAIN METHODS ------*/
 
 // setup()
 //
@@ -157,7 +173,7 @@ function setupVoiceCommands() {
       'yellow': () => {
         if (input = true) {
           console.log('yellow!');
-          currentChoice = colorKeys.yellow;
+          currentChoice = colors.keys.yellow;
           choices.push(currentChoice);
           checkInput();
         }
@@ -165,7 +181,7 @@ function setupVoiceCommands() {
       'blue': () => {
         if (input = true) {
           console.log('blue!');
-          currentChoice = colorKeys.blue;
+          currentChoice = colors.keys.blue;
           choices.push(currentChoice);
           checkInput();
         }
@@ -173,7 +189,7 @@ function setupVoiceCommands() {
       'green': () => {
         if (input = true) {
           console.log('green!');
-          currentChoice = colorKeys.green;
+          currentChoice = colors.keys.green;
           choices.push(currentChoice);
           checkInput();
         }
@@ -181,7 +197,7 @@ function setupVoiceCommands() {
       'red': () => {
         if (input = true) {
           console.log('red!');
-          currentChoice = colorKeys.red;
+          currentChoice = colors.keys.red;
           choices.push(currentChoice);
           checkInput();
         }
@@ -210,16 +226,16 @@ function gameLoop(delta) {
 function play(delta) {
   drawQuadrants();
   drawOutlines();
-  moveEye();
   // console.log('delta: ' + app.ticker.deltaTime);
 }
 
 function onClick () {
   console.log('clicked');
-  lightPattern(2);
+  lightPattern(patternLength);
 }
 
 function lightPattern(length) {
+  console.log('fresh pattern');
   // Inialize counter to control pattern length
   let counter = 0;
   // Randomly generate quadrant to light up
@@ -232,6 +248,12 @@ function lightPattern(length) {
   let pattern = setInterval(() => {
     currentLight = quadrants[Math.floor(Math.random() * quadrants.length)];
     currentLight.lightUp();
+    if (currentLight.xPlacement === position.LEFT) {
+      sound.filters = panLeft;
+    } else {
+      sound.filters = panRight;
+    }
+    PIXI.sound.play('beep');
     currentPattern.push(currentLight.keyword);
     counter ++;
     if (counter >= length) {
@@ -253,7 +275,7 @@ function acceptInput() {
     pitch: Math.random(),
     rate: Math.random()
   };
-  responsiveVoice.speak('1,2,3, copy me!', 'UK English Male', options);
+  // responsiveVoice.speak('1,2,3, copy me!', 'UK English Male', options);
   // Start accepting input
   input = true;
 }
@@ -283,12 +305,22 @@ function checkInput() {
       input = false;
       // If patterns match, user wins
       if (incorrect === 0 && correct === currentPattern.length) {
+        patternLength++;
         console.log('winner!');
       }
       // If patterns don't match, user loses
       else if (incorrect > 0) {
+        patternLength = 1;
         console.log('loser!');
       }
+      // Clear arrays and reset match counters
+      correct = 0;
+      incorrect = 0;
+      currentPattern = [];
+      choices = [];
+      // Call a fresh pattern
+      lightPattern(patternLength);
+      console.log('pattern length: ' + patternLength);
     }
   }
   // If not accepting input when function is called, log message to console
@@ -359,6 +391,7 @@ function drawQuadrants() {
 }
 
 function displayQuadrants() {
+
   topLeft.display();
   topRight.display();
   bottomRight.display();
@@ -366,6 +399,7 @@ function displayQuadrants() {
 }
 
 function drawOutlines() {
+
   outlines.clear();
   outlines.lineStyle(30, colors.black, 1, 0.5)
   outlines.beginFill(colors.black);
@@ -379,7 +413,9 @@ function drawOutlines() {
 }
 
 function displayOutlines() {
+
   app.stage.addChild(outlines);
+
 }
 
 function setupSprites() {
@@ -414,6 +450,9 @@ function setupSprites() {
 
   eye.vx = 2;
   eye.vy = 2;
+
+  eyeball.visible = false;
+  eye.visible = false;
 }
 
 function moveEye() {
