@@ -146,16 +146,21 @@ function play(delta) {
 
 function onClick () {
   console.log('clicked');
-  // currentLight = quadrants[Math.floor(Math.random() * quadrants.length)];
-  // currentLight.lightUp();
   lightPattern(5);
 }
 
 function lightPattern(length) {
+  // Inialize counter to control pattern length
   let counter = 0;
+  // Randomly generate quadrant to light up
   let currentLight = quadrants[Math.floor(Math.random() * quadrants.length)];
+  // Save that quadrant's keyword in an array
   currentPattern.push(currentLight.keyword);
+  // Interval until next light flashes
   let i = INTERVAL * 2;
+
+  // Every interval, light up the current quadrant, then randomly select a new quadrant
+  // Loop through until full pattern length completed, saving each keyword in array
   let pattern = setInterval(function() {
     currentLight.lightUp();
     currentLight = quadrants[Math.floor(Math.random() * quadrants.length)];
@@ -165,6 +170,7 @@ function lightPattern(length) {
       clearInterval(pattern);
     }
   }, i);
+  
   console.log(currentPattern);
 }
 
