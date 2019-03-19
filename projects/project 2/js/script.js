@@ -9,7 +9,7 @@ author, and this description to match your project!
 
 ******************/
 // Class references
-const {Application, Graphics, Sprite, Container, lights, display} = PIXI;
+const {Application, Graphics, Sprite, Container,lights, display} = PIXI;
 
 // Setup Pixi application
 let app  = new PIXI.Application({
@@ -49,6 +49,8 @@ function resize() {
 // Load sprite texture
 PIXI.loader
   .add('assets/images/ear.png')
+  .add('assets/images/eye.png')
+  .add('assets/images/eyeball.png')
   .on('progress', loadProgressHandler)
   .load(setup);
 
@@ -119,7 +121,7 @@ let incorrect = 0;
 let result;
 
 // Sprites
-let ear;
+let ear, eye, eyeball, eyeBounds, eyeballBounds;
 
 // setup()
 //
@@ -135,17 +137,8 @@ function setup() {
   displayQuadrants();
   drawOutlines();
   displayOutlines();
+  setupSprites();
 
-  ear = new PIXI.Sprite(
-    PIXI.loader.resources['assets/images/ear.png'].texture
-  );
-  app.stage.addChild(ear);
-  ear.anchor.set(0.5);
-  ear.x = width/2;
-  ear.y = height/2;
-  let s = (radius/2.5) / ear.height;
-  ear.scale.set(s,s);
-  ear.visible = false;
 
   topLeft.interactive = true;
   topLeft.on('click', onClick);
@@ -217,6 +210,7 @@ function gameLoop(delta) {
 function play(delta) {
   drawQuadrants();
   drawOutlines();
+  moveEye();
   // console.log('delta: ' + app.ticker.deltaTime);
 }
 
@@ -254,10 +248,12 @@ function lightPattern(length) {
 // Receives speech input from user (speaking back light pattern)
 // Checks user input against pattern
 function acceptInput() {
-  // Make ear sprite visible
-  ear.visible = true;
   // Voice prompt for user input
-  responsiveVoice.speak('Repeat after me');
+  let options = {
+    pitch: Math.random(),
+    rate: Math.random()
+  };
+  responsiveVoice.speak('1,2,3, copy me!', 'UK English Male', options);
   // Start accepting input
   input = true;
 }
@@ -384,4 +380,68 @@ function drawOutlines() {
 
 function displayOutlines() {
   app.stage.addChild(outlines);
+}
+
+function setupSprites() {
+  ear = new Sprite(
+    PIXI.loader.resources['assets/images/ear.png'].texture
+  );
+  app.stage.addChild(ear);
+  ear.anchor.set(0.5);
+  ear.x = width/2;
+  ear.y = height/2;
+  let s = (radius/2.5) / ear.height;
+  ear.scale.set(s,s);
+  ear.visible = false;
+
+  eyeball = new Sprite(
+    PIXI.loader.resources['assets/images/eyeball.png'].texture
+  );
+  app.stage.addChild(eyeball);
+  eyeball.anchor.set(0.5);
+  eyeball.x = width/2;
+  eyeball.y = height/2;
+
+  eye = new Sprite(
+    PIXI.loader.resources['assets/images/eye.png'].texture
+  );
+  app.stage.addChild(eye);
+  eye.anchor.set(0.5);
+  eye.setParent(eyeball);
+  eyeball.scale.set(s,s);
+  eyeballBounds = eyeball.getBounds();
+  eyeBounds = eye.getBounds();
+
+  eye.vx = 2;
+  eye.vy = 2;
+}
+
+function moveEye() {
+  console.log('move');
+  eye.x -= eye.vx;
+  eye.y -= eye.vy;
+
+
+/*
+  switch(currentLight) {
+    case topLeft:
+      eye.x -= eye.vx;
+      eye.y -= eye.vy;
+      break;
+    case topRight:
+      eye.x += eye.vx;
+      eye.y -= eye.vy;
+      break;
+    case bottomRight:
+      eye.x += eye.vx;
+      eye.y += eye.vy;
+      break;
+    case bottomLeft:
+      eye.x -= eye.vx;
+      eye.y += eye.vy;
+      break;
+    default:
+      break;
+  }
+  */
 }
