@@ -89,7 +89,7 @@ let position = {
   BOTTOM: 'bottom',
   LEFT: 'left',
   RIGHT: 'right'
-}
+};
 // Quadrant colours
 let colors = {
   green: 0x007E2D,
@@ -102,13 +102,29 @@ let colors = {
   brightYellow: 0xFFF500,
   white: 0xFFFFFF,
   black: 0x000000
-}
+};
+
+let colorKeys = {
+  green: 'green',
+  red: 'red',
+  blue: 'blue',
+  yellow: 'yellow'
+};
+
+let currentChoice;
+let choices = [];
+let input = false;
+let correct = 0;
+let incorrect = 0;
+let result;
 
 // setup()
 //
 //
 function setup() {
   console.log('setup');
+
+  setupVoiceCommands();
 
   drawBoard();
   setupQuadrants();
@@ -125,6 +141,52 @@ function setup() {
 
   // Start game loop
   app.ticker.add(delta => gameLoop(delta));
+}
+
+function setupVoiceCommands() {
+  if (annyang) {
+
+    let colorChoices = {
+      'yellow': () => {
+        if (input = true) {
+          console.log('yellow!');
+          currentChoice = colorKeys.yellow;
+          choices.push(currentChoice);
+          checkInput();
+        }
+      },
+      'blue': () => {
+        if (input = true) {
+          console.log('blue!');
+          currentChoice = colorKeys.blue;
+          choices.push(currentChoice);
+          checkInput();
+        }
+      },
+      'green': () => {
+        if (input = true) {
+          console.log('green!');
+          currentChoice = colorKeys.green;
+          choices.push(currentChoice);
+          checkInput();
+        }
+      },
+      'red': () => {
+        if (input = true) {
+          console.log('red!');
+          currentChoice = colorKeys.red;
+          choices.push(currentChoice);
+          checkInput();
+        }
+      },
+    };
+
+    // Add our commands to annyang
+    annyang.addCommands(colorChoices);
+
+    // Start listening. You can call this here, or attach this call to an event, button, etc.
+    annyang.start();
+  }
 }
 
 // gameLoop()
@@ -146,32 +208,71 @@ function play(delta) {
 
 function onClick () {
   console.log('clicked');
-  lightPattern(5);
+  lightPattern(2);
 }
 
 function lightPattern(length) {
   // Inialize counter to control pattern length
   let counter = 0;
   // Randomly generate quadrant to light up
-  let currentLight = quadrants[Math.floor(Math.random() * quadrants.length)];
-  // Save that quadrant's keyword in an array
-  currentPattern.push(currentLight.keyword);
+  let currentLight;
   // Interval until next light flashes
   let i = INTERVAL * 2;
 
   // Every interval, light up the current quadrant, then randomly select a new quadrant
-  // Loop through until full pattern length completed, saving each keyword in array
-  let pattern = setInterval(function() {
-    currentLight.lightUp();
+  // Loop through until full pattern completed, saving each keyword in array
+  let pattern = setInterval(() => {
     currentLight = quadrants[Math.floor(Math.random() * quadrants.length)];
+    currentLight.lightUp();
     currentPattern.push(currentLight.keyword);
     counter ++;
     if (counter >= length) {
       clearInterval(pattern);
+      acceptInput();
     }
   }, i);
-  
+
   console.log(currentPattern);
+}
+
+// repeatPattern()
+//
+// Receives speech input from user (speaking back light pattern)
+// Checks user input against pattern
+function acceptInput() {
+  correct;
+  responsiveVoice.speak('Repeat after me');
+  input = true;
+}
+
+function checkInput() {
+  console.log('checking');
+  console.log('choices length: ' + choices.length);
+  console.log('pattern length: ' + currentPattern.length);
+  if (input) {
+    if (choices.length === currentPattern.length) {
+      for (let i = 0; i < choices.length; i++) {
+        if (choices[i] === currentPattern[i]) {
+          correct++;
+          console.log('right:' + correct + ' ' + i);
+        } else {
+          incorrect++;
+          console.log('wrong:' + incorrect + ' ' + i);
+        }
+      }
+      input = false;
+      if (incorrect === 0 && correct === currentPattern.length) {
+        console.log('winner!');
+      }
+      else if (incorrect > 0) {
+        console.log('loser!');
+      }
+    }
+  }
+  else {
+    console.log('not accepting input');
+  }
+
 }
 
 function drawBoard() {
