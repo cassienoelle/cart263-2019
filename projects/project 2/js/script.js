@@ -48,7 +48,7 @@ function resize() {
 
 // Load sprite texture
 PIXI.loader
-  .add('nudibranchImage','assets/images/purple-nudibranch.png')
+  .add('assets/images/ear.png')
   .on('progress', loadProgressHandler)
   .load(setup);
 
@@ -118,6 +118,9 @@ let correct = 0;
 let incorrect = 0;
 let result;
 
+// Sprites
+let ear;
+
 // setup()
 //
 //
@@ -132,6 +135,17 @@ function setup() {
   displayQuadrants();
   drawOutlines();
   displayOutlines();
+
+  ear = new PIXI.Sprite(
+    PIXI.loader.resources['assets/images/ear.png'].texture
+  );
+  app.stage.addChild(ear);
+  ear.anchor.set(0.5);
+  ear.x = width/2;
+  ear.y = height/2;
+  let s = (radius/2.5) / ear.height;
+  ear.scale.set(s,s);
+  ear.visible = false;
 
   topLeft.interactive = true;
   topLeft.on('click', onClick);
@@ -240,35 +254,48 @@ function lightPattern(length) {
 // Receives speech input from user (speaking back light pattern)
 // Checks user input against pattern
 function acceptInput() {
-  correct;
+  // Make ear sprite visible
+  ear.visible = true;
+  // Voice prompt for user input
   responsiveVoice.speak('Repeat after me');
+  // Start accepting input
   input = true;
 }
 
 function checkInput() {
-  console.log('checking');
-  console.log('choices length: ' + choices.length);
-  console.log('pattern length: ' + currentPattern.length);
+  // console.log('checking');
+  // console.log('choices length: ' + choices.length);
+  // console.log('pattern length: ' + currentPattern.length);
+
+  // If accepting input when function is called
   if (input) {
+    // When user has attempted full pattern (same number of choices)
     if (choices.length === currentPattern.length) {
+      // Compare array of user choices to computer-generated pattern
       for (let i = 0; i < choices.length; i++) {
         if (choices[i] === currentPattern[i]) {
+          // Log number of correct matches
           correct++;
           console.log('right:' + correct + ' ' + i);
         } else {
+          // Log number of incorrect matches
           incorrect++;
           console.log('wrong:' + incorrect + ' ' + i);
         }
       }
+      // Don't accept any more input
       input = false;
+      // If patterns match, user wins
       if (incorrect === 0 && correct === currentPattern.length) {
         console.log('winner!');
       }
+      // If patterns don't match, user loses
       else if (incorrect > 0) {
         console.log('loser!');
       }
     }
   }
+  // If not accepting input when function is called, log message to console
   else {
     console.log('not accepting input');
   }
