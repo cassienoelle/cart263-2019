@@ -78,6 +78,10 @@ let bottomRight;
 let quadrants = [];
 // Currently lit quadrant
 let currentLight;
+// Most recent light pattern
+let currentPattern = [];
+// Interval for light flash
+const INTERVAL = 500;
 
 // Quadrant relative position
 let position = {
@@ -150,15 +154,18 @@ function onClick () {
 function lightPattern(length) {
   let counter = 0;
   let currentLight = quadrants[Math.floor(Math.random() * quadrants.length)];
-  let i = currentLight.interval * 2;
+  currentPattern.push(currentLight.keyword);
+  let i = INTERVAL * 2;
   let pattern = setInterval(function() {
     currentLight.lightUp();
     currentLight = quadrants[Math.floor(Math.random() * quadrants.length)];
+    currentPattern.push(currentLight.keyword);
     counter ++;
     if (counter >= length) {
       clearInterval(pattern);
     }
   }, i);
+  console.log(currentPattern);
 }
 
 function drawBoard() {
@@ -207,10 +214,10 @@ function setupQuadrants() {
   getVertices();
 
   // Create quadrant objects and populate array
-  quadrants[0] = topLeft = new Quadrant(position.LEFT,position.TOP,radius,colors.green,colors.brightGreen,1,undefined);
-  quadrants[1] = topRight = new Quadrant(position.RIGHT,position.TOP,radius,colors.red,colors.brightRed,1,undefined);
-  quadrants[2] = bottomRight = new Quadrant(position.RIGHT,position.BOTTOM,radius,colors.blue,colors.brightBlue,1,undefined);
-  quadrants[3] = bottomLeft = new Quadrant(position.LEFT,position.BOTTOM,radius,colors.yellow,colors.brightYellow,1,undefined);
+  quadrants[0] = topLeft = new Quadrant(position.LEFT,position.TOP,radius,colors.green,colors.brightGreen,1,INTERVAL,'green');
+  quadrants[1] = topRight = new Quadrant(position.RIGHT,position.TOP,radius,colors.red,colors.brightRed,1,INTERVAL,'red');
+  quadrants[2] = bottomRight = new Quadrant(position.RIGHT,position.BOTTOM,radius,colors.blue,colors.brightBlue,1,INTERVAL,'blue');
+  quadrants[3] = bottomLeft = new Quadrant(position.LEFT,position.BOTTOM,radius,colors.yellow,colors.brightYellow,1,INTERVAL,'yellow');
 
 }
 

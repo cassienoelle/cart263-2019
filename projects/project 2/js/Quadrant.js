@@ -9,7 +9,7 @@ Extends PIXI.Graphics()
 ******************/
 
 class Quadrant extends Graphics {
-  constructor(xPlacement,yPlacement,radius,color,lightColor,alpha,keyword) {
+  constructor(xPlacement,yPlacement,radius,color,lightColor,alpha,interval,keyword) {
     super();
     this.xPlacement = xPlacement;
     this.yPlacement = yPlacement;
@@ -24,7 +24,7 @@ class Quadrant extends Graphics {
     this.hy;
     this.cx = vertex.cx;
     this.cy = vertex.cy;
-    this.interval = 500;
+    this.interval = interval;
   }
 
   setPosition() {
