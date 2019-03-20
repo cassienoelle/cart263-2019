@@ -87,14 +87,23 @@ class Quadrant extends Graphics {
   }
 
 
-  lightUp() {
+  lightUp(length) {
     // Reduce opacity of DARK overlay to
     // reveal BRIGHT quadrant underneath (lit)
     this.a = 0;
     // After interval increase overlay opacity again (unlit)
-    setTimeout(() => {
-      this.a = 1;
-    }, this.interval);
+    if (length === short) {
+      setTimeout(() => {
+        this.a = 1;
+      }, this.interval);
+    }
+    else if (length === long) {
+      responsiveVoice.speak(this.keyword,'UK English Male');
+      setTimeout(() => {
+        this.a = 1;
+      }, this.interval * 4);
+    }
+
   }
 
 

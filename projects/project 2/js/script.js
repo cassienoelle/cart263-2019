@@ -93,7 +93,7 @@ let colors = {
   red: 0X8A0900,
   brightRed: 0xFF3D00,
   blue: 0x0859A5,
-  brightBlue: 0x0084FF,
+  brightBlue: 0x00ADFF,
   yellow: 0xB89B07,
   brightYellow: 0xFFF500,
   white: 0xFFFFFF,
@@ -112,12 +112,15 @@ let outlines = new Graphics();
 
 // Sprites
 let ear, eye, eyeball, eyeBounds, eyeballBounds;
-
+let count = 0;
 
 /*------ BASIC INTERACTION ------*/
 
 // Interval for light flash
 const INTERVAL = 500;
+// Paramaters for length of flash
+const short = 'short';
+const long = 'long';
 // Currently lit quadrant
 let currentLight;
 // Most recent light pattern
@@ -174,44 +177,41 @@ function setupVoiceCommands() {
 
     let colorChoices = {
       'yellow': () => {
-        if (input = true) {
           console.log('yellow!');
           currentChoice = colors.keys.yellow;
           choices.push(currentChoice);
           checkInput();
-        }
       },
       'blue': () => {
-        if (input = true) {
           console.log('blue!');
           currentChoice = colors.keys.blue;
           choices.push(currentChoice);
           checkInput();
-        }
       },
       'green': () => {
-        if (input = true) {
           console.log('green!');
           currentChoice = colors.keys.green;
           choices.push(currentChoice);
           checkInput();
-        }
       },
       'red': () => {
-        if (input = true) {
           console.log('red!');
           currentChoice = colors.keys.red;
           choices.push(currentChoice);
           checkInput();
-        }
       },
     };
 
     // Add our commands to annyang
     annyang.addCommands(colorChoices);
 
+    annyang.addCallback('soundstart', () =>{
+        console.log('sound detected');
+  });
+
     // Start listening. You can call this here, or attach this call to an event, button, etc.
     annyang.start();
+    annyang.pause();
   }
 }
 
@@ -234,31 +234,36 @@ function play(delta) {
 
 function onClick () {
   console.log('clicked');
-  lightPattern(patternLength);
+  lightPattern(length);
 }
 
 function lightPattern(length) {
   console.log('fresh pattern');
+  // Clear current pattern array
+  currentPattern = [];
   // Inialize counter to control pattern length
   let counter = 0;
   // Randomly generate quadrant to light up
   let currentLight;
   // Interval until next light flashes
-  let i = INTERVAL * 2;
+  let interval = INTERVAL * 2;
 
   // Every interval, light up the current quadrant, then randomly select a new quadrant
   // Loop through until full pattern completed, saving each keyword in array
   let pattern = setInterval(() => {
     currentLight = quadrants[Math.floor(Math.random() * quadrants.length)];
-    currentLight.lightUp();
+    currentLight.lightUp(short);
     PIXI.sound.play('beep');
     currentPattern.push(currentLight.keyword);
     counter ++;
     if (counter >= length) {
       clearInterval(pattern);
-      acceptInput();
+      setTimeout(() =>{
+        acceptInput();
+      }, interval * 1.5);
+
     }
-  }, i);
+  }, interval);
 
   console.log(currentPattern);
 }
@@ -270,18 +275,21 @@ function lightPattern(length) {
 function acceptInput() {
   // Voice prompt for user input
   let options = {
-    pitch: Math.random(),
-    rate: Math.random()
+    pitch: Math.random() * 2 ,
+    rate: 1.25
   };
-  // responsiveVoice.speak('1,2,3, copy me!', 'UK English Male', options);
+  responsiveVoice.speak('Your turn!', 'UK English Male', options);
   // Start accepting input
   input = true;
-}
+  ear.visible = true;
+  annyang.resume();
+;}
 
 function checkInput() {
-  // console.log('checking');
-  // console.log('choices length: ' + choices.length);
-  // console.log('pattern length: ' + currentPattern.length);
+  console.log('checking');
+  console.log('input = ' + input);
+  console.log('choices length: ' + choices.length);
+  console.log('pattern length: ' + currentPattern.length);
 
   // If accepting input when function is called
   if (input) {
@@ -301,6 +309,7 @@ function checkInput() {
       }
       // Don't accept any more input
       input = false;
+      annyang.pause();
       // If patterns match, user wins
       if (incorrect === 0 && correct === currentPattern.length) {
         patternLength++;
@@ -314,7 +323,6 @@ function checkInput() {
       // Clear arrays and reset match counters
       correct = 0;
       incorrect = 0;
-      currentPattern = [];
       choices = [];
       // Call a fresh pattern
       lightPattern(patternLength);
@@ -325,6 +333,32 @@ function checkInput() {
   else {
     console.log('not accepting input');
   }
+
+}
+
+function shuffleKeywords(type) {
+
+}
+
+function showKeywords() {
+  console.log('showing keywords, input = ' + input);
+  let interval = INTERVAL * 4;
+  let i = 0;
+
+  let speakKeys = setInterval(() => {
+    currentLight = quadrants[i];
+    currentLight.lightUp(long);
+    i ++;
+    console.log('i: ' + i);
+    if (i >= quadrants.length) {
+      clearInterval(speakKeys);
+      console.log('interval cleared');
+      setTimeout(() => {
+        console.log('timeout init');
+        lightPattern(patternLength);
+      }, 2000);
+    }
+  }, interval);
 
 }
 
@@ -424,8 +458,15 @@ function setupSprites() {
   ear.anchor.set(0.5);
   ear.x = width/2;
   ear.y = height/2;
-  let s = (radius/2.5) / ear.height;
+  let s = (radius/2.5) / (ear.height * 0.7);
   ear.scale.set(s,s);
+
+  app.ticker.add((delta) =>{
+      ear.scale.x = s + Math.sin(count) * 0.01;
+      ear.scale.y = s + Math.cos(count) * 0.01;
+      count += 0.1;
+  });
+
   ear.visible = false;
 
   eyeball = new Sprite(
@@ -452,6 +493,7 @@ function setupSprites() {
   eyeball.visible = false;
   eye.visible = false;
 }
+
 
 function moveEye() {
   console.log('moving');
