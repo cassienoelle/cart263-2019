@@ -114,12 +114,23 @@ let outlines = new Graphics();
 
 // Sprites
 let ear, eye, eyeball, eyeBounds, eyeballBounds;
+let soundAnimation;
+let soundTicker;
+let scaleEar, scaleSound;
+let revertEar;
 let count = 0;
 let rcount = 0;
+let scount = 0;
+let animation = {
+  hover: 'hover',
+  shrink: 'shrink'
+}
+
 
 /*------ MAIN INTERACTION ------*/
 
 // Array of current keywords
+// Also corresponds to annyang commands object properties
 let currentKeywords = [
   colors.keys.green,
   colors.keys.red,
@@ -127,14 +138,10 @@ let currentKeywords = [
   colors.keys.yellow
 ]
 
-let one = colors.keys.green;
-let two = colors.keys.red;
-let three = colors.keys.blue;
-let four = colors.keys.yellow;
-
 // Interval for light flash
 const INTERVAL = 500;
-// Paramaters for length of flash
+// Length of flash
+const rapid = 'rapid';
 const short = 'short';
 const long = 'long';
 // Currently lit quadrant
@@ -143,6 +150,8 @@ let currentLight;
 let currentPattern = [];
 // Pattern length (number of flashes)
 let patternLength = 1;
+// Counter to control pattern length
+let flashed = 0;
 
 // User input
 let input = false;
@@ -159,9 +168,6 @@ sound.beep.filters = [
   new PIXI.sound.filters.ReverbFilter(3, 15)
 ];
 
-// Sound-registered animation
-let soundAnimation;
-let soundTicker;
 /*------ MAIN METHODS ------*/
 
 // setup()
@@ -178,59 +184,37 @@ function setup() {
   displayOutlines();
   setupSprites();
 
-  shuffleKeywords();
+  passKeywords();
 
   setupVoiceCommands();
 
   topLeft.interactive = true;
-  topLeft.on('click', onClick);
+  topLeft.on('click', clickOne);
+  topRight.interactive = true;
+  topRight.on('click', clickTwo);
+  bottomRight.interactive = true;
+  bottomRight.on('click', clickThree);
 
   // Set game state
   state = play;
 
   // Start game loop
   app.ticker.add(delta => gameLoop(delta));
+
 }
 
 function setupVoiceCommands() {
   if (annyang) {
 
-    let commands = {
-      [one]: () => {
-          console.log('you just said: ' + one);
-          currentChoice = one;
-          console.log('current choice: ' + currentChoice)
-          choices.push(currentChoice);
-          checkInput();
-      },
-      [two]: () => {
-          console.log(two);
-          currentChoice = two;
-          choices.push(currentChoice);
-          checkInput();
-      },
-      [three]: () => {
-          console.log(three);
-          currentChoice = three;
-          choices.push(currentChoice);
-          checkInput();
-      },
-      [four]: () => {
-          console.log(four);
-          currentChoice = four;
-          choices.push(currentChoice);
-          checkInput();
-      }
-    };
-
     // Add our commands to annyang
-    annyang.addCommands(commands);
+    annyang.addCommands(setVoiceCommands());
 
     annyang.addCallback('soundstart', () =>{
         console.log('sound detected');
     });
 
     annyang.addCallback('resultMatch', () =>{
+      console.log('result match');
       soundAnimation.visible = true;
       soundTicker.start();
     });
@@ -239,6 +223,8 @@ function setupVoiceCommands() {
     annyang.start();
     annyang.pause();
   }
+
+  responsiveVoice.setDefaultVoice('UK English Male');
 }
 
 // gameLoop()
@@ -257,21 +243,79 @@ function play(delta) {
   drawOutlines();
 }
 
-function onClick () {
+function clickOne() {
   console.log('clicked');
-  lightPattern(length);
+  intro(false);
 }
 
+function clickTwo() {
+  console.log('clicked shuffle');
+  shuffleKeywords();
+}
+
+function clickThree() {
+  console.log('clicked info');
+  console.log('CURRENT KEYWORDS');
+  console.log(currentKeywords[0]);
+  console.log(currentKeywords[1]);
+  console.log(currentKeywords[2]);
+  console.log(currentKeywords[3]);
+  console.log('CURRENT QUADRANT KEYWORDS');
+  console.log(quadrants[0].keyword);
+  console.log(quadrants[1].keyword);
+  console.log(quadrants[2].keyword);
+  console.log(quadrants[3].keyword);
+  console.log('CURRENT COMMAND KEYS');
+
+}
+
+function intro(first) {
+  console.log('intro');
+  let counter = 0;
+  let options = {
+    rate: 1.5,
+    onstart: ()=>{counter++},
+    onend: wait
+  }
+
+  if (first) {
+    responsiveVoice.speak(simonSays.instructions.hello,'UK English Male');
+    responsiveVoice.speak(simonSays.instructions.initial,'UK English Male');
+    responsiveVoice.speak(simonSays.instructions.speed,'UK English Male', options);
+
+  } else {
+    responsiveVoice.speak(simonSays.instructions.ready);
+  }
+
+  function wait() {
+    let i = setInterval(() =>{
+      if (!responsiveVoice.isPlaying() && counter > 0) {
+        clearInterval(i);
+        showKeywords(true);
+      }
+    },250);
+  }
+
+  annyang.resume();
+
+}
+
+
+
 function lightPattern(length) {
-  console.log('fresh pattern');
+  console.log(length);
+  let interval = INTERVAL * 2;
+  // Clear arrays and reset match counters
+  correct = 0;
+  incorrect = 0;
+  choices = [];
   // Clear current pattern array
   currentPattern = [];
-  // Inialize counter to control pattern length
-  let counter = 0;
-  // Randomly generate quadrant to light up
-  let currentLight;
-  // Interval until next light flashes
-  let interval = INTERVAL * 2;
+  // Reset counter
+  flashed = 0;
+  // Reset currently lit quadrant
+  currentLight = undefined;
+
 
   // Every interval, light up the current quadrant, then randomly select a new quadrant
   // Loop through until full pattern completed, saving each keyword in array
@@ -280,8 +324,8 @@ function lightPattern(length) {
     currentLight.lightUp(short);
     PIXI.sound.play('beep');
     currentPattern.push(currentLight.keyword);
-    counter ++;
-    if (counter >= length) {
+    flashed ++;
+    if (flashed >= length) {
       clearInterval(pattern);
       setTimeout(() =>{
         acceptInput();
@@ -337,21 +381,28 @@ function checkInput() {
       annyang.pause();
       // If patterns match, user wins
       if (incorrect === 0 && correct === currentPattern.length) {
+
         patternLength++;
         console.log('winner!');
+
+        if (patternLength === 2) {
+          remix();
+        }
+        else {
+          // Call a fresh pattern
+          lightPattern(patternLength);
+          console.log('pattern length: ' + patternLength);
+        }
+
       }
       // If patterns don't match, user loses
       else if (incorrect > 0) {
         patternLength = 1;
         console.log('loser!');
+        // Call a fresh pattern
+        lightPattern(patternLength);
+        console.log('pattern length: ' + patternLength);
       }
-      // Clear arrays and reset match counters
-      correct = 0;
-      incorrect = 0;
-      choices = [];
-      // Call a fresh pattern
-      lightPattern(patternLength);
-      console.log('pattern length: ' + patternLength);
     }
   }
   // If not accepting input when function is called, log message to console
@@ -361,33 +412,110 @@ function checkInput() {
 
 }
 
+function remix() {
+  input = false;
+  annyang.pause();
+
+  app.ticker.add((delta) =>{
+    console.log('disappearing ear');
+    fadeEar();
+  });
+
+  let p = 0;
+
+  let options = {
+    rate: 0.2,
+    pitch: 1.3
+  }
+  responsiveVoice.speak(simonSays.remix,'UK English Male',options);
+  shuffleKeywords();
+  console.log('shuffled-remix');
+  let index;
+  let i = 0;
+  let rapidFlash = setInterval(() => {
+
+    index = Math.floor(Math.random() * quadrants.length);
+    quadrants[index].lightUp(rapid);
+    i++;
+    if (i > 20) {
+      clearInterval(rapidFlash);
+      showKeywords(false);
+    }
+
+  }, INTERVAL/4);
+
+}
+
 function shuffleKeywords() {
+  // Fisher-Yates function to shuffle arrays
+  Array.prototype.shuffle = function() {
+    let input = this;
+
+    for (let i = input.length-1; i >=0; i--) {
+        let randomIndex = Math.floor(Math.random()*(i+1));
+        let itemAtIndex = input[randomIndex];
+
+        input[randomIndex] = input[i];
+        input[i] = itemAtIndex;
+    }
+    return input;
+  }
+
+  // Shuffle the current keywords
+  currentKeywords.shuffle();
+  // Pass keywords to quadrants and voice commands
+  passKeywords();
+}
+
+function passKeywords() {
+  // Associate keywords to quadrants in clockwise order
   for (let i = 0; i < quadrants.length; i++) {
     quadrants[i].keyword = currentKeywords[i];
   }
+
+  // Reset voice commands with new associations
+  annyang.removeCommands();
+  annyang.addCommands(setVoiceCommands());
+
 }
 
-function showKeywords() {
-  console.log('showing keywords, input = ' + input);
+function showKeywords(start) {
+  // Don't accept voice input
+  input = false;
+  annyang.pause();
+
   let interval = INTERVAL * 4;
   let i = 0;
-
+  // Flash each quadrant once, moving clockwise
+  // and speak each current quadrant keyword
   let speakKeys = setInterval(() => {
-    currentLight = quadrants[i];
-    currentLight.lightUp(long);
-    i ++;
-    console.log('i: ' + i);
+
+    // Check if all the quadrants have flashed and
+    // if so clear interval and call the next function
     if (i >= quadrants.length) {
+
+      console.log('showKeywords done');
       clearInterval(speakKeys);
-      console.log('interval cleared');
-      setTimeout(() => {
-        console.log('timeout init');
-        lightPattern(patternLength);
-      }, 2000);
+
+      // Ask if user ready?
+      intro();
     }
+
+    // If not all quadrants have flashed
+    // continue calling interval and moving clockwise
+    else {
+      console.log('speaking');
+      currentLight = quadrants[i];
+      currentLight.lightUp(long);
+      i ++;
+      console.log('i: ' + i);
+    }
+
   }, interval);
 
 }
+
+
 
 function drawBoard() {
   // Set radius so circle fits to window with slight margin
@@ -485,13 +613,15 @@ function setupSprites() {
   ear.anchor.set(0.5);
   ear.x = width/2;
   ear.y = height/2;
-  let s = (radius/2.5) / (ear.height * 0.7);
-  ear.scale.set(s,s);
+  revertEar = (radius/2.5) / (ear.height * 0.7);
+  scaleEar = revertEar;
+
+  ear.scale.set(scaleEar,scaleEar);
 
   app.ticker.add((delta) =>{
-      ear.scale.x = s + Math.sin(count) * 0.01;
-      ear.scale.y = s + Math.cos(count) * 0.01;
-      count += 0.1;
+    ear.scale.x = scaleEar + Math.sin(count) * 0.01;
+    ear.scale.y = scaleEar + Math.cos(count) * 0.01;
+    count += 0.1;
   });
 
   ear.visible = false;
@@ -510,7 +640,7 @@ function setupSprites() {
   app.stage.addChild(eye);
   eye.anchor.set(0.5);
   eye.setParent(eyeball);
-  eyeball.scale.set(s,s);
+  eyeball.scale.set(scaleEar,scaleEar);
   eyeballBounds = eyeball.getBounds();
   eyeBounds = eye.getBounds();
 
@@ -525,30 +655,40 @@ function setupSprites() {
     PIXI.loader.resources['assets/images/soundImg.png'].texture
   );
   app.stage.addChild(soundAnimation);
-  let sa = (radius/2.5) / (soundAnimation.height * 0.5);
+  scaleSound = (radius/2.5) / (soundAnimation.height * 0.5);
   soundAnimation.anchor.set(0.5);
   soundAnimation.x = width/2;
   soundAnimation.y = height/2;
-  soundAnimation.scale.set(sa,sa);
-  soundAnimation.visible = false;
+  soundAnimation.scale.set(scaleSound,scaleSound);
 
   soundTicker = new PIXI.ticker.Ticker();
   soundTicker.autostart = false;
-  soundTicker.stop();
   soundTicker.add((delta) => {
-    soundAnimation.scale.x = sa - rcount;
-    soundAnimation.scale.y = sa - rcount;
+    soundAnimation.scale.x = scaleSound - rcount;
+    soundAnimation.scale.y = scaleSound - rcount;
     soundAnimation.alpha = 0.5 - rcount;
     rcount += 0.01;
 
     if (soundAnimation.width < 5) {
       soundAnimation.visible = false;
-      soundAnimation.scale.x = sa;
-      soundAnimation.scale.y = sa;
+      soundAnimation.scale.x = scaleSound;
+      soundAnimation.scale.y = scaleSound;
       rcount = 0;
       soundTicker.stop();
     }
   });
+  soundTicker.stop();
+  soundAnimation.visible = false;
+}
+
+function fadeEar() {
+  ear.alpha -= scount;
+  scount += 0.001;
+  if (ear.alpha < 5) {
+    ear.visible = false;
+    ear.alpha = 1;
+    scount = 0;
+  }
 }
 
 function moveEye() {
@@ -593,4 +733,43 @@ function animateSound(delta) {
 
 function displaySoundAnimation() {
 
+}
+
+function setVoiceCommands() {
+  let commands = {
+    [quadrants[0].keyword]: () => {
+        console.log('you just said: ' + quadrants[0].keyword);
+        currentChoice = currentKeywords[0];
+        quadrants[0].lightUp(short);
+        choices.push(currentChoice);
+        checkInput();
+    },
+    [quadrants[1].keyword]: () => {
+        console.log('you just said: ' + quadrants[1].keyword);
+        currentChoice = currentKeywords[1];
+        quadrants[1].lightUp(short);
+        choices.push(currentChoice);
+        checkInput();
+    },
+    [quadrants[2].keyword]: () => {
+        console.log('you just said: ' + quadrants[2].keyword);
+        currentChoice = currentKeywords[2];
+        quadrants[2].lightUp(short);
+        choices.push(currentChoice);
+        checkInput();
+    },
+    [quadrants[3].keyword]: () => {
+        console.log('you just said: ' + quadrants[3].keyword);
+        currentChoice = quadrants[3].keyword;
+        quadrants[3].lightUp(short);
+        choices.push(currentChoice);
+        checkInput();
+    },
+    'yes': () => {
+      lightPattern(patternLength);
+      annyang.pause();
+    }
+  };
+
+  return commands;
 }

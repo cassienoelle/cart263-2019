@@ -8,6 +8,34 @@ This is a template. You must fill in the title,
 author, and this description to match your project!
 
 ******************/
+[one]: () => {
+    console.log('you just said: ' + one);
+    currentChoice = one;
+    console.log('current choice: ' + currentChoice)
+    choices.push(currentChoice);
+    checkInput();
+},
+[two]: () => {
+    console.log(two);
+    currentChoice = two;
+    choices.push(currentChoice);
+    checkInput();
+},
+[three]: () => {
+    console.log(three);
+    currentChoice = three;
+    choices.push(currentChoice);
+    checkInput();
+},
+[four]: () => {
+    console.log(four);
+    currentChoice = four;
+    choices.push(currentChoice);
+    checkInput();
+}
+
+
+//----------
 const {Layer, Stage} = display;
 
 let cover = new Graphics();

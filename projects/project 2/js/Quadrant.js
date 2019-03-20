@@ -91,7 +91,12 @@ class Quadrant extends Graphics {
     // reveal BRIGHT quadrant underneath (lit)
     this.a = 0;
     // After interval increase overlay opacity again (unlit)
-    if (length === short) {
+    if (length === rapid) {
+      setTimeout(() => {
+        this.a = 1;
+      }, this.interval/4);
+    }
+    else if (length === short) {
       setTimeout(() => {
         this.a = 1;
       }, this.interval);
