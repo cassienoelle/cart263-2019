@@ -51,6 +51,7 @@ PIXI.loader
   .add('assets/images/ear.png')
   .add('assets/images/eye.png')
   .add('assets/images/eyeball.png')
+  .add('assets/images/soundImg.png')
   .load(setup);
 
 // Load sounds
@@ -113,6 +114,7 @@ let outlines = new Graphics();
 // Sprites
 let ear, eye, eyeball, eyeBounds, eyeballBounds;
 let count = 0;
+let rcount = 0;
 
 /*------ BASIC INTERACTION ------*/
 
@@ -143,6 +145,8 @@ sound.beep.filters = [
   new PIXI.sound.filters.ReverbFilter(3, 15)
 ];
 
+// Sound-registered animation
+let soundAnimation;
 /*------ MAIN METHODS ------*/
 
 // setup()
@@ -229,7 +233,6 @@ function gameLoop(delta) {
 function play(delta) {
   drawQuadrants();
   drawOutlines();
-  // console.log('delta: ' + app.ticker.deltaTime);
 }
 
 function onClick () {
@@ -282,6 +285,7 @@ function acceptInput() {
   // Start accepting input
   input = true;
   ear.visible = true;
+  soundAnimation.visible = true;
   annyang.resume();
 ;}
 
@@ -492,8 +496,32 @@ function setupSprites() {
 
   eyeball.visible = false;
   eye.visible = false;
-}
 
+
+  soundAnimation = new Sprite(
+    PIXI.loader.resources['assets/images/soundImg.png'].texture
+  );
+  app.stage.addChild(soundAnimation);
+  let sa = (radius/2.5) / (soundAnimation.height * 0.5);
+  soundAnimation.anchor.set(0.5);
+  soundAnimation.x = width/2;
+  soundAnimation.y = height/2;
+  soundAnimation.scale.set(sa,sa);
+  soundAnimation.visible = false;
+
+  app.ticker.add((delta) => {
+    soundAnimation.scale.x = sa - rcount;
+    soundAnimation.scale.y = sa - rcount;
+    soundAnimation.alpha = 0.5 - rcount;
+    rcount += 0.01;
+
+    if (soundAnimation.width < 5) {
+      soundAnimation.scale.x = sa;
+      soundAnimation.scale.y = sa;
+      rcount = 0;
+    }
+  });
+}
 
 function moveEye() {
   console.log('moving');
@@ -522,4 +550,19 @@ function moveEye() {
       break;
   }
   */
+}
+
+function animateSound(delta) {
+  soundAnimation.scale.x = s - rcount;
+  soundAnimation.scale.y = s - rcount;
+  rcount += 5;
+
+  if (soundAnimation.width < 5) {
+    soundAnimation.scale.x = s;
+    soundAnimation.scale.y = s;
+  }
+}
+
+function displaySoundAnimation() {
+
 }
