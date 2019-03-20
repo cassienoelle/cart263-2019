@@ -59,8 +59,8 @@ let sound = PIXI.sound.add({
   beep: 'assets/sounds/beep.wav'
 });
 
-// Declare global variables
-let state; // game state
+// Game state
+let state;
 
 /*------- GAME BOARD ------*/
 
@@ -147,6 +147,7 @@ sound.beep.filters = [
 
 // Sound-registered animation
 let soundAnimation;
+let soundTicker;
 /*------ MAIN METHODS ------*/
 
 // setup()
@@ -154,8 +155,6 @@ let soundAnimation;
 //
 function setup() {
   console.log('setup');
-
-  setupVoiceCommands();
 
   drawBoard();
   setupQuadrants();
@@ -165,6 +164,7 @@ function setup() {
   displayOutlines();
   setupSprites();
 
+  setupVoiceCommands();
 
   topLeft.interactive = true;
   topLeft.on('click', onClick);
@@ -211,6 +211,11 @@ function setupVoiceCommands() {
 
     annyang.addCallback('soundstart', () =>{
         console.log('sound detected');
+    });
+
+    annyang.addCallback('resultMatch', () =>{
+      soundAnimation.visible = true;
+      soundTicker.start();
     });
 
     // Start listening. You can call this here, or attach this call to an event, button, etc.
@@ -285,9 +290,8 @@ function acceptInput() {
   // Start accepting input
   input = true;
   ear.visible = true;
-  soundAnimation.visible = true;
   annyang.resume();
-;}
+}
 
 function checkInput() {
   console.log('checking');
@@ -509,16 +513,21 @@ function setupSprites() {
   soundAnimation.scale.set(sa,sa);
   soundAnimation.visible = false;
 
-  app.ticker.add((delta) => {
+  soundTicker = new PIXI.ticker.Ticker();
+  soundTicker.autostart = false;
+  soundTicker.stop();
+  soundTicker.add((delta) => {
     soundAnimation.scale.x = sa - rcount;
     soundAnimation.scale.y = sa - rcount;
     soundAnimation.alpha = 0.5 - rcount;
     rcount += 0.01;
 
     if (soundAnimation.width < 5) {
+      soundAnimation.visible = false;
       soundAnimation.scale.x = sa;
       soundAnimation.scale.y = sa;
       rcount = 0;
+      soundTicker.stop();
     }
   });
 }
