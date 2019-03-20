@@ -8,6 +8,7 @@ This is a template. You must fill in the title,
 author, and this description to match your project!
 
 ******************/
+// PIXI APP
 // Class references
 const {Application, Graphics, Sprite, Container,lights, display} = PIXI;
 
@@ -44,7 +45,7 @@ function resize() {
   height = window.innerHeight;
 }
 
-/*** -------------------------------------- ***/
+/*** -----------LOADER, SOUNDS, STATE---------------- ***/
 
 // Load sprite texture
 PIXI.loader
@@ -116,7 +117,20 @@ let ear, eye, eyeball, eyeBounds, eyeballBounds;
 let count = 0;
 let rcount = 0;
 
-/*------ BASIC INTERACTION ------*/
+/*------ MAIN INTERACTION ------*/
+
+// Array of current keywords
+let currentKeywords = [
+  colors.keys.green,
+  colors.keys.red,
+  colors.keys.blue,
+  colors.keys.yellow
+]
+
+let one = colors.keys.green;
+let two = colors.keys.red;
+let three = colors.keys.blue;
+let four = colors.keys.yellow;
 
 // Interval for light flash
 const INTERVAL = 500;
@@ -164,6 +178,8 @@ function setup() {
   displayOutlines();
   setupSprites();
 
+  shuffleKeywords();
+
   setupVoiceCommands();
 
   topLeft.interactive = true;
@@ -179,35 +195,36 @@ function setup() {
 function setupVoiceCommands() {
   if (annyang) {
 
-    let colorChoices = {
-      'yellow': () => {
-          console.log('yellow!');
-          currentChoice = colors.keys.yellow;
+    let commands = {
+      [one]: () => {
+          console.log('you just said: ' + one);
+          currentChoice = one;
+          console.log('current choice: ' + currentChoice)
           choices.push(currentChoice);
           checkInput();
       },
-      'blue': () => {
-          console.log('blue!');
-          currentChoice = colors.keys.blue;
+      [two]: () => {
+          console.log(two);
+          currentChoice = two;
           choices.push(currentChoice);
           checkInput();
       },
-      'green': () => {
-          console.log('green!');
-          currentChoice = colors.keys.green;
+      [three]: () => {
+          console.log(three);
+          currentChoice = three;
           choices.push(currentChoice);
           checkInput();
       },
-      'red': () => {
-          console.log('red!');
-          currentChoice = colors.keys.red;
+      [four]: () => {
+          console.log(four);
+          currentChoice = four;
           choices.push(currentChoice);
           checkInput();
-      },
+      }
     };
 
     // Add our commands to annyang
-    annyang.addCommands(colorChoices);
+    annyang.addCommands(commands);
 
     annyang.addCallback('soundstart', () =>{
         console.log('sound detected');
@@ -344,8 +361,10 @@ function checkInput() {
 
 }
 
-function shuffleKeywords(type) {
-
+function shuffleKeywords() {
+  for (let i = 0; i < quadrants.length; i++) {
+    quadrants[i].keyword = currentKeywords[i];
+  }
 }
 
 function showKeywords() {
@@ -416,10 +435,10 @@ function setupQuadrants() {
   getVertices();
 
   // Create quadrant objects and populate array
-  quadrants[0] = topLeft = new Quadrant(position.LEFT,position.TOP,radius,colors.green,colors.brightGreen,1,INTERVAL,'green');
-  quadrants[1] = topRight = new Quadrant(position.RIGHT,position.TOP,radius,colors.red,colors.brightRed,1,INTERVAL,'red');
-  quadrants[2] = bottomRight = new Quadrant(position.RIGHT,position.BOTTOM,radius,colors.blue,colors.brightBlue,1,INTERVAL,'blue');
-  quadrants[3] = bottomLeft = new Quadrant(position.LEFT,position.BOTTOM,radius,colors.yellow,colors.brightYellow,1,INTERVAL,'yellow');
+  quadrants[0] = topLeft = new Quadrant(position.LEFT,position.TOP,radius,colors.green,colors.brightGreen,1,INTERVAL,undefined);
+  quadrants[1] = topRight = new Quadrant(position.RIGHT,position.TOP,radius,colors.red,colors.brightRed,1,INTERVAL,undefined);
+  quadrants[2] = bottomRight = new Quadrant(position.RIGHT,position.BOTTOM,radius,colors.blue,colors.brightBlue,1,INTERVAL,undefined);
+  quadrants[3] = bottomLeft = new Quadrant(position.LEFT,position.BOTTOM,radius,colors.yellow,colors.brightYellow,1,INTERVAL,undefined);
 
 }
 
