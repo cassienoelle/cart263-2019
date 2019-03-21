@@ -52,16 +52,19 @@ function gotData(data) {
   // Now the cat
   let cat = getRandomElement(data.cats);
 
+  // Now the color, and make lower case
+  let color = getRandomElement(data.colors).color.toLowerCase();
+
   // Same again for room
   let room = getRandomElement(data.rooms);
 
   // Now we can construct our description with a template string
   // We have the basic structure of a sentence and we substitute in the
   // values we've just calculated
-  let description = `${condiment} ${verb} like a ${cat} in a ${room}.`;
+  let description = `${condiment} ${verb} like a ${cat} in a ${color} ${room}.`;
 
   // Finally, we add it to the page and hey presto!
-  $('body').append(description)
+  $('body').append(description);
 }
 
 // getRandomElement ()
