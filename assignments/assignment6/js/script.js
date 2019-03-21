@@ -17,6 +17,9 @@ http://rednoise.org/rita/index.html
 */
 
 let vowels = "aeiou";
+// Indefinite article
+let firstArticle = 'a';
+let secondArticle = 'a';
 
 $(document).ready(function() {
 
@@ -58,10 +61,24 @@ function gotData(data) {
   // Same again for room
   let room = getRandomElement(data.rooms);
 
+  // Check if either of the words following indefinite article begin
+  // with a vowel, and if so change that article to 'an'
+  if (checkVowels(cat)) {
+    firstArticle = 'an';
+  } else {
+    firstArticle = 'a';
+  };
+
+  if (checkVowels(color)) {
+    secondArticle = 'an';
+  } else {
+    secondArticle = 'a';
+  }
+
   // Now we can construct our description with a template string
   // We have the basic structure of a sentence and we substitute in the
   // values we've just calculated
-  let description = `${condiment} ${verb} like a ${cat} in a ${color} ${room}.`;
+  let description = `${condiment} ${verb} like ${firstArticle} ${cat} in ${secondArticle} ${color} ${room}.`;
 
   // Finally, we add it to the page and hey presto!
   $('body').append(description);
@@ -72,4 +89,19 @@ function gotData(data) {
 // Returns a random element from the array provided
 function getRandomElement(array) {
   return array[Math.floor(Math.random() * array.length)];
+}
+
+// checkVowels()
+//
+// Check if first letter of word is a vowel and return true if so
+function checkVowels(string) {
+  let isVowel = false;;
+  for (i = 0; i < vowels.length; i++) {
+    console.log(vowels[i] + ': ' + string.indexOf(vowels[i]));
+    if (string.indexOf(vowels[i]) === 0) {
+      isVowel = true;
+    }
+ }
+
+ return isVowel;
 }
