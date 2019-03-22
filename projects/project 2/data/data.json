@@ -1,0 +1,576 @@
+{
+    "description": "List of named HTML colors",
+    "colors": [
+        {
+            "color": "AliceBlue",
+            "hex": "#F0F8FF"
+        },
+        {
+            "color": "AntiqueWhite",
+            "hex": "#FAEBD7"
+        },
+        {
+            "color": "Aqua",
+            "hex": "#00FFFF"
+        },
+        {
+            "color": "Aquamarine",
+            "hex": "#7FFFD4"
+        },
+        {
+            "color": "Azure",
+            "hex": "#F0FFFF"
+        },
+        {
+            "color": "Beige",
+            "hex": "#F5F5DC"
+        },
+        {
+            "color": "Bisque",
+            "hex": "#FFE4C4"
+        },
+        {
+            "color": "BlanchedAlmond",
+            "hex": "#FFEBCD"
+        },
+        {
+            "color": "Blue",
+            "hex": "#0000FF"
+        },
+        {
+            "color": "BlueViolet",
+            "hex": "#8A2BE2"
+        },
+        {
+            "color": "Brown",
+            "hex": "#A52A2A"
+        },
+        {
+            "color": "BurlyWood",
+            "hex": "#DEB887"
+        },
+        {
+            "color": "CadetBlue",
+            "hex": "#5F9EA0"
+        },
+        {
+            "color": "Chartreuse",
+            "hex": "#7FFF00"
+        },
+        {
+            "color": "Chocolate",
+            "hex": "#D2691E"
+        },
+        {
+            "color": "Coral",
+            "hex": "#FF7F50"
+        },
+        {
+            "color": "CornflowerBlue",
+            "hex": "#6495ED"
+        },
+        {
+            "color": "Cornsilk",
+            "hex": "#FFF8DC"
+        },
+        {
+            "color": "Crimson",
+            "hex": "#DC143C"
+        },
+        {
+            "color": "Cyan",
+            "hex": "#00FFFF"
+        },
+        {
+            "color": "DodgerBlue",
+            "hex": "#1E90FF"
+        },
+        {
+            "color": "FireBrick",
+            "hex": "#B22222"
+        },
+        {
+            "color": "FloralWhite",
+            "hex": "#FFFAF0"
+        },
+        {
+            "color": "ForestGreen",
+            "hex": "#228B22"
+        },
+        {
+            "color": "Fuchsia",
+            "hex": "#FF00FF"
+        },
+        {
+            "color": "Gainsboro",
+            "hex": "#DCDCDC"
+        },
+        {
+            "color": "GhostWhite",
+            "hex": "#F8F8FF"
+        },
+        {
+            "color": "Gold",
+            "hex": "#FFD700"
+        },
+        {
+            "color": "GoldenRod",
+            "hex": "#DAA520"
+        },
+        {
+            "color": "Gray",
+            "hex": "#808080"
+        },
+        {
+            "color": "Green",
+            "hex": "#008000"
+        },
+        {
+            "color": "GreenYellow",
+            "hex": "#ADFF2F"
+        },
+        {
+            "color": "HoneyDew",
+            "hex": "#F0FFF0"
+        },
+        {
+            "color": "HotPink",
+            "hex": "#FF69B4"
+        },
+        {
+            "color": "Indigo ",
+            "hex": "#4B0082"
+        },
+        {
+            "color": "Ivory",
+            "hex": "#FFFFF0"
+        },
+        {
+            "color": "Khaki",
+            "hex": "#F0E68C"
+        },
+        {
+            "color": "Lavender",
+            "hex": "#E6E6FA"
+        },
+        {
+            "color": "LavenderBlush",
+            "hex": "#FFF0F5"
+        },
+        {
+            "color": "LawnGreen",
+            "hex": "#7CFC00"
+        },
+        {
+            "color": "LemonChiffon",
+            "hex": "#FFFACD"
+        },
+        {
+            "color": "LightBlue",
+            "hex": "#ADD8E6"
+        },
+        {
+            "color": "LightCoral",
+            "hex": "#F08080"
+        },
+        {
+            "color": "LightCyan",
+            "hex": "#E0FFFF"
+        },
+        {
+            "color": "LightGoldenRodYellow",
+            "hex": "#FAFAD2"
+        },
+        {
+            "color": "LightGray",
+            "hex": "#D3D3D3"
+        },
+        {
+            "color": "LightGreen",
+            "hex": "#90EE90"
+        },
+        {
+            "color": "LightPink",
+            "hex": "#FFB6C1"
+        },
+        {
+            "color": "LightSalmon",
+            "hex": "#FFA07A"
+        },
+        {
+            "color": "LightSeaGreen",
+            "hex": "#20B2AA"
+        },
+        {
+            "color": "LightSkyBlue",
+            "hex": "#87CEFA"
+        },
+        {
+            "color": "LightSlateGray",
+            "hex": "#778899"
+        },
+        {
+            "color": "LightSteelBlue",
+            "hex": "#B0C4DE"
+        },
+        {
+            "color": "LightYellow",
+            "hex": "#FFFFE0"
+        },
+        {
+            "color": "Lime",
+            "hex": "#00FF00"
+        },
+        {
+            "color": "LimeGreen",
+            "hex": "#32CD32"
+        },
+        {
+            "color": "Linen",
+            "hex": "#FAF0E6"
+        },
+        {
+            "color": "Magenta",
+            "hex": "#FF00FF"
+        },
+        {
+            "color": "Maroon",
+            "hex": "#800000"
+        },
+        {
+            "color": "MediumAquaMarine",
+            "hex": "#66CDAA"
+        },
+        {
+            "color": "MediumBlue",
+            "hex": "#0000CD"
+        },
+        {
+            "color": "MediumOrchid",
+            "hex": "#BA55D3"
+        },
+        {
+            "color": "MediumPurple",
+            "hex": "#9370DB"
+        },
+        {
+            "color": "MediumSeaGreen",
+            "hex": "#3CB371"
+        },
+        {
+            "color": "MediumSlateBlue",
+            "hex": "#7B68EE"
+        },
+        {
+            "color": "MediumSpringGreen",
+            "hex": "#00FA9A"
+        },
+        {
+            "color": "MediumTurquoise",
+            "hex": "#48D1CC"
+        },
+        {
+            "color": "MediumVioletRed",
+            "hex": "#C71585"
+        },
+        {
+            "color": "MintCream",
+            "hex": "#F5FFFA"
+        },
+        {
+            "color": "MistyRose",
+            "hex": "#FFE4E1"
+        },
+        {
+            "color": "Moccasin",
+            "hex": "#FFE4B5"
+        },
+        {
+            "color": "Navy",
+            "hex": "#000080"
+        },
+        {
+            "color": "OldLace",
+            "hex": "#FDF5E6"
+        },
+        {
+            "color": "Olive",
+            "hex": "#808000"
+        },
+        {
+            "color": "OliveDrab",
+            "hex": "#6B8E23"
+        },
+        {
+            "color": "Orange",
+            "hex": "#FFA500"
+        },
+        {
+            "color": "OrangeRed",
+            "hex": "#FF4500"
+        },
+        {
+            "color": "Orchid",
+            "hex": "#DA70D6"
+        },
+        {
+            "color": "PaleGoldenRod",
+            "hex": "#EEE8AA"
+        },
+        {
+            "color": "PaleGreen",
+            "hex": "#98FB98"
+        },
+        {
+            "color": "PaleTurquoise",
+            "hex": "#AFEEEE"
+        },
+        {
+            "color": "PaleVioletRed",
+            "hex": "#DB7093"
+        },
+        {
+            "color": "PapayaWhip",
+            "hex": "#FFEFD5"
+        },
+        {
+            "color": "PeachPuff",
+            "hex": "#FFDAB9"
+        },
+        {
+            "color": "Peru",
+            "hex": "#CD853F"
+        },
+        {
+            "color": "Pink",
+            "hex": "#FFC0CB"
+        },
+        {
+            "color": "Plum",
+            "hex": "#DDA0DD"
+        },
+        {
+            "color": "PowderBlue",
+            "hex": "#B0E0E6"
+        },
+        {
+            "color": "Purple",
+            "hex": "#800080"
+        },
+        {
+            "color": "Red",
+            "hex": "#FF0000"
+        },
+        {
+            "color": "RosyBrown",
+            "hex": "#BC8F8F"
+        },
+        {
+            "color": "RoyalBlue",
+            "hex": "#4169E1"
+        },
+        {
+            "color": "SaddleBrown",
+            "hex": "#8B4513"
+        },
+        {
+            "color": "Salmon",
+            "hex": "#FA8072"
+        },
+        {
+            "color": "SandyBrown",
+            "hex": "#F4A460"
+        },
+        {
+            "color": "SeaGreen",
+            "hex": "#2E8B57"
+        },
+        {
+            "color": "SeaShell",
+            "hex": "#FFF5EE"
+        },
+        {
+            "color": "Sienna",
+            "hex": "#A0522D"
+        },
+        {
+            "color": "Silver",
+            "hex": "#C0C0C0"
+        },
+        {
+            "color": "SkyBlue",
+            "hex": "#87CEEB"
+        },
+        {
+            "color": "SlateBlue",
+            "hex": "#6A5ACD"
+        },
+        {
+            "color": "SlateGray",
+            "hex": "#708090"
+        },
+        {
+            "color": "Snow",
+            "hex": "#FFFAFA"
+        },
+        {
+            "color": "SpringGreen",
+            "hex": "#00FF7F"
+        },
+        {
+            "color": "SteelBlue",
+            "hex": "#4682B4"
+        },
+        {
+            "color": "Tan",
+            "hex": "#D2B48C"
+        },
+        {
+            "color": "Teal",
+            "hex": "#008080"
+        },
+        {
+            "color": "Thistle",
+            "hex": "#D8BFD8"
+        },
+        {
+            "color": "Tomato",
+            "hex": "#FF6347"
+        },
+        {
+            "color": "Turquoise",
+            "hex": "#40E0D0"
+        },
+        {
+            "color": "Violet",
+            "hex": "#EE82EE"
+        },
+        {
+            "color": "Wheat",
+            "hex": "#F5DEB3"
+        },
+        {
+            "color": "White",
+            "hex": "#FFFFFF"
+        },
+        {
+            "color": "WhiteSmoke",
+            "hex": "#F5F5F5"
+        },
+        {
+            "color": "Yellow",
+            "hex": "#FFFF00"
+        },
+        {
+            "color": "YellowGreen",
+            "hex": "#9ACD32"
+        }
+    ],
+
+  "adjectives": [
+    "acidic",
+    "alcoholic",
+    "angular",
+    "astringent",
+    "austere",
+    "autolytic",
+    "baked",
+    "balanced",
+    "barnyard",
+    "big",
+    "bitter",
+    "bright",
+    "brilliance",
+    "buttery",
+    "cassis",
+    "cat pee",
+    "charcoal",
+    "chewy",
+    "chocolaty",
+    "cigar box",
+    "closed",
+    "cloying",
+    "coarse",
+    "complex",
+    "concentrated",
+    "connected",
+    "corked",
+    "creamy",
+    "crisp",
+    "dense",
+    "depth",
+    "dirty",
+    "dry",
+    "earthy",
+    "elegant",
+    "expressive",
+    "extracted",
+    "fallen over",
+    "fat",
+    "firm",
+    "flabby",
+    "flamboyant",
+    "flat",
+    "fleshy",
+    "food friendly",
+    "foxy",
+    "fresh",
+    "fruity",
+    "full",
+    "grassy",
+    "green",
+    "grippy",
+    "hard",
+    "heavy",
+    "herbaceous",
+    "herbal",
+    "hollow",
+    "hot",
+    "intellectually satisfying",
+    "jammy",
+    "juicy",
+    "laser-like",
+    "lean",
+    "leathery",
+    "lees",
+    "leggy",
+    "minerally",
+    "musty",
+    "oaked",
+    "oaky",
+    "opulent",
+    "oxidized",
+    "petrolly",
+    "powerful",
+    "raisiny",
+    "refined",
+    "reticent",
+    "rich",
+    "rough",
+    "round",
+    "silky",
+    "smokey",
+    "smooth",
+    "soft",
+    "sour",
+    "spicy",
+    "steely",
+    "structured",
+    "supple",
+    "sweet",
+    "tannic",
+    "tar",
+    "tart",
+    "tight",
+    "toast",
+    "toasty",
+    "transparent",
+    "unctuous",
+    "unoaked",
+    "vanillin",
+    "vegetal",
+    "velvety",
+    "vinegary",
+  ]
+
+}

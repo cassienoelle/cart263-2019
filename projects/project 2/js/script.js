@@ -25,7 +25,6 @@ let app  = new PIXI.Application({
 window.onload = function() {
   document.body.appendChild(app.view);
 }
-
 // Aliases for window width and height
 let width;
 let height;
@@ -138,6 +137,7 @@ let currentKeywords = [
   colors.keys.yellow
 ]
 
+let dataObject;
 // Interval for light flash
 const INTERVAL = 500;
 // Length of flash
@@ -176,6 +176,11 @@ sound.beep.filters = [
 function setup() {
   console.log('setup');
 
+  $.getJSON('data/data.json', function(data) {
+    console.log('json');
+    dataObject = data;
+  });
+
   drawBoard();
   setupQuadrants();
   drawQuadrants();
@@ -202,6 +207,7 @@ function setup() {
   app.ticker.add(delta => gameLoop(delta));
 
 }
+
 
 function setupVoiceCommands() {
   if (annyang) {
@@ -249,23 +255,26 @@ function clickOne() {
 }
 
 function clickTwo() {
-  console.log('clicked shuffle');
-  shuffleKeywords();
+  console.log('clicked replace');
+  // shuffleKeywords();
+  replaceQuadColors();
 }
 
 function clickThree() {
-  console.log('clicked info');
-  console.log('CURRENT KEYWORDS');
-  console.log(currentKeywords[0]);
-  console.log(currentKeywords[1]);
-  console.log(currentKeywords[2]);
-  console.log(currentKeywords[3]);
-  console.log('CURRENT QUADRANT KEYWORDS');
-  console.log(quadrants[0].keyword);
-  console.log(quadrants[1].keyword);
-  console.log(quadrants[2].keyword);
-  console.log(quadrants[3].keyword);
-  console.log('CURRENT COMMAND KEYS');
+  console.log('adjective');
+  prependAdjective();
+  // console.log('clicked info');
+  // console.log('CURRENT KEYWORDS');
+  // console.log(currentKeywords[0]);
+  // console.log(currentKeywords[1]);
+  // console.log(currentKeywords[2]);
+  // console.log(currentKeywords[3]);
+  // console.log('CURRENT QUADRANT KEYWORDS');
+  // console.log(quadrants[0].keyword);
+  // console.log(quadrants[1].keyword);
+  // console.log(quadrants[2].keyword);
+  // console.log(quadrants[3].keyword);
+  // console.log('CURRENT COMMAND KEYS');
 
 }
 
@@ -291,7 +300,7 @@ function intro(first) {
     let i = setInterval(() =>{
       if (!responsiveVoice.isPlaying() && counter > 0) {
         clearInterval(i);
-        showKeywords(true);
+        showKeywords();
       }
     },250);
   }
@@ -416,10 +425,10 @@ function remix() {
   input = false;
   annyang.pause();
 
-  app.ticker.add((delta) =>{
-    console.log('disappearing ear');
-    fadeEar();
-  });
+  // app.ticker.add((delta) =>{
+  //   console.log('disappearing ear');
+  //   fadeEar();
+  // });
 
   let p = 0;
 
@@ -430,6 +439,11 @@ function remix() {
   responsiveVoice.speak(simonSays.remix,'UK English Male',options);
   shuffleKeywords();
   console.log('shuffled-remix');
+
+  rapidFlash();
+}
+
+function rapidFlash() {
   let index;
   let i = 0;
   let rapidFlash = setInterval(() => {
@@ -439,11 +453,75 @@ function remix() {
     i++;
     if (i > 20) {
       clearInterval(rapidFlash);
-      showKeywords(false);
+      showKeywords();
     }
 
   }, INTERVAL/4);
+}
 
+function replaceQuadColors() {
+  let randomColor;
+  let hex;
+  // Replace each quadrant color property
+  for (let i = 0; i < quadrants.length; i++) {
+    randomColor = getRandomElement(dataObject.colors);
+    hex = randomColor.hex.replace('#', '0x')
+    quadrants[i].lightColor = hex;
+    quadrants[i].maxAlpha = 0.4;
+    quadrants[i].a = quadrants[i].maxAlpha;
+    quadrants[i].color = colors.black;
+
+    currentKeywords[i] = insertSpaces(randomColor.color);
+  }
+
+  passKeywords();
+  rapidFlash();
+}
+
+// insertSpaces(string)
+//
+// Insert a space before every capitalized word in a string
+function insertSpaces(string){
+  console.log(string);
+  // Array to save indices of each capital letter
+  let spaceHere = [];
+  // Run through string and log index of every capital letter to array
+  for (let i = 0; i < string.length; i++) {
+    // Check each character against upper case variant
+    if (string[i] === string[i].toUpperCase()) {
+      console.log(i + 'is uppercase');
+      // Push to array if upper case
+      spaceHere.push(i);
+    }
+  }
+  // Add spaces to string using index numbers saved to spaceHere array
+  // Don't add a space in front of the first word (assumes first word is capitalized)
+  for (let i = 1; i < spaceHere.length; i++) {
+    // Increase index numbers to account for new string length including spaces
+    spaceHere[i] += (i - 1)
+    // Slice the string at the appropriate index, add a space and reconcatenate
+    string = string.slice(0,spaceHere[i]) + ' ' + string.slice(spaceHere[i]);
+    console.log('new string: ' + string);
+  }
+
+  // Return the new string with spaces!
+  return string;
+}
+
+function prependAdjective() {
+  let randomAdjective;
+  let arrayOfWords;
+  // Prepend an adjective to the front of each quadrant color keyword
+  // Remove any existing adjectives first
+  for (let i = 0; i < quadrants.length; i++) {
+    randomAdjective = getRandomElement(dataObject.adjectives);
+    randomAdjective = insertSpaces(randomAdjective);
+    arrayOfWords = currentKeywords[i].split(' ');
+    currentKeywords[i] = arrayOfWords[arrayOfWords.length - 1].replace(/^/, randomAdjective + ' ');
+  }
+
+  passKeywords();
+  showKeywords();
 }
 
 function shuffleKeywords() {
@@ -479,7 +557,7 @@ function passKeywords() {
 
 }
 
-function showKeywords(start) {
+function showKeywords() {
   // Don't accept voice input
   input = false;
   annyang.pause();
@@ -772,4 +850,8 @@ function setVoiceCommands() {
   };
 
   return commands;
+}
+
+function getRandomElement(array) {
+  return array[Math.floor(Math.random() * array.length)];
 }
