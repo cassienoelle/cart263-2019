@@ -1,4 +1,4 @@
-# Project 2: Simon Says 
+# Project 2: Simon Said What!?
 
 ### The Idea
 There's a lot to unpack in James Bridle's essay *Something is Wrong on the Internet*, and it's honestly right up my discursive alley, but I wanted to keep this project relatively light to avoid reproducing some of the violence he discusses. I decided to focus on this excerpt:
