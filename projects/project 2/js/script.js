@@ -1,11 +1,15 @@
 'use strict';
 /*****************
 
-Title of Project
-Author Name
+Simon Says
+Cassie Smith
+CART 263 -2019
 
-This is a template. You must fill in the title,
-author, and this description to match your project!
+Simon Says green is blue and 2 + 2 = 5. Well, not that last one. He's too good at math.
+Play the classic 80s Simon Says game with a twist.
+
+Match Simon by speaking his colour patterns aloud.
+Careful, he might switch things up on you by remixing the colours and keywords.
 
 ******************/
 // PIXI APP
@@ -870,71 +874,54 @@ function displayOutlines() {
 
 // setup Sprites()
 //
-//
+// Create sprites and add animation to tickers
 function setupSprites() {
+  // This is an ear that hangs out in the center of the gameboard
+  // to show that Simon is listening
   ear = new Sprite(
     PIXI.loader.resources['assets/images/ear.png'].texture
   );
   app.stage.addChild(ear);
+  // Position and scale
   ear.anchor.set(0.5);
   ear.x = width/2;
   ear.y = height/2;
-  revertEar = (radius/2.5) / (ear.height * 0.7);
-  scaleEar = revertEar;
-
+  scaleEar = (radius/2.5) / (ear.height * 0.7);
   ear.scale.set(scaleEar,scaleEar);
 
+  // Add to the ticker to animate
+  // Lightly pulsates in position
   app.ticker.add((delta) =>{
     ear.scale.x = scaleEar + Math.sin(count) * 0.01;
     ear.scale.y = scaleEar + Math.cos(count) * 0.01;
     count += 0.1;
   });
-
+  // Hide until revealed
   ear.visible = false;
 
-  eyeball = new Sprite(
-    PIXI.loader.resources['assets/images/eyeball.png'].texture
-  );
-  app.stage.addChild(eyeball);
-  eyeball.anchor.set(0.5);
-  eyeball.x = width/2;
-  eyeball.y = height/2;
-
-  eye = new Sprite(
-    PIXI.loader.resources['assets/images/eye.png'].texture
-  );
-  app.stage.addChild(eye);
-  eye.anchor.set(0.5);
-  eye.setParent(eyeball);
-  eyeball.scale.set(scaleEar,scaleEar);
-  eyeballBounds = eyeball.getBounds();
-  eyeBounds = eye.getBounds();
-
-  eye.vx = 2;
-  eye.vy = 2;
-
-  eyeball.visible = false;
-  eye.visible = false;
-
-
+  // This is a circle that represents sound entering the ear
+  // It appears every time a voice command is registered
   soundAnimation = new Sprite(
     PIXI.loader.resources['assets/images/soundImg.png'].texture
   );
   app.stage.addChild(soundAnimation);
+  // Position and scale
   scaleSound = (radius/2.5) / (soundAnimation.height * 0.5);
   soundAnimation.anchor.set(0.5);
   soundAnimation.x = width/2;
   soundAnimation.y = height/2;
   soundAnimation.scale.set(scaleSound,scaleSound);
 
+  // Create a separate ticker for the sound animation
   soundTicker = new PIXI.ticker.Ticker();
   soundTicker.autostart = false;
+  // Gets smaller so it appears to go 'into' ear
   soundTicker.add((delta) => {
     soundAnimation.scale.x = scaleSound - rcount;
     soundAnimation.scale.y = scaleSound - rcount;
     soundAnimation.alpha = 0.5 - rcount;
     rcount += 0.01;
-
+    // Reset size
     if (soundAnimation.width < 5) {
       soundAnimation.visible = false;
       soundAnimation.scale.x = scaleSound;
@@ -943,44 +930,18 @@ function setupSprites() {
       soundTicker.stop();
     }
   });
+  // Stop animationi and hide until a new voice command is registered
   soundTicker.stop();
   soundAnimation.visible = false;
 }
 
-function fadeEar() {
-  ear.alpha -= scount;
-  scount += 0.001;
-  if (ear.alpha < 5) {
-    ear.visible = false;
-    ear.alpha = 1;
-    scount = 0;
-  }
-}
-
-function moveEye() {
-  console.log('moving');
-  eye.x -= eye.vx;
-  eye.y -= eye.vy;
-
-}
-
-function animateSound(delta) {
-  soundAnimation.scale.x = s - rcount;
-  soundAnimation.scale.y = s - rcount;
-  rcount += 5;
-
-  if (soundAnimation.width < 5) {
-    soundAnimation.scale.x = s;
-    soundAnimation.scale.y = s;
-  }
-}
-
-function displaySoundAnimation() {
-
-}
-
+// setVoiceCommands()
+//
+// Set commands for annyang voice recognition
 function setVoiceCommands() {
   let commands = {
+    // These are the four quadrant keywords / current keywords
+    // Light up the associated quadrant and log keyword to choices array
     [quadrants[0].keyword]: () => {
         console.log('you just said: ' + quadrants[0].keyword);
         currentChoice = currentKeywords[0];
@@ -1010,6 +971,7 @@ function setVoiceCommands() {
         checkInput();
     },
     'yes': () => {
+      // Hide text and start game play
       text.visible = false;
       let options = {pitch: 0.5, rate: 0.6}
       setTimeout(() => {
@@ -1020,6 +982,7 @@ function setVoiceCommands() {
       }, 3000);
       annyang.pause();
     },
+    // Hide text and admonish user, then ask 'are you ready?' again
     'no': () => {
       text.visible = false;
       let activity = getRandomElement(dataObject.activities);

@@ -3,7 +3,7 @@
 
 Data
 
-Phrases and words
+Phrases Simon Says
 
 ******************/
 
@@ -26,5 +26,5 @@ let simonSays = {
     'Then why did you even start talking to me!?',
     'Fix your shit'
   ],
-  
+
 }
