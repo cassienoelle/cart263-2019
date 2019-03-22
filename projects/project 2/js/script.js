@@ -277,45 +277,27 @@ function startGame() {
   console.log('clicked');
   currentVoice = 'UK English Male';
   text.visible = false;
-  intro();
+  intro(true);
 }
 
 function changeBoard() {
   let options = [1,2,3];
   let next = getRandomElement(options);
 
-  // if (next === 1) {
-  //   currentVoice = 'UK English Male';
-  //   replaceQuadColors();
-  // }
-  // else if (next === 2) {
-  //   currentVoice = 'UK English Male';
+  if (next === 1) {
+    currentVoice = 'UK English Male';
+    replaceQuadColors();
+  }
+  else if (next === 2) {
+    currentVoice = 'UK English Male';
     prependAdjective();
-  // }
-  // else if (next === 3) {
-  //   console.log(3);
-  //   currentVoice = 'Welsh Male';
-  //   rapidFlash();
-  // }
+  }
+  else if (next === 3) {
+    console.log(3);
+    currentVoice = 'Welsh Male';
+    rapidFlash();
+  }
 
-}
-
-
-function clickThree() {
-  console.log('adjective');
-  prependAdjective();
-  // console.log('clicked info');
-  // console.log('CURRENT KEYWORDS');
-  // console.log(currentKeywords[0]);
-  // console.log(currentKeywords[1]);
-  // console.log(currentKeywords[2]);
-  // console.log(currentKeywords[3]);
-  // console.log('CURRENT QUADRANT KEYWORDS');
-  // console.log(quadrants[0].keyword);
-  // console.log(quadrants[1].keyword);
-  // console.log(quadrants[2].keyword);
-  // console.log(quadrants[3].keyword);
-  // console.log('CURRENT COMMAND KEYS');
 }
 
 // intro(first)
