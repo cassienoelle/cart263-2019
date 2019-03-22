@@ -22,4 +22,4 @@ Four quadrants of a circle light up in a random pattern and the user has to repe
 ### The Execution
 I used Pixi.js to program Simon. I originally wanted to build something with Phaser, but I found the documentation way too frustrating. Because there's not a lot of physics in this game anyways, I went with Pixi since it's utilized by Phaser and I thought it might be a more accessible starting point.  This was probably a mistake. I wanted to learn something new but considering the time crunch I had, I should have just used P5 or jQuery.
 
-It was still fun and I like that Simon turned out to be a bit of a cheeky bastard. I think the interaction could be built out and iterated further in the future.
+It was still fun and I like that Simon turned out to be a bit of a cheeky bastard. I think the interaction could be built out and iterated further in the future. That said, it's not the most satisfying to play because of how slowly you have to talk for the voice recognition to work and how prone annyang is to mis-register what you say. This makes it hard to achieve longer patterns or get into a rhythm.
