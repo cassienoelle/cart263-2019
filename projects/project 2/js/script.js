@@ -24,10 +24,18 @@ let app  = new PIXI.Application({
     backgroundColor: 0x000000
 });
 
+// Object to hold JSON data
+let dataObject;
+
 // Add to DOM
 // * document returns null unless window is loaded *
 window.onload = function() {
   document.body.appendChild(app.view);
+  // Get data from json file and store in variable
+  $.getJSON('data/data.json', function(data) {
+    console.log('json');
+    dataObject = data;
+  });
 }
 // Aliases for window width and height
 let width;
@@ -65,9 +73,6 @@ let sound = PIXI.sound.add({
 
 // Game state
 let state;
-
-// Object to hold JSON data
-let dataObject;
 
 /*------- GAME BOARD ------*/
 
@@ -192,12 +197,6 @@ sound.beep.filters = [
 //
 function setup() {
   console.log('setup');
-
-  // Get data from json file and store in variable
-  $.getJSON('data/data.json', function(data) {
-    console.log('json');
-    dataObject = data;
-  });
 
   // Draw the interface
   drawBoard();
