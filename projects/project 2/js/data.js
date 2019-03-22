@@ -17,7 +17,7 @@ let simonSays = {
     ready: 'Are you ready?',
     clickToStart: 'Click To Start'
   },
-    remix: 'Simon Says...Reeeeeeeeeeeeeeeeeeeeeee miiiiiiiiiiiiiiiiiix',
+    remix: 'Reeeeeeeeeeeeeeeeeeeeeee miiiiiiiiiiiiiiiiiix',
   reactions: ['Well, ', 'Why not? ', 'Whatever, '],
   admonishment: [
     'Get it together!',

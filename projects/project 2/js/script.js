@@ -494,8 +494,7 @@ function checkInput() {
         else {
           // Call a fresh pattern
           lightPattern(patternLength);
-          console.log('pattern length: ' + patternLength);
-        }
+          }
 
       }
       // If patterns don't match, user loses
@@ -503,9 +502,14 @@ function checkInput() {
         // Reset pattern length to one flash
         patternLength = 1;
         console.log('loser!');
-        // Call a fresh pattern
-        lightPattern(patternLength);
-        console.log('pattern length: ' + patternLength);
+        // Every 5 rounds, remix the keywords
+        if (roundsPlayed % 5 === 0) {
+          remix();
+        }
+        else {
+          // Call a fresh pattern
+          lightPattern(patternLength);
+          }
       }
     }
   }
