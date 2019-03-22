@@ -176,11 +176,13 @@ sound.beep.filters = [
 function setup() {
   console.log('setup');
 
+  // Get data from json file and store in variable
   $.getJSON('data/data.json', function(data) {
     console.log('json');
     dataObject = data;
   });
 
+  // Draw the interface
   drawBoard();
   setupQuadrants();
   drawQuadrants();
@@ -189,8 +191,11 @@ function setup() {
   displayOutlines();
   setupSprites();
 
+  // Pass initial keywords to quadrants (keyword property)
+  // and voice commands object
   passKeywords();
 
+  // Initialize annyang, add commands
   setupVoiceCommands();
 
   topLeft.interactive = true;
@@ -210,26 +215,30 @@ function setup() {
 
 
 function setupVoiceCommands() {
+  // Setup annyang
   if (annyang) {
 
-    // Add our commands to annyang
+    // Add commands to annyang
     annyang.addCommands(setVoiceCommands());
 
+    // log to the console when input detected
     annyang.addCallback('soundstart', () =>{
         console.log('sound detected');
     });
 
+    // Play animation when a command is spoken
     annyang.addCallback('resultMatch', () =>{
       console.log('result match');
       soundAnimation.visible = true;
       soundTicker.start();
     });
 
-    // Start listening. You can call this here, or attach this call to an event, button, etc.
+    // Start listening (but pause right away)
     annyang.start();
     annyang.pause();
   }
 
+  // Set default voice for reponsive voice text-to-speech
   responsiveVoice.setDefaultVoice('UK English Male');
 }
 
@@ -275,9 +284,11 @@ function clickThree() {
   // console.log(quadrants[2].keyword);
   // console.log(quadrants[3].keyword);
   // console.log('CURRENT COMMAND KEYS');
-
 }
 
+// intro(first)
+//
+// Simon introduces himself and gameplay
 function intro(first) {
   console.log('intro');
   let counter = 0;
@@ -286,16 +297,23 @@ function intro(first) {
     onstart: ()=>{counter++},
     onend: wait
   }
-
+  // Initial instructions when game is first started
+  // calls wait() while Simon finishes speaking, then demonstrates keywords
   if (first) {
     responsiveVoice.speak(simonSays.instructions.hello,'UK English Male');
     responsiveVoice.speak(simonSays.instructions.initial,'UK English Male');
     responsiveVoice.speak(simonSays.instructions.speed,'UK English Male', options);
 
+  //-----------------
+  // showKeywords() calls back this part of the function
+  // asks the user if they are ready / prompts main gameplay
   } else {
     responsiveVoice.speak(simonSays.instructions.ready);
   }
+  //-----------------
 
+  // Builds in a short delay for Simon to stop speaking
+  // before calling next function
   function wait() {
     let i = setInterval(() =>{
       if (!responsiveVoice.isPlaying() && counter > 0) {
@@ -304,36 +322,39 @@ function intro(first) {
       }
     },250);
   }
-
+  // annyang is listening
   annyang.resume();
 
 }
 
-
-
+// lightPattern(length)
+//
+// Animate a new random light pattern for user to follow
+// set the length of the pattern according to passed argument
 function lightPattern(length) {
   console.log(length);
   let interval = INTERVAL * 2;
-  // Clear arrays and reset match counters
+  // Clear arrays and reset counters with each new pattern
   correct = 0;
   incorrect = 0;
   choices = [];
-  // Clear current pattern array
   currentPattern = [];
-  // Reset counter
   flashed = 0;
-  // Reset currently lit quadrant
   currentLight = undefined;
 
 
   // Every interval, light up the current quadrant, then randomly select a new quadrant
-  // Loop through until full pattern completed, saving each keyword in array
+  // Loop through until full pattern sequence is completed, saving each keyword in array
   let pattern = setInterval(() => {
+    // Light up a random quadrant
     currentLight = quadrants[Math.floor(Math.random() * quadrants.length)];
     currentLight.lightUp(short);
     PIXI.sound.play('beep');
+    // Save that quadrant's keyword to array holding current pattern sequence
     currentPattern.push(currentLight.keyword);
     flashed ++;
+    // Pattern complete when length of sequence matches argument passed
+    // Stop adding to sequence and start accepting user voice input
     if (flashed >= length) {
       clearInterval(pattern);
       setTimeout(() =>{
@@ -346,7 +367,7 @@ function lightPattern(length) {
   console.log(currentPattern);
 }
 
-// repeatPattern()
+// acceptInput()
 //
 // Receives speech input from user (speaking back light pattern)
 // Checks user input against pattern
@@ -357,19 +378,24 @@ function acceptInput() {
     rate: 1.25
   };
   responsiveVoice.speak('Your turn!', 'UK English Male', options);
-  // Start accepting input
+  // Start accepting input, resume annyang
   input = true;
-  ear.visible = true;
   annyang.resume();
+  // Display ear animation to show that Simon is listening
+  ear.visible = true;
 }
 
+// checkInput()
+//
+// Check voice input against light pattern to see if it's a match
+// Gets called when a voice command is registered by annyang
 function checkInput() {
   console.log('checking');
   console.log('input = ' + input);
   console.log('choices length: ' + choices.length);
   console.log('pattern length: ' + currentPattern.length);
 
-  // If accepting input when function is called
+  // Make sure we are accepting input
   if (input) {
     // When user has attempted full pattern (same number of choices)
     if (choices.length === currentPattern.length) {
@@ -385,12 +411,12 @@ function checkInput() {
           console.log('wrong:' + incorrect + ' ' + i);
         }
       }
-      // Don't accept any more input
+      // Don't accept any more input, pause annyang
       input = false;
       annyang.pause();
       // If patterns match, user wins
       if (incorrect === 0 && correct === currentPattern.length) {
-
+        // Increase pattern length for next round
         patternLength++;
         console.log('winner!');
 
@@ -406,6 +432,7 @@ function checkInput() {
       }
       // If patterns don't match, user loses
       else if (incorrect > 0) {
+        // Reset pattern length to one flash
         patternLength = 1;
         console.log('loser!');
         // Call a fresh pattern
@@ -421,29 +448,39 @@ function checkInput() {
 
 }
 
+// remix()
+//
+// Shuffle quadrant keywords (keep display the same)
+// so that keywords are now associated with the wrong color
+// (note: this doesn't set totally new keywords)
 function remix() {
+  // Pause annyang
   input = false;
   annyang.pause();
 
-  // app.ticker.add((delta) =>{
-  //   console.log('disappearing ear');
-  //   fadeEar();
-  // });
+  // Hide ear because Simon isn't listening
+  ear.visible = false;
 
-  let p = 0;
-
+  // Simon calls out 'reeeemiiiix'
   let options = {
     rate: 0.2,
     pitch: 1.3
   }
   responsiveVoice.speak(simonSays.remix,'UK English Male',options);
+
+  // Shuffle current keywords and pass to voice commands
   shuffleKeywords();
   console.log('shuffled-remix');
-
+  // Flash quadrants in rapid succession
   rapidFlash();
 }
 
+// rapidFlash()
+//
+// Flashes quadrants in rapid succession to show a change
+// is occurring in color and/or keyword
 function rapidFlash() {
+
   let index;
   let i = 0;
   let rapidFlash = setInterval(() => {
@@ -451,30 +488,43 @@ function rapidFlash() {
     index = Math.floor(Math.random() * quadrants.length);
     quadrants[index].lightUp(rapid);
     i++;
+    // Flash a random quadrant 20 times then clear
+    // and have Simon demonstrate the new setup
     if (i > 20) {
       clearInterval(rapidFlash);
       showKeywords();
     }
 
   }, INTERVAL/4);
+
 }
 
+// replaceQuadColors()
+//
+// Totally change the quadrant colors and matching keywords
 function replaceQuadColors() {
+
   let randomColor;
   let hex;
-  // Replace each quadrant color property
+  // Iterate through quadrants clockwise
   for (let i = 0; i < quadrants.length; i++) {
+    // Get a random color object from data and change hex format so readable
     randomColor = getRandomElement(dataObject.colors);
-    hex = randomColor.hex.replace('#', '0x')
+    hex = randomColor.hex.replace('#', '0x');
+    // Set the 'lit' quadrant color to new color and
+    // Make the overlay a semi-transparent black to darken it
     quadrants[i].lightColor = hex;
     quadrants[i].maxAlpha = 0.4;
     quadrants[i].a = quadrants[i].maxAlpha;
     quadrants[i].color = colors.black;
-
+    // Update current keywords based on new color, inserting spaces
+    // between words if color name is more than one word
     currentKeywords[i] = insertSpaces(randomColor.color);
   }
 
+  // Pass the new keywords to quadrants and annyang commands
   passKeywords();
+  // Flash quadrants to animate change and have Simon demonstrate new keywords
   rapidFlash();
 }
 
@@ -508,22 +558,37 @@ function insertSpaces(string){
   return string;
 }
 
+// prependAdjective
+//
+// Prepend an adjective to the front of each quadrant color keyword
+// Remove any existing adjectives first
 function prependAdjective() {
+
   let randomAdjective;
   let arrayOfWords;
-  // Prepend an adjective to the front of each quadrant color keyword
-  // Remove any existing adjectives first
+  // Iterate through quadrants
   for (let i = 0; i < quadrants.length; i++) {
-    randomAdjective = getRandomElement(dataObject.adjectives);
-    randomAdjective = insertSpaces(randomAdjective);
+    // If the current keyword is more than one word split words into array
+    // the noun will be the last item in the array
     arrayOfWords = currentKeywords[i].split(' ');
+    // Get a random ajective from data
+    randomAdjective = getRandomElement(dataObject.adjectives);
+    // Insert spaces if needed
+    randomAdjective = insertSpaces(randomAdjective);
+    // Replace adjectives
     currentKeywords[i] = arrayOfWords[arrayOfWords.length - 1].replace(/^/, randomAdjective + ' ');
   }
 
+  // Pass the new keywords to quadrants and annyang commands
   passKeywords();
-  showKeywords();
+  // Flash quadrants to animate change and have Simon demonstrate new keywords
+  rapidFlash();
 }
 
+// shuffleKeywords()
+//
+// Shuffle the array of current keywords and
+// pass new associations to quadrants and voice commands
 function shuffleKeywords() {
   // Fisher-Yates function to shuffle arrays
   Array.prototype.shuffle = function() {
@@ -545,6 +610,9 @@ function shuffleKeywords() {
   passKeywords();
 }
 
+// passKeywords()
+//
+// Set quadrant keyword properties and voice commands
 function passKeywords() {
   // Associate keywords to quadrants in clockwise order
   for (let i = 0; i < quadrants.length; i++) {
@@ -557,6 +625,10 @@ function passKeywords() {
 
 }
 
+// showKeywords()
+//
+// Have Simon demonstrate keywords by flashing quadrants
+// clockwise and speaking related keyword aloud
 function showKeywords() {
   // Don't accept voice input
   input = false;
@@ -594,7 +666,9 @@ function showKeywords() {
 }
 
 
-
+// drawBoard()
+//
+// Create classic Simon interface
 function drawBoard() {
   // Set radius so circle fits to window with slight margin
   // adapt for portrait or landscape orientation
@@ -613,6 +687,9 @@ function drawBoard() {
 
 }
 
+// getVertices()
+//
+// Determine vertices for quadrants according to base circle
 function getVertices() {
   // Determine outer edges of circle
   board = circle.getBounds();
@@ -637,7 +714,11 @@ function getVertices() {
   }
 }
 
+// setup Quadrants()
+//
+// Create quadrant objects
 function setupQuadrants() {
+
   getVertices();
 
   // Create quadrant objects and populate array
@@ -648,6 +729,10 @@ function setupQuadrants() {
 
 }
 
+// drawQuadrants()
+//
+// Draw the quadrants as primitive shapes using vertices as reference
+// (call in setup and game loop)
 function drawQuadrants() {
   topLeft.draw();
   topRight.draw();
@@ -655,6 +740,10 @@ function drawQuadrants() {
   bottomLeft.draw();
 }
 
+// displayQuadrants()
+//
+// Display quadrants on screen
+// Appends quadrants to stage (call once in setup)
 function displayQuadrants() {
 
   topLeft.display();
@@ -663,6 +752,10 @@ function displayQuadrants() {
   bottomLeft.display();
 }
 
+// drawOutlines()
+//
+// Draw the black circle at center of the gameboard and lines between quadrants
+// (call in game loop so always rendered on top of quadrants)
 function drawOutlines() {
 
   outlines.clear();
@@ -677,12 +770,18 @@ function drawOutlines() {
 
 }
 
+// displayOutlines()
+//
+// Display outlines, append to stage (call once in setup)
 function displayOutlines() {
 
   app.stage.addChild(outlines);
 
 }
 
+// setup Sprites()
+//
+//
 function setupSprites() {
   ear = new Sprite(
     PIXI.loader.resources['assets/images/ear.png'].texture
@@ -774,28 +873,6 @@ function moveEye() {
   eye.x -= eye.vx;
   eye.y -= eye.vy;
 
-/*
-  switch(currentLight) {
-    case topLeft:
-      eye.x -= eye.vx;
-      eye.y -= eye.vy;
-      break;
-    case topRight:
-      eye.x += eye.vx;
-      eye.y -= eye.vy;
-      break;
-    case bottomRight:
-      eye.x += eye.vx;
-      eye.y += eye.vy;
-      break;
-    case bottomLeft:
-      eye.x -= eye.vx;
-      eye.y += eye.vy;
-      break;
-    default:
-      break;
-  }
-  */
 }
 
 function animateSound(delta) {
@@ -846,6 +923,14 @@ function setVoiceCommands() {
     'yes': () => {
       lightPattern(patternLength);
       annyang.pause();
+    },
+    'no': () => {
+      let activity = getRandomElement(dataObject.activities);
+      let reaction = getRandomElement(simonSays.reactions);
+      responsiveVoice.speak(reaction + 'too busy' + activity + 'I see');
+      setTimeout(() => {
+        intro();
+      }, 6000);
     }
   };
 
