@@ -973,7 +973,7 @@ function setVoiceCommands() {
       let activity = getRandomElement(dataObject.activities);
       let reaction = getRandomElement(simonSays.reactions);
       let admonishment = getRandomElement(simonSays.admonishment);
-      responsiveVoice.speak(reaction + 'too busy ' + activity + '? ' + admonishment);
+      responsiveVoice.speak(reaction + 'too busy ' + activity + '? ' + admonishment, currentVoice);
       setTimeout(() => {
         intro();
       }, 10000);
