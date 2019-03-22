@@ -10,7 +10,7 @@ author, and this description to match your project!
 ******************/
 // PIXI APP
 // Class references
-const {Application, Graphics, Sprite, Container,lights, display} = PIXI;
+const {Application, Graphics, Sprite, Container,Text, TextStyle, lights, display} = PIXI;
 
 // Setup Pixi application
 let app  = new PIXI.Application({
@@ -125,6 +125,9 @@ let animation = {
   shrink: 'shrink'
 }
 
+// Text
+let phrase = ' ';
+let text, style;
 
 /*------ MAIN INTERACTION ------*/
 
@@ -190,6 +193,7 @@ function setup() {
   drawOutlines();
   displayOutlines();
   setupSprites();
+  setupText();
 
   // Pass initial keywords to quadrants (keyword property)
   // and voice commands object
@@ -198,8 +202,8 @@ function setup() {
   // Initialize annyang, add commands
   setupVoiceCommands();
 
-  topLeft.interactive = true;
-  topLeft.on('click', clickOne);
+  outlines.interactive = true;
+  outlines.on('click', clickOne);
   topRight.interactive = true;
   topRight.on('click', clickTwo);
   bottomRight.interactive = true;
@@ -260,6 +264,7 @@ function play(delta) {
 
 function clickOne() {
   console.log('clicked');
+  text.visible = false;
   intro(false);
 }
 
@@ -310,6 +315,7 @@ function intro(first) {
   } else {
     responsiveVoice.speak(simonSays.instructions.ready);
   }
+
   //-----------------
 
   // Builds in a short delay for Simon to stop speaking
@@ -324,8 +330,51 @@ function intro(first) {
   }
   // annyang is listening
   annyang.resume();
+  // Make ear visible to show Simon is listening
+  setTimeout(() => {
+    ear.visible = true;
+  }, 2000);
+
 
 }
+
+// setupText()
+//
+// Sets up text prompts for display in center of gameboard
+function setupText() {
+  console.log('text');
+  // Pull phrase from data
+  phrase = (simonSays.instructions.clickToStart.toUpperCase());
+  // Set text style
+  style = new TextStyle({
+    fontFamily: 'Arial',
+    fontSize: (radius/2.5) / 5,
+    fontWeight: 'bold',
+    fill: 0xFFFFFF,
+    wordWrap: true,
+    wordWrapWidth: radius/2.5,
+    align: 'center'
+  });
+  // Declare text object
+  text = new Text(phrase, style);
+  // Set anchor point to center and position in center of gameboard
+  text.anchor.set(0.5);
+  text.x = circle.x;
+  text.y = circle.y;
+
+  // Append to stage
+  app.stage.addChild(text);
+
+  // Add animation
+  let counter = 0;
+  app.ticker.add((delta) =>{
+    text.scale.x = style.wordWrapWidth/200 + Math.sin(count) * 0.01;
+    text.scale.y = style.wordWrapWidth/200 + Math.sin(count) * 0.01;
+    counter += 0.1;
+  });
+
+}
+
 
 // lightPattern(length)
 //
@@ -921,16 +970,19 @@ function setVoiceCommands() {
         checkInput();
     },
     'yes': () => {
+      let options = {pitch: 0.3, rate: 0.6}
+      responsiveVoice.speak('Let\'s play', 'UK English Male', options);
       lightPattern(patternLength);
       annyang.pause();
     },
     'no': () => {
       let activity = getRandomElement(dataObject.activities);
       let reaction = getRandomElement(simonSays.reactions);
-      responsiveVoice.speak(reaction + 'too busy' + activity + 'I see');
+      let admonishment = getRandomElement(simonSays.admonishment);
+      responsiveVoice.speak(reaction + 'too busy ' + activity + '? ' + admonishment);
       setTimeout(() => {
         intro();
-      }, 6000);
+      }, 10000);
     }
   };
 
