@@ -103,7 +103,7 @@ class Quadrant extends Graphics {
       }, this.interval);
     }
     else if (length === long) {
-      responsiveVoice.speak(this.keyword,'UK English Male');
+      responsiveVoice.speak(this.keyword, currentVoice);
       setTimeout(() => {
         this.a = this.maxAlpha;
       }, this.interval * 4);

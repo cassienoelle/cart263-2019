@@ -62,6 +62,9 @@ let sound = PIXI.sound.add({
 // Game state
 let state;
 
+// Object to hold JSON data
+let dataObject;
+
 /*------- GAME BOARD ------*/
 
 // Base circle shape
@@ -129,6 +132,14 @@ let animation = {
 let phrase = ' ';
 let text, style;
 
+// Counts how many times intro() is called
+let introCounter = 0;
+// Counts how many rounds have been played
+let roundsPlayed = 0;
+
+// Current voice for responsive voice
+let currentVoice;
+
 /*------ MAIN INTERACTION ------*/
 
 // Array of current keywords
@@ -140,7 +151,6 @@ let currentKeywords = [
   colors.keys.yellow
 ]
 
-let dataObject;
 // Interval for light flash
 const INTERVAL = 500;
 // Length of flash
@@ -202,12 +212,12 @@ function setup() {
   // Initialize annyang, add commands
   setupVoiceCommands();
 
+  // Initialize click event to start game
   outlines.interactive = true;
-  outlines.on('click', clickOne);
-  topRight.interactive = true;
-  topRight.on('click', clickTwo);
-  bottomRight.interactive = true;
-  bottomRight.on('click', clickThree);
+  outlines.on('click', startGame);
+
+  ear.interactive = true;
+  ear.on('click', changeBoard)
 
   // Set game state
   state = play;
@@ -241,9 +251,6 @@ function setupVoiceCommands() {
     annyang.start();
     annyang.pause();
   }
-
-  // Set default voice for reponsive voice text-to-speech
-  responsiveVoice.setDefaultVoice('UK English Male');
 }
 
 // gameLoop()
@@ -262,17 +269,33 @@ function play(delta) {
   drawOutlines();
 }
 
-function clickOne() {
+function startGame() {
   console.log('clicked');
+  currentVoice = 'UK English Male';
   text.visible = false;
-  intro(false);
+  intro();
 }
 
-function clickTwo() {
-  console.log('clicked replace');
-  // shuffleKeywords();
-  replaceQuadColors();
+function changeBoard() {
+  let options = [1,2,3];
+  let next = getRandomElement(options);
+
+  // if (next === 1) {
+  //   currentVoice = 'UK English Male';
+  //   replaceQuadColors();
+  // }
+  // else if (next === 2) {
+  //   currentVoice = 'UK English Male';
+    prependAdjective();
+  // }
+  // else if (next === 3) {
+  //   console.log(3);
+  //   currentVoice = 'Welsh Male';
+  //   rapidFlash();
+  // }
+
 }
+
 
 function clickThree() {
   console.log('adjective');
@@ -295,25 +318,32 @@ function clickThree() {
 //
 // Simon introduces himself and gameplay
 function intro(first) {
+  // Disable click event handler
+  outlines.interactive = false;
+
   console.log('intro');
-  let counter = 0;
   let options = {
     rate: 1.5,
-    onstart: ()=>{counter++},
+    onstart: ()=>{introCounter++},
     onend: wait
   }
   // Initial instructions when game is first started
   // calls wait() while Simon finishes speaking, then demonstrates keywords
   if (first) {
-    responsiveVoice.speak(simonSays.instructions.hello,'UK English Male');
-    responsiveVoice.speak(simonSays.instructions.initial,'UK English Male');
-    responsiveVoice.speak(simonSays.instructions.speed,'UK English Male', options);
+    responsiveVoice.speak(simonSays.instructions.hello,currentVoice);
+    responsiveVoice.speak(simonSays.instructions.initial,currentVoice);
+    responsiveVoice.speak(simonSays.instructions.speed,currentVoice, options);
 
   //-----------------
   // showKeywords() calls back this part of the function
   // asks the user if they are ready / prompts main gameplay
   } else {
-    responsiveVoice.speak(simonSays.instructions.ready);
+    responsiveVoice.speak(simonSays.instructions.ready,currentVoice,{onend: okayGo});
+    // Make ear visible to show Simon is listening
+    ear.visible = true;
+    // Set text
+    text.text = 'YES? NO?';
+    style.fill = colors.brightRed;
   }
 
   //-----------------
@@ -322,19 +352,26 @@ function intro(first) {
   // before calling next function
   function wait() {
     let i = setInterval(() =>{
-      if (!responsiveVoice.isPlaying() && counter > 0) {
+      if (!responsiveVoice.isPlaying() && introCounter > 0) {
         clearInterval(i);
         showKeywords();
       }
     },250);
   }
-  // annyang is listening
-  annyang.resume();
-  // Make ear visible to show Simon is listening
-  setTimeout(() => {
-    ear.visible = true;
-  }, 2000);
 
+
+  // Display text showing response options
+  function okayGo() {
+    setTimeout(() => {
+      // annyang is listening
+      annyang.resume();
+      if (introCounter <= 1) {
+        text.visible = true;
+        introCounter ++;
+
+      }
+    }, 1500);
+  }
 
 }
 
@@ -426,7 +463,7 @@ function acceptInput() {
     pitch: Math.random() * 2 ,
     rate: 1.25
   };
-  responsiveVoice.speak('Your turn!', 'UK English Male', options);
+  responsiveVoice.speak('Your turn!', currentVoice, options);
   // Start accepting input, resume annyang
   input = true;
   annyang.resume();
@@ -439,11 +476,8 @@ function acceptInput() {
 // Check voice input against light pattern to see if it's a match
 // Gets called when a voice command is registered by annyang
 function checkInput() {
-  console.log('checking');
-  console.log('input = ' + input);
-  console.log('choices length: ' + choices.length);
-  console.log('pattern length: ' + currentPattern.length);
-
+  // Update rounds played counter
+  roundsPlayed++;
   // Make sure we are accepting input
   if (input) {
     // When user has attempted full pattern (same number of choices)
@@ -468,8 +502,8 @@ function checkInput() {
         // Increase pattern length for next round
         patternLength++;
         console.log('winner!');
-
-        if (patternLength === 2) {
+        // Every 5 rounds, remix the keywords
+        if (roundsPlayed % 5 === 0) {
           remix();
         }
         else {
@@ -515,7 +549,7 @@ function remix() {
     rate: 0.2,
     pitch: 1.3
   }
-  responsiveVoice.speak(simonSays.remix,'UK English Male',options);
+  responsiveVoice.speak(simonSays.remix,currentVoice,options);
 
   // Shuffle current keywords and pass to voice commands
   shuffleKeywords();
@@ -557,7 +591,7 @@ function replaceQuadColors() {
   let hex;
   // Iterate through quadrants clockwise
   for (let i = 0; i < quadrants.length; i++) {
-    // Get a random color object from data and change hex format so readable
+    // Get a random color object from data and standardize hex code format
     randomColor = getRandomElement(dataObject.colors);
     hex = randomColor.hex.replace('#', '0x');
     // Set the 'lit' quadrant color to new color and
@@ -612,7 +646,8 @@ function insertSpaces(string){
 // Prepend an adjective to the front of each quadrant color keyword
 // Remove any existing adjectives first
 function prependAdjective() {
-
+  let options = [1,2];
+  let property = getRandomElement(options);
   let randomAdjective;
   let arrayOfWords;
   // Iterate through quadrants
@@ -621,7 +656,12 @@ function prependAdjective() {
     // the noun will be the last item in the array
     arrayOfWords = currentKeywords[i].split(' ');
     // Get a random ajective from data
-    randomAdjective = getRandomElement(dataObject.adjectives);
+    if (property === 1) {
+      randomAdjective = getRandomElement(dataObject.adjectives);
+    }
+    else if (property === 2) {
+      randomAdjective = getRandomElement(dataObject.expletives);
+    }
     // Insert spaces if needed
     randomAdjective = insertSpaces(randomAdjective);
     // Replace adjectives
@@ -970,12 +1010,18 @@ function setVoiceCommands() {
         checkInput();
     },
     'yes': () => {
-      let options = {pitch: 0.3, rate: 0.6}
-      responsiveVoice.speak('Let\'s play', 'UK English Male', options);
-      lightPattern(patternLength);
+      text.visible = false;
+      let options = {pitch: 0.5, rate: 0.6}
+      setTimeout(() => {
+        responsiveVoice.speak('Let\'s play', currentVoice, options);
+      }, 1000);
+      setTimeout(() => {
+        lightPattern(patternLength);
+      }, 3000);
       annyang.pause();
     },
     'no': () => {
+      text.visible = false;
       let activity = getRandomElement(dataObject.activities);
       let reaction = getRandomElement(simonSays.reactions);
       let admonishment = getRandomElement(simonSays.admonishment);
