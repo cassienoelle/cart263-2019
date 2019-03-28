@@ -11,7 +11,8 @@ synthesis and soundfile playing abilities.
 ******************/
 
 // Time for one note
-const NOTE_TEMPO = 500;
+let noteTempo = 500;
+let options = [500,1000,2000];
 // Time for one beat
 const DRUM_TEMPO = 250;
 // Attack time for a note (in seconds)
@@ -92,7 +93,7 @@ function setup() {
 function mousePressed() {
   if (!clicked) {
     // Start an interval for the notes
-    setInterval(playNote,NOTE_TEMPO);
+    setTimeout(playNote,noteTempo);
     // Start an interval for the drums
     setInterval(playDrum,DRUM_TEMPO);
   } else {
@@ -105,7 +106,10 @@ function mousePressed() {
 // playNote
 //
 // Chooses a random frequency and assigns it to the synth
-function playNote() {
+function playNote(continueInterval = true) {
+  console.log('called');
+  console.log('continue: ' + continueInterval)
+  console.log('note tempo: ' + noteTempo);
   // Pick a random frequency from the array
   let frequency = frequencies[Math.floor(Math.random() * frequencies.length)];
   // Set the synth's frequency
@@ -113,11 +117,19 @@ function playNote() {
   // If it's not 'silence' play it, otherwise stop
   if (frequency != silence) {
     synth.play();
+    console.log('playing: ' + frequency);
   }
   else if (frequency === silence) {
     synth.stop();
     console.log('rest');
   }
+
+  noteTempo = random(options);
+
+  if (continueInterval) {
+      setTimeout(playNote,noteTempo);
+    }
+
 
 }
 
