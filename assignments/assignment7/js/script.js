@@ -19,6 +19,9 @@ const ATTACK = 0.1;
 // Release time for a note (in seconds)
 const RELEASE = 0.1;
 
+// Prevent duplicate mouse-clicks
+let clicked = false;
+
 // We need an array of the possible notes to play as frequencies (in Hz)
 // A Major =  A, B, C♯, D, E, F♯, and G♯
 // We can get the frequencies of these notes from THE INTERNET, e.g.
@@ -85,10 +88,16 @@ function setup() {
 // Using this to start the note and drum sequences to get around
 // user interaction (and to give the files time to load)
 function mousePressed() {
-  // Start an interval for the notes
-  setInterval(playNote,NOTE_TEMPO);
-  // Start an interval for the drums
-  setInterval(playDrum,DRUM_TEMPO);
+  if (!clicked) {
+    // Start an interval for the notes
+    setInterval(playNote,NOTE_TEMPO);
+    // Start an interval for the drums
+    setInterval(playDrum,DRUM_TEMPO);
+  } else {
+    console.log('Nope!');
+  }
+
+  clicked = true;
 }
 
 // playNote
