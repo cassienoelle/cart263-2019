@@ -45,6 +45,9 @@ let hihat;
 let pattern = ['x','*','xo*',' ','x','x','xo','*'];
 // Which beat of the pattern we're at right now
 let patternIndex = 0;
+// Effects
+let pingPongDelay, reverb, stereoPanner;
+let pan = 1;
 
 // setup()
 //
@@ -84,6 +87,26 @@ function setup() {
       path: 'assets/sounds/hihat.wav'
     }
   });
+
+  // Add effects
+  pingPongDelay = new Pizzicato.Effects.PingPongDelay({
+    feedback: 0.6,
+    time: 0.4,
+    mix: 0.5
+  });
+  kick.addEffect(pingPongDelay);
+
+  reverb = new Pizzicato.Effects.Reverb({
+    time: 1,
+    decay: 2,
+    mix: 0.89
+  });
+  synth.addEffect(reverb);
+
+  stereoPanner = new Pizzicato.Effects.StereoPanner({
+    pan: pan
+  });
+  snare.addEffect(stereoPanner);
 }
 
 // mousePressed
@@ -138,6 +161,8 @@ function playNote(continueInterval = true) {
 // Checks the string representing the drums for the current beat
 // and plays the appropriate sounds
 function playDrum() {
+  // Set pan
+  stereoPanner.pan = random(-1,1);
   // Get the symbols for the current beat in the pattern
   let symbols = pattern[patternIndex];
 
