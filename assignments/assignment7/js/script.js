@@ -21,13 +21,15 @@ const RELEASE = 0.1;
 
 // Prevent duplicate mouse-clicks
 let clicked = false;
+// Frequency to trigger pause / rest (never played by synth)
+let silence = 16.35;
 
 // We need an array of the possible notes to play as frequencies (in Hz)
 // A Major =  A, B, C♯, D, E, F♯, and G♯
 // We can get the frequencies of these notes from THE INTERNET, e.g.
 // http://pages.mtu.edu/~suits/notefreqs.html
 let frequencies = [
-  220,246.94,277.18,293.66,329.63,369.99,415.30
+  220,246.94,277.18,293.66,329.63,369.99,415.30,silence
 ];
 // The synth
 let synth;
@@ -108,8 +110,15 @@ function playNote() {
   let frequency = frequencies[Math.floor(Math.random() * frequencies.length)];
   // Set the synth's frequency
   synth.frequency = frequency;
-  // If it's note already play, play the synth
-  synth.play();
+  // If it's not 'silence' play it, otherwise stop
+  if (frequency != silence) {
+    synth.play();
+  }
+  else if (frequency === silence) {
+    synth.stop();
+    console.log('rest');
+  }
+
 }
 
 // playDrum()
