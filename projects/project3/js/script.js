@@ -2,17 +2,19 @@
 
 /*****************
 
-Title of Project
-Author Name
+Art has a double face, of expression and illusion,
+just like science has a double face:
+the reality of error and the phantom of truth.
 
-This is a template. You must fill in the title,
-author, and this description to match your project!
+Cassie Smith
 
 ******************/
+let canvas, capture;
+
 
 // preload()
 //
-// Description of preload
+//
 
 function preload() {
 
@@ -21,17 +23,26 @@ function preload() {
 
 // setup()
 //
-// Description of setup
+//
 
 function setup() {
+
+  canvas = createCanvas(640,480);
+  background(0);
+  capture = createCapture(VIDEO);
+  capture.size(640, 480);
+  capture.hide();
 
 }
 
 
 // draw()
 //
-// Description of draw()
+//
 
 function draw() {
+  
+  tint(255, 0, 250);
+  image(capture, 0, 0);
 
 }
