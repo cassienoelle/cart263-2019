@@ -9,40 +9,58 @@ the reality of error and the phantom of truth.
 Cassie Smith
 
 ******************/
-let canvas, capture;
 
 
-// preload()
+let colors = new tracking.ColorTracker(['magenta', 'cyan', 'yellow']);
+
+ colors.on('track', function(event) {
+   if (event.data.length === 0) {
+     // No colors were detected in this frame.
+   } else {
+     event.data.forEach(function(rect) {
+       console.log(rect.x, rect.y, rect.height, rect.width, rect.color);
+     });
+   }
+ });
+
+tracking.track('#myVideo', colors);
+
+
+// let canvas, capture;
 //
 //
-
-function preload() {
-
-}
-
-
-// setup()
+// // preload()
+// //
+// //
+//
+// function preload() {
+//
+// }
 //
 //
-
-function setup() {
-
-  canvas = createCanvas(640,480);
-  background(0);
-  capture = createCapture(VIDEO);
-  capture.size(640, 480);
-  capture.hide();
-
-}
-
-
-// draw()
+// // setup()
+// //
+// //
+//
+// function setup() {
+//
+//   canvas = createCanvas(640,480);
+//   background(0);
+//   capture = createCapture(VIDEO);
+//   capture.size(640, 480);
+//   capture.hide();
+//
+// }
 //
 //
-
-function draw() {
-  
-  tint(255, 0, 250);
-  image(capture, 0, 0);
-
-}
+// // draw()
+// //
+// //
+//
+// function draw() {
+//
+//   background(0);
+//   tint(255, 0, 250);
+//   image(capture, 0, 0);
+//
+// }

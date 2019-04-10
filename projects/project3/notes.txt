@@ -1,4 +1,5 @@
 1. setup p5 canvas test pixel processing
 2. test face recognition
 3. determine course
-4. Smile. street harassment element? 
+4. use face recognition, more than one face harmonizes
+5. combine p5 and face recognition? only analyze pixels in face?
