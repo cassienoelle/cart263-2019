@@ -245,7 +245,7 @@ function play(delta) {
 
 function clickOne() {
   console.log('clicked');
-  intro(false);
+  intro(true);
 }
 
 function clickTwo() {
