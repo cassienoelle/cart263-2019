@@ -3,7 +3,7 @@
 
 Data
 
-Phrases Simon Says
+Phrases and words
 
 ******************/
 
@@ -15,16 +15,6 @@ let simonSays = {
     // hearing: 'My hearing\'s not what it used to be back in the 80s!.!.Ha ha haha ha!.!.!.!.!.!.',
     // keywords: 'Here\'s what you have to say',
     ready: 'Are you ready?',
-    clickToStart: 'Click To Start'
   },
-    remix: 'Reeeeeeeeeeeeeeeeeeeeeee miiiiiiiiiiiiiiiiiix',
-  reactions: ['Well, ', 'Why not? ', 'Whatever, '],
-  admonishment: [
-    'Get it together!',
-    'Come on, I don\'t have all day!',
-    'I guess I\'ll have to wait',
-    'Then why did you even start talking to me!?',
-    'Fix your shit'
-  ],
-
+    remix: 'Reeeeeeeeeeeeeeeeeeeeeee miiiiiiiiiiiiiiiiiix'
 }

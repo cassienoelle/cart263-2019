@@ -18,7 +18,6 @@ class Quadrant extends Graphics {
     this.lightColor = lightColor;
     this.keyword = keyword;
     this.a = alpha;
-    this.maxAlpha = 1;
     this.vx;
     this.vy;
     this.hx;
@@ -94,18 +93,18 @@ class Quadrant extends Graphics {
     // After interval increase overlay opacity again (unlit)
     if (length === rapid) {
       setTimeout(() => {
-        this.a = this.maxAlpha;
+        this.a = 1;
       }, this.interval/4);
     }
     else if (length === short) {
       setTimeout(() => {
-        this.a = this.maxAlpha;
+        this.a = 1;
       }, this.interval);
     }
     else if (length === long) {
-      responsiveVoice.speak(this.keyword, currentVoice);
+      responsiveVoice.speak(this.keyword,'UK English Male');
       setTimeout(() => {
-        this.a = this.maxAlpha;
+        this.a = 1;
       }, this.interval * 4);
     }
 

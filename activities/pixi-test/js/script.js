@@ -1,20 +1,16 @@
 'use strict';
 /*****************
 
-Simon Said What!?
-Cassie Smith
-CART 263 -2019
+Title of Project
+Author Name
 
-Simon Says green is blue and 2 + 2 = 5. Well, not that last one. He's too good at math.
-Play the classic 80s Simon Says game with a twist.
-
-Match Simon by speaking his colour patterns aloud.
-Careful, he might switch things up on you by remixing the colours and keywords.
+This is a template. You must fill in the title,
+author, and this description to match your project!
 
 ******************/
 // PIXI APP
 // Class references
-const {Application, Graphics, Sprite, Container,Text, TextStyle, lights, display} = PIXI;
+const {Application, Graphics, Sprite, Container,lights, display} = PIXI;
 
 // Setup Pixi application
 let app  = new PIXI.Application({
@@ -24,19 +20,12 @@ let app  = new PIXI.Application({
     backgroundColor: 0x000000
 });
 
-// Object to hold JSON data
-let dataObject;
-
 // Add to DOM
 // * document returns null unless window is loaded *
 window.onload = function() {
   document.body.appendChild(app.view);
-  // Get data from json file and store in variable
-  $.getJSON('data/data.json', function(data) {
-    console.log('json');
-    dataObject = data;
-  });
 }
+
 // Aliases for window width and height
 let width;
 let height;
@@ -137,17 +126,6 @@ let animation = {
   shrink: 'shrink'
 }
 
-// Text
-let phrase = ' ';
-let text, style;
-
-// Counts how many times intro() is called
-let introCounter = 0;
-// Counts how many rounds have been played
-let roundsPlayed = 0;
-
-// Current voice for responsive voice
-let currentVoice;
 
 /*------ MAIN INTERACTION ------*/
 
@@ -198,7 +176,6 @@ sound.beep.filters = [
 function setup() {
   console.log('setup');
 
-  // Draw the interface
   drawBoard();
   setupQuadrants();
   drawQuadrants();
@@ -206,21 +183,17 @@ function setup() {
   drawOutlines();
   displayOutlines();
   setupSprites();
-  setupText();
 
-  // Pass initial keywords to quadrants (keyword property)
-  // and voice commands object
   passKeywords();
 
-  // Initialize annyang, add commands
   setupVoiceCommands();
 
-  // Initialize click event to start game
-  outlines.interactive = true;
-  outlines.on('click', startGame);
-
-  ear.interactive = true;
-  ear.on('click', changeBoard)
+  topLeft.interactive = true;
+  topLeft.on('click', clickOne);
+  topRight.interactive = true;
+  topRight.on('click', clickTwo);
+  bottomRight.interactive = true;
+  bottomRight.on('click', clickThree);
 
   // Set game state
   state = play;
@@ -230,30 +203,28 @@ function setup() {
 
 }
 
-
 function setupVoiceCommands() {
-  // Setup annyang
   if (annyang) {
 
-    // Add commands to annyang
+    // Add our commands to annyang
     annyang.addCommands(setVoiceCommands());
 
-    // log to the console when input detected
     annyang.addCallback('soundstart', () =>{
         console.log('sound detected');
     });
 
-    // Play animation when a command is spoken
     annyang.addCallback('resultMatch', () =>{
       console.log('result match');
       soundAnimation.visible = true;
       soundTicker.start();
     });
 
-    // Start listening (but pause right away)
+    // Start listening. You can call this here, or attach this call to an event, button, etc.
     annyang.start();
     annyang.pause();
   }
+
+  responsiveVoice.setDefaultVoice('UK English Male');
 }
 
 // gameLoop()
@@ -272,160 +243,88 @@ function play(delta) {
   drawOutlines();
 }
 
-function startGame() {
+function clickOne() {
   console.log('clicked');
-  currentVoice = 'UK English Male';
-  text.visible = false;
-  intro(true);
+  intro(false);
 }
 
-function changeBoard() {
-  let options = [1,2,3];
-  let next = getRandomElement(options);
+function clickTwo() {
+  console.log('clicked shuffle');
+  shuffleKeywords();
+}
 
-  if (next === 1) {
-    currentVoice = 'UK English Male';
-    replaceQuadColors();
-  }
-  else if (next === 2) {
-    currentVoice = 'UK English Male';
-    prependAdjective();
-  }
-  else if (next === 3) {
-    console.log(3);
-    currentVoice = 'Welsh Male';
-    rapidFlash();
-  }
+function clickThree() {
+  console.log('clicked info');
+  console.log('CURRENT KEYWORDS');
+  console.log(currentKeywords[0]);
+  console.log(currentKeywords[1]);
+  console.log(currentKeywords[2]);
+  console.log(currentKeywords[3]);
+  console.log('CURRENT QUADRANT KEYWORDS');
+  console.log(quadrants[0].keyword);
+  console.log(quadrants[1].keyword);
+  console.log(quadrants[2].keyword);
+  console.log(quadrants[3].keyword);
+  console.log('CURRENT COMMAND KEYS');
 
 }
 
-// intro(first)
-//
-// Simon introduces himself and gameplay
 function intro(first) {
-  // Disable click event handler
-  outlines.interactive = false;
-
   console.log('intro');
+  let counter = 0;
   let options = {
     rate: 1.5,
-    onstart: ()=>{introCounter++},
+    onstart: ()=>{counter++},
     onend: wait
   }
-  // Initial instructions when game is first started
-  // calls wait() while Simon finishes speaking, then demonstrates keywords
-  if (first) {
-    responsiveVoice.speak(simonSays.instructions.hello,currentVoice);
-    responsiveVoice.speak(simonSays.instructions.initial,currentVoice);
-    responsiveVoice.speak(simonSays.instructions.speed,currentVoice, options);
 
-  //-----------------
-  // showKeywords() calls back this part of the function
-  // asks the user if they are ready / prompts main gameplay
+  if (first) {
+    responsiveVoice.speak(simonSays.instructions.hello,'UK English Male');
+    responsiveVoice.speak(simonSays.instructions.initial,'UK English Male');
+    responsiveVoice.speak(simonSays.instructions.speed,'UK English Male', options);
+
   } else {
-    responsiveVoice.speak(simonSays.instructions.ready,currentVoice,{onend: okayGo});
-    // Make ear visible to show Simon is listening
-    ear.visible = true;
-    // Set text
-    text.text = 'YES? NO?';
-    style.fill = colors.brightRed;
+    responsiveVoice.speak(simonSays.instructions.ready);
   }
 
-  //-----------------
-
-  // Builds in a short delay for Simon to stop speaking
-  // before calling next function
   function wait() {
     let i = setInterval(() =>{
-      if (!responsiveVoice.isPlaying() && introCounter > 0) {
+      if (!responsiveVoice.isPlaying() && counter > 0) {
         clearInterval(i);
-        showKeywords();
+        showKeywords(true);
       }
     },250);
   }
 
-
-  // Display text showing response options
-  function okayGo() {
-    setTimeout(() => {
-      // annyang is listening
-      annyang.resume();
-      if (introCounter <= 1) {
-        text.visible = true;
-        introCounter ++;
-
-      }
-    }, 1500);
-  }
-
-}
-
-// setupText()
-//
-// Sets up text prompts for display in center of gameboard
-function setupText() {
-  console.log('text');
-  // Pull phrase from data
-  phrase = (simonSays.instructions.clickToStart.toUpperCase());
-  // Set text style
-  style = new TextStyle({
-    fontFamily: 'Arial',
-    fontSize: (radius/2.5) / 5,
-    fontWeight: 'bold',
-    fill: 0xFFFFFF,
-    wordWrap: true,
-    wordWrapWidth: radius/2.5,
-    align: 'center'
-  });
-  // Declare text object
-  text = new Text(phrase, style);
-  // Set anchor point to center and position in center of gameboard
-  text.anchor.set(0.5);
-  text.x = circle.x;
-  text.y = circle.y;
-
-  // Append to stage
-  app.stage.addChild(text);
-
-  // Add animation
-  let counter = 0;
-  app.ticker.add((delta) =>{
-    text.scale.x = style.wordWrapWidth/200 + Math.sin(count) * 0.01;
-    text.scale.y = style.wordWrapWidth/200 + Math.sin(count) * 0.01;
-    counter += 0.1;
-  });
+  annyang.resume();
 
 }
 
 
-// lightPattern(length)
-//
-// Animate a new random light pattern for user to follow
-// set the length of the pattern according to passed argument
+
 function lightPattern(length) {
   console.log(length);
   let interval = INTERVAL * 2;
-  // Clear arrays and reset counters with each new pattern
+  // Clear arrays and reset match counters
   correct = 0;
   incorrect = 0;
   choices = [];
+  // Clear current pattern array
   currentPattern = [];
+  // Reset counter
   flashed = 0;
+  // Reset currently lit quadrant
   currentLight = undefined;
 
 
   // Every interval, light up the current quadrant, then randomly select a new quadrant
-  // Loop through until full pattern sequence is completed, saving each keyword in array
+  // Loop through until full pattern completed, saving each keyword in array
   let pattern = setInterval(() => {
-    // Light up a random quadrant
     currentLight = quadrants[Math.floor(Math.random() * quadrants.length)];
     currentLight.lightUp(short);
     PIXI.sound.play('beep');
-    // Save that quadrant's keyword to array holding current pattern sequence
     currentPattern.push(currentLight.keyword);
     flashed ++;
-    // Pattern complete when length of sequence matches argument passed
-    // Stop adding to sequence and start accepting user voice input
     if (flashed >= length) {
       clearInterval(pattern);
       setTimeout(() =>{
@@ -438,7 +337,7 @@ function lightPattern(length) {
   console.log(currentPattern);
 }
 
-// acceptInput()
+// repeatPattern()
 //
 // Receives speech input from user (speaking back light pattern)
 // Checks user input against pattern
@@ -448,22 +347,20 @@ function acceptInput() {
     pitch: Math.random() * 2 ,
     rate: 1.25
   };
-  responsiveVoice.speak('Your turn!', currentVoice, options);
-  // Start accepting input, resume annyang
+  responsiveVoice.speak('Your turn!', 'UK English Male', options);
+  // Start accepting input
   input = true;
-  annyang.resume();
-  // Display ear animation to show that Simon is listening
   ear.visible = true;
+  annyang.resume();
 }
 
-// checkInput()
-//
-// Check voice input against light pattern to see if it's a match
-// Gets called when a voice command is registered by annyang
 function checkInput() {
-  // Update rounds played counter
-  roundsPlayed++;
-  // Make sure we are accepting input
+  console.log('checking');
+  console.log('input = ' + input);
+  console.log('choices length: ' + choices.length);
+  console.log('pattern length: ' + currentPattern.length);
+
+  // If accepting input when function is called
   if (input) {
     // When user has attempted full pattern (same number of choices)
     if (choices.length === currentPattern.length) {
@@ -479,37 +376,32 @@ function checkInput() {
           console.log('wrong:' + incorrect + ' ' + i);
         }
       }
-      // Don't accept any more input, pause annyang
+      // Don't accept any more input
       input = false;
       annyang.pause();
       // If patterns match, user wins
       if (incorrect === 0 && correct === currentPattern.length) {
-        // Increase pattern length for next round
+
         patternLength++;
         console.log('winner!');
-        // Every 5 rounds, remix the keywords
-        if (roundsPlayed % 5 === 0) {
+
+        if (patternLength === 2) {
           remix();
         }
         else {
           // Call a fresh pattern
           lightPattern(patternLength);
-          }
+          console.log('pattern length: ' + patternLength);
+        }
 
       }
       // If patterns don't match, user loses
       else if (incorrect > 0) {
-        // Reset pattern length to one flash
         patternLength = 1;
         console.log('loser!');
-        // Every 5 rounds, remix the keywords
-        if (roundsPlayed % 5 === 0) {
-          remix();
-        }
-        else {
-          // Call a fresh pattern
-          lightPattern(patternLength);
-          }
+        // Call a fresh pattern
+        lightPattern(patternLength);
+        console.log('pattern length: ' + patternLength);
       }
     }
   }
@@ -520,39 +412,24 @@ function checkInput() {
 
 }
 
-// remix()
-//
-// Shuffle quadrant keywords (keep display the same)
-// so that keywords are now associated with the wrong color
-// (note: this doesn't set totally new keywords)
 function remix() {
-  // Pause annyang
   input = false;
   annyang.pause();
 
-  // Hide ear because Simon isn't listening
-  ear.visible = false;
+  app.ticker.add((delta) =>{
+    console.log('disappearing ear');
+    fadeEar();
+  });
 
-  // Simon calls out 'reeeemiiiix'
+  let p = 0;
+
   let options = {
     rate: 0.2,
     pitch: 1.3
   }
-  responsiveVoice.speak(simonSays.remix,currentVoice,options);
-
-  // Shuffle current keywords and pass to voice commands
+  responsiveVoice.speak(simonSays.remix,'UK English Male',options);
   shuffleKeywords();
   console.log('shuffled-remix');
-  // Flash quadrants in rapid succession
-  rapidFlash();
-}
-
-// rapidFlash()
-//
-// Flashes quadrants in rapid succession to show a change
-// is occurring in color and/or keyword
-function rapidFlash() {
-
   let index;
   let i = 0;
   let rapidFlash = setInterval(() => {
@@ -560,113 +437,15 @@ function rapidFlash() {
     index = Math.floor(Math.random() * quadrants.length);
     quadrants[index].lightUp(rapid);
     i++;
-    // Flash a random quadrant 20 times then clear
-    // and have Simon demonstrate the new setup
     if (i > 20) {
       clearInterval(rapidFlash);
-      showKeywords();
+      showKeywords(false);
     }
 
   }, INTERVAL/4);
 
 }
 
-// replaceQuadColors()
-//
-// Totally change the quadrant colors and matching keywords
-function replaceQuadColors() {
-
-  let randomColor;
-  let hex;
-  // Iterate through quadrants clockwise
-  for (let i = 0; i < quadrants.length; i++) {
-    // Get a random color object from data and standardize hex code format
-    randomColor = getRandomElement(dataObject.colors);
-    hex = randomColor.hex.replace('#', '0x');
-    // Set the 'lit' quadrant color to new color and
-    // Make the overlay a semi-transparent black to darken it
-    quadrants[i].lightColor = hex;
-    quadrants[i].maxAlpha = 0.4;
-    quadrants[i].a = quadrants[i].maxAlpha;
-    quadrants[i].color = colors.black;
-    // Update current keywords based on new color, inserting spaces
-    // between words if color name is more than one word
-    currentKeywords[i] = insertSpaces(randomColor.color);
-  }
-
-  // Pass the new keywords to quadrants and annyang commands
-  passKeywords();
-  // Flash quadrants to animate change and have Simon demonstrate new keywords
-  rapidFlash();
-}
-
-// insertSpaces(string)
-//
-// Insert a space before every capitalized word in a string
-function insertSpaces(string){
-  console.log(string);
-  // Array to save indices of each capital letter
-  let spaceHere = [];
-  // Run through string and log index of every capital letter to array
-  for (let i = 0; i < string.length; i++) {
-    // Check each character against upper case variant
-    if (string[i] === string[i].toUpperCase()) {
-      console.log(i + 'is uppercase');
-      // Push to array if upper case
-      spaceHere.push(i);
-    }
-  }
-  // Add spaces to string using index numbers saved to spaceHere array
-  // Don't add a space in front of the first word (assumes first word is capitalized)
-  for (let i = 1; i < spaceHere.length; i++) {
-    // Increase index numbers to account for new string length including spaces
-    spaceHere[i] += (i - 1)
-    // Slice the string at the appropriate index, add a space and reconcatenate
-    string = string.slice(0,spaceHere[i]) + ' ' + string.slice(spaceHere[i]);
-    console.log('new string: ' + string);
-  }
-
-  // Return the new string with spaces!
-  return string;
-}
-
-// prependAdjective
-//
-// Prepend an adjective to the front of each quadrant color keyword
-// Remove any existing adjectives first
-function prependAdjective() {
-  let options = [1,2];
-  let property = getRandomElement(options);
-  let randomAdjective;
-  let arrayOfWords;
-  // Iterate through quadrants
-  for (let i = 0; i < quadrants.length; i++) {
-    // If the current keyword is more than one word split words into array
-    // the noun will be the last item in the array
-    arrayOfWords = currentKeywords[i].split(' ');
-    // Get a random ajective from data
-    if (property === 1) {
-      randomAdjective = getRandomElement(dataObject.adjectives);
-    }
-    else if (property === 2) {
-      randomAdjective = getRandomElement(dataObject.expletives);
-    }
-    // Insert spaces if needed
-    randomAdjective = insertSpaces(randomAdjective);
-    // Replace adjectives
-    currentKeywords[i] = arrayOfWords[arrayOfWords.length - 1].replace(/^/, randomAdjective + ' ');
-  }
-
-  // Pass the new keywords to quadrants and annyang commands
-  passKeywords();
-  // Flash quadrants to animate change and have Simon demonstrate new keywords
-  rapidFlash();
-}
-
-// shuffleKeywords()
-//
-// Shuffle the array of current keywords and
-// pass new associations to quadrants and voice commands
 function shuffleKeywords() {
   // Fisher-Yates function to shuffle arrays
   Array.prototype.shuffle = function() {
@@ -688,9 +467,6 @@ function shuffleKeywords() {
   passKeywords();
 }
 
-// passKeywords()
-//
-// Set quadrant keyword properties and voice commands
 function passKeywords() {
   // Associate keywords to quadrants in clockwise order
   for (let i = 0; i < quadrants.length; i++) {
@@ -703,11 +479,7 @@ function passKeywords() {
 
 }
 
-// showKeywords()
-//
-// Have Simon demonstrate keywords by flashing quadrants
-// clockwise and speaking related keyword aloud
-function showKeywords() {
+function showKeywords(start) {
   // Don't accept voice input
   input = false;
   annyang.pause();
@@ -744,9 +516,7 @@ function showKeywords() {
 }
 
 
-// drawBoard()
-//
-// Create classic Simon interface
+
 function drawBoard() {
   // Set radius so circle fits to window with slight margin
   // adapt for portrait or landscape orientation
@@ -765,9 +535,6 @@ function drawBoard() {
 
 }
 
-// getVertices()
-//
-// Determine vertices for quadrants according to base circle
 function getVertices() {
   // Determine outer edges of circle
   board = circle.getBounds();
@@ -792,11 +559,7 @@ function getVertices() {
   }
 }
 
-// setup Quadrants()
-//
-// Create quadrant objects
 function setupQuadrants() {
-
   getVertices();
 
   // Create quadrant objects and populate array
@@ -807,10 +570,6 @@ function setupQuadrants() {
 
 }
 
-// drawQuadrants()
-//
-// Draw the quadrants as primitive shapes using vertices as reference
-// (call in setup and game loop)
 function drawQuadrants() {
   topLeft.draw();
   topRight.draw();
@@ -818,10 +577,6 @@ function drawQuadrants() {
   bottomLeft.draw();
 }
 
-// displayQuadrants()
-//
-// Display quadrants on screen
-// Appends quadrants to stage (call once in setup)
 function displayQuadrants() {
 
   topLeft.display();
@@ -830,10 +585,6 @@ function displayQuadrants() {
   bottomLeft.display();
 }
 
-// drawOutlines()
-//
-// Draw the black circle at center of the gameboard and lines between quadrants
-// (call in game loop so always rendered on top of quadrants)
 function drawOutlines() {
 
   outlines.clear();
@@ -848,65 +599,76 @@ function drawOutlines() {
 
 }
 
-// displayOutlines()
-//
-// Display outlines, append to stage (call once in setup)
 function displayOutlines() {
 
   app.stage.addChild(outlines);
 
 }
 
-// setup Sprites()
-//
-// Create sprites and add animation to tickers
 function setupSprites() {
-  // This is an ear that hangs out in the center of the gameboard
-  // to show that Simon is listening
   ear = new Sprite(
     PIXI.loader.resources['assets/images/ear.png'].texture
   );
   app.stage.addChild(ear);
-  // Position and scale
   ear.anchor.set(0.5);
   ear.x = width/2;
   ear.y = height/2;
-  scaleEar = (radius/2.5) / (ear.height * 0.7);
+  revertEar = (radius/2.5) / (ear.height * 0.7);
+  scaleEar = revertEar;
+
   ear.scale.set(scaleEar,scaleEar);
 
-  // Add to the ticker to animate
-  // Lightly pulsates in position
   app.ticker.add((delta) =>{
     ear.scale.x = scaleEar + Math.sin(count) * 0.01;
     ear.scale.y = scaleEar + Math.cos(count) * 0.01;
     count += 0.1;
   });
-  // Hide until revealed
+
   ear.visible = false;
 
-  // This is a circle that represents sound entering the ear
-  // It appears every time a voice command is registered
+  eyeball = new Sprite(
+    PIXI.loader.resources['assets/images/eyeball.png'].texture
+  );
+  app.stage.addChild(eyeball);
+  eyeball.anchor.set(0.5);
+  eyeball.x = width/2;
+  eyeball.y = height/2;
+
+  eye = new Sprite(
+    PIXI.loader.resources['assets/images/eye.png'].texture
+  );
+  app.stage.addChild(eye);
+  eye.anchor.set(0.5);
+  eye.setParent(eyeball);
+  eyeball.scale.set(scaleEar,scaleEar);
+  eyeballBounds = eyeball.getBounds();
+  eyeBounds = eye.getBounds();
+
+  eye.vx = 2;
+  eye.vy = 2;
+
+  eyeball.visible = false;
+  eye.visible = false;
+
+
   soundAnimation = new Sprite(
     PIXI.loader.resources['assets/images/soundImg.png'].texture
   );
   app.stage.addChild(soundAnimation);
-  // Position and scale
   scaleSound = (radius/2.5) / (soundAnimation.height * 0.5);
   soundAnimation.anchor.set(0.5);
   soundAnimation.x = width/2;
   soundAnimation.y = height/2;
   soundAnimation.scale.set(scaleSound,scaleSound);
 
-  // Create a separate ticker for the sound animation
   soundTicker = new PIXI.ticker.Ticker();
   soundTicker.autostart = false;
-  // Gets smaller so it appears to go 'into' ear
   soundTicker.add((delta) => {
     soundAnimation.scale.x = scaleSound - rcount;
     soundAnimation.scale.y = scaleSound - rcount;
     soundAnimation.alpha = 0.5 - rcount;
     rcount += 0.01;
-    // Reset size
+
     if (soundAnimation.width < 5) {
       soundAnimation.visible = false;
       soundAnimation.scale.x = scaleSound;
@@ -915,18 +677,66 @@ function setupSprites() {
       soundTicker.stop();
     }
   });
-  // Stop animationi and hide until a new voice command is registered
   soundTicker.stop();
   soundAnimation.visible = false;
 }
 
-// setVoiceCommands()
-//
-// Set commands for annyang voice recognition
+function fadeEar() {
+  ear.alpha -= scount;
+  scount += 0.001;
+  if (ear.alpha < 5) {
+    ear.visible = false;
+    ear.alpha = 1;
+    scount = 0;
+  }
+}
+
+function moveEye() {
+  console.log('moving');
+  eye.x -= eye.vx;
+  eye.y -= eye.vy;
+
+/*
+  switch(currentLight) {
+    case topLeft:
+      eye.x -= eye.vx;
+      eye.y -= eye.vy;
+      break;
+    case topRight:
+      eye.x += eye.vx;
+      eye.y -= eye.vy;
+      break;
+    case bottomRight:
+      eye.x += eye.vx;
+      eye.y += eye.vy;
+      break;
+    case bottomLeft:
+      eye.x -= eye.vx;
+      eye.y += eye.vy;
+      break;
+    default:
+      break;
+  }
+  */
+}
+
+function animateSound(delta) {
+  soundAnimation.scale.x = s - rcount;
+  soundAnimation.scale.y = s - rcount;
+  rcount += 5;
+
+  if (soundAnimation.width < 5) {
+    soundAnimation.scale.x = s;
+    soundAnimation.scale.y = s;
+  }
+}
+
+function displaySoundAnimation() {
+
+}
+
 function setVoiceCommands() {
   let commands = {
-    // These are the four quadrant keywords / current keywords
-    // Light up the associated quadrant and log keyword to choices array
     [quadrants[0].keyword]: () => {
         console.log('you just said: ' + quadrants[0].keyword);
         currentChoice = currentKeywords[0];
@@ -956,33 +766,10 @@ function setVoiceCommands() {
         checkInput();
     },
     'yes': () => {
-      // Hide text and start game play
-      text.visible = false;
-      let options = {pitch: 0.5, rate: 0.6}
-      setTimeout(() => {
-        responsiveVoice.speak('Let\'s play', currentVoice, options);
-      }, 1000);
-      setTimeout(() => {
-        lightPattern(patternLength);
-      }, 3000);
+      lightPattern(patternLength);
       annyang.pause();
-    },
-    // Hide text and admonish user, then ask 'are you ready?' again
-    'no': () => {
-      text.visible = false;
-      let activity = getRandomElement(dataObject.activities);
-      let reaction = getRandomElement(simonSays.reactions);
-      let admonishment = getRandomElement(simonSays.admonishment);
-      responsiveVoice.speak(reaction + 'too busy ' + activity + '? ' + admonishment, currentVoice);
-      setTimeout(() => {
-        intro();
-      }, 10000);
     }
   };
 
   return commands;
-}
-
-function getRandomElement(array) {
-  return array[Math.floor(Math.random() * array.length)];
 }
