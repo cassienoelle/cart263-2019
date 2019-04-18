@@ -72,7 +72,7 @@ function mousePressed() {
 
 function draw() {
 
-  tint(255, 0, 250);
+  tint(255);
   image(video, centerX, centerY);
   drawKeypoints();
 
