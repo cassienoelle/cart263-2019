@@ -19,7 +19,17 @@ let centerX, centerY;
 // Pose tracking variables
 let poseNet;
 let poses = [];
-let face = ["leftEar", "leftEye", "nose", "rightEye", "rightEar"];
+let faceParts = ["rightEar", "rightEye", "nose", "leftEye", "leftEar"];
+let facePositions = [];
+let positionIndex = 0;
+
+
+// Music
+let drumTempo;
+let kick, snare, clap;
+let drumPattern;
+// Prevent multiple mousePressed calls
+let pressed = false;
 
 // preload()
 //
@@ -56,6 +66,28 @@ function setup() {
     poses = results;
   });
 
+  // Load drum sounds
+  kick = new Pizzicato.Sound({
+    source: 'file',
+    options: {
+      path: 'assets/sounds/kick.wav'
+    }
+  });
+
+  snare = new Pizzicato.Sound({
+    source: 'file',
+    options: {
+      path: 'assets/sounds/snare.wav'
+    }
+  });
+
+  clap = new Pizzicato.Sound({
+    source: 'file',
+    options: {
+      path: 'assets/sounds/clap.wav'
+    }
+  });
+
 }
 
 function modelReady() {
@@ -64,6 +96,15 @@ function modelReady() {
 
 function mousePressed() {
   console.log(JSON.stringify(poses));
+  console.log(facePositions);
+
+  if (!pressed) {
+    setTimeout(drumBeat, 500);
+  } else {
+    console.log('already pressed!');
+  }
+
+  pressed = true;
 }
 
 // draw()
@@ -90,13 +131,68 @@ function drawKeypoints()  {
       // Loop through face array and
       // only draw an ellipse if the keypoint is part of the face
       // and keypoint score is high enough
-      for (let f = 0; f < face.length; f++) {
-        if (keypoint.part === face[f] && keypoint.score > 0.2) {
+      for (let f = 0; f < faceParts.length; f++) {
+        if (keypoint.part === faceParts[f] && keypoint.score > 0.2) {
+          // Draw ellipse at keypoint
           fill(255, 0, 0);
           noStroke();
           ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
+          // Add to facePosition array
+          facePositions[f] = keypoint.position.x;
         }
       }
     }
   }
+}
+
+// Play drum sounds corresponding to face parts
+// Tempo controlled by real-time x-distance between face parts
+function drumBeat(continueInterval = true) {
+  console.log('called');
+  console.log('continue');
+  console.log('drum tempo: ' + drumTempo);
+
+  switch (faceParts[positionIndex]) {
+    case 'leftEar' || 'rightEar':
+      snare.play();
+      console.log(faceParts[positionIndex] + 'snare');
+      break;
+
+    case 'leftEye' || 'rightEye':
+      kick.play();
+      console.log(faceParts[positionIndex] + 'kick');
+      break;
+
+    case 'nose':
+      clap.play();
+      console.log(faceParts[positionIndex] + 'clap');
+      break;
+
+    default:
+      break;
+  }
+
+  drumTempo = setTempo();
+
+  positionIndex++;
+  if (positionIndex > facePositions.length) {
+    positionIndex = 0;
+  }
+
+  if (continueInterval) {
+    setTimeout(drumBeat, drumTempo);
+  }
+}
+
+function setTempo() {
+  let averageDistance = 0;
+  let distance = 0;
+  for (let i = facePositions.length - 1; i > 0; i--) {
+    distance = facePositions[i] - facePositions[i - 1];
+    averageDistance += distance;
+  }
+
+  averageDistance = averageDistance / facePositions.length;
+  console.log('average:' + averageDistance);
+  return averageDistance;
 }
