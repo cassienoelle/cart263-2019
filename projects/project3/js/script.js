@@ -19,12 +19,15 @@ let videoWidth, videoHeight;
 let poseNet;
 let poses = [];
 let faceParts = ["leftEar", "leftEye", "nose", "rightEye", "rightEar"];
+let leftX, leftY, rightX, rightY, noseX, noseY, size;
 let facePositions = [];
 let positionIndex = 0;
 let r = 255;
 let g = 255;
 let b = 255;
 
+// Overlay images
+let wowEmoji;
 
 // Music
 let drumTempo;
@@ -41,7 +44,7 @@ let pressed = false;
 //
 
 function preload() {
-
+  wowEmoji = loadImage('assets/images/wow-emoji.png');
 }
 
 
@@ -141,16 +144,14 @@ function modelReady() {
 }
 
 function mousePressed() {
-  // console.log(JSON.stringify(poses));
-  // console.log(facePositions);
-
-  if (!pressed) {
-    setTimeout(drumBeat, 35);
-  } else {
-    console.log('already pressed!');
-  }
-  selectDrums();
-  pressed = true;
+  // console.log(JSON.stringify(poses[0]));
+  // if (!pressed) {
+  //   setTimeout(drumBeat, 35);
+  // } else {
+  //   console.log('already pressed!');
+  // }
+  // selectDrums();
+  // pressed = true;
 }
 
 
@@ -171,12 +172,14 @@ function draw() {
 
   // Draw ellipses at on keypoints of face
   drawKeypoints();
+  emojiFace();
 }
 
 // A function to draw ellipses over the detected keypoints
 function drawKeypoints()  {
   // Loop through all the poses detected
   for (let i = 0; i < poses.length; i++) {
+    // console.log('Pose ' + i + poses[i]);
     // For each pose detected, loop through all the keypoints
     for (let j = 0; j < poses[i].pose.keypoints.length; j++) {
       // A keypoint is an object describing a body part (like rightArm or leftShoulder)
@@ -196,6 +199,25 @@ function drawKeypoints()  {
       }
     }
   }
+}
+
+
+function emojiFace() {
+  // Diameter of image is width between ears
+  if (poses.length > 0) {
+    leftX = poses[0].pose.keypoints[4].position.x;
+    leftY = poses[0].pose.keypoints[4].position.y;
+    rightX = poses[0].pose.keypoints[5].position.x;
+    rightY = poses[0].pose.keypoints[5].position.y;
+    noseX = poses[0].pose.keypoints[0].position.x;
+    noseY = poses[0].pose.keypoints[0].position.y;
+    size = dist(leftX, leftY, rightX, rightY) * 0.75;
+    push()
+    imageMode(CENTER);
+    image(wowEmoji, noseX, noseY, size, size);
+    pop();
+  }
+
 }
 
 // Play drum sounds corresponding to face parts
