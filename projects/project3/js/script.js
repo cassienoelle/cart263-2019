@@ -28,7 +28,9 @@ let b = 255;
 
 // Music
 let drumTempo;
-let kick, snare, clap;
+let kick, snare, clap, acid, grime;
+let drumSounds = [];
+let drumPattern = [];
 let currentSound;
 let stereoPanner;
 // Prevent multiple mousePressed calls
@@ -100,14 +102,38 @@ function setupSounds() {
     }
   });
 
+  acid = new Pizzicato.Sound({
+    source: 'file',
+    options: {
+      path: 'assets/sounds/acid-one.wav'
+    }
+  });
+
+  grime = new Pizzicato.Sound({
+    source: 'file',
+    options: {
+      path: 'assets/sounds/grime-one.wav'
+    }
+  });
+
   // Setup effects
   stereoPanner = new Pizzicato.Effects.StereoPanner({
     pan: 0
   });
+
+  // Enter sounds into array
+  drumSounds = [kick, snare, clap, acid, grime];
   // Add effects to drum sounds
-  kick.addEffect(stereoPanner);
-  snare.addEffect(stereoPanner);
-  clap.addEffect(stereoPanner);
+  for (let i = 0; i < drumSounds.length; i++) {
+    drumSounds[i].addEffect(stereoPanner);
+  }
+}
+
+function selectDrums() {
+  for (let i = 0; i < 3; i++) {
+    drumPattern[i] = random(drumSounds);
+  }
+  console.log('drumPattern: ' + drumPattern);
 }
 
 function modelReady() {
@@ -123,9 +149,11 @@ function mousePressed() {
   } else {
     console.log('already pressed!');
   }
-
+  selectDrums();
   pressed = true;
 }
+
+
 
 // draw()
 //
@@ -181,31 +209,31 @@ function drumBeat(continueInterval = true) {
   switch (faceParts[positionIndex]) {
     case 'leftEar':
       stereoPanner.pan = -1;
-      currentSound = snare;
+      currentSound = drumPattern[0];
       console.log(faceParts[positionIndex] + 'snare');
       break;
 
     case 'leftEye':
       stereoPanner.pan = -0.5;
-      currentSound = kick;
+      currentSound = drumPattern[1];
       console.log(faceParts[positionIndex] + 'kick');
       break;
 
     case 'nose':
       stereoPanner.pan = 0;
-      currentSound = clap;
+      currentSound = drumPattern[2];
       console.log(faceParts[positionIndex] + 'clap');
       break;
 
     case 'rightEye':
       stereoPanner.pan = 0.5;
-      currentSound = kick;
+      currentSound = drumPattern[1];
       console.log(faceParts[positionIndex] + 'kick');
       break;
 
     case 'rightEar':
       stereoPanner.pan = 1;
-      currentSound = snare;
+      currentSound = drumPattern[0];
       console.log(faceParts[positionIndex] + 'snare');
       break;
 
@@ -219,7 +247,6 @@ function drumBeat(continueInterval = true) {
     console.log('timeout set!');
     setTimeout(drumBeat, drumTempo);
   }
-
 
   positionIndex++;
   if (positionIndex >= facePositions.length) {
@@ -241,5 +268,6 @@ function setTempo() {
     averageDistance = averageDistance * -1;
   }
   console.log('average:' + averageDistance);
+  averageDistance = constrain(averageDistance, 75, 1500);
   drumTempo = averageDistance;
 }

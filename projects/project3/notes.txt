@@ -6,6 +6,7 @@
 6. using posenet, the beat is created using the key points on the face, then the harmony or wtvr using body poses
 7. sound files and frequencies but if time add option to record mic input
 8. make it so you can record the piece of music
+9. drag and drop sounds onto face parts to select beat 
 
 
 
