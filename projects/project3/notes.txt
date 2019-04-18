@@ -5,9 +5,10 @@
 5. combine p5 and face recognition? only analyze pixels in face?
 6. using posenet, the beat is created using the key points on the face, then the harmony or wtvr using body poses
 7. sound files and frequencies but if time add option to record mic input
+8. make it so you can record the piece of music
 
 
 
 TO DO:
 - fix/equalize length of drum beat sound files
-- make appropriate dot flash with each beat 
+- make appropriate dot flash with each beat

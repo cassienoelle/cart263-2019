@@ -14,7 +14,6 @@ Cassie Smith
 let canvas;
 let video;
 let videoWidth, videoHeight;
-let centerX, centerY;
 
 // Pose tracking variables
 let poseNet;
@@ -49,18 +48,23 @@ function preload() {
 //
 
 function setup() {
+  // Set width and height to maintain webcam aspect ratio
+  // for any screen orientation
+  if (windowWidth >= windowHeight) {
+    videoHeight = windowHeight;
+    videoWidth = windowHeight / 0.75;
+  }
+  else if (windowHeight > windowWidth) {
+    videoWidth = windowWidth;
+    videoHeight = windowWidth * 0.75;
+  }
 
   // Setup canvas and webcam feed
-  canvas = createCanvas(1000, 750);
+  canvas = createCanvas(videoWidth, videoHeight);
 
-  // videoWidth = 1000;
-  // videoHeight = 750;
-  // centerX = (windowWidth - videoWidth)/2;
-  // centerY = (windowHeight - videoHeight)/2;
-
-  // video = createCapture(VIDEO);
-  // video.size(1000, 750);
-  // video.hide();
+  video = createCapture(VIDEO);
+  video.size(videoWidth, videoHeight);
+  video.hide();
 
   // Initialize poseNet
   // Fill poses array with results every time a new pose is detected
@@ -69,6 +73,11 @@ function setup() {
     poses = results;
   });
 
+  setupSounds();
+
+}
+
+function setupSounds() {
   // Load drum sounds
   kick = new Pizzicato.Sound({
     source: 'file',
@@ -124,13 +133,13 @@ function mousePressed() {
 
 function draw() {
   background(0);
-  // tint(255);
+  tint(255);
 
   // Flip video horizontally so
   // left-right motions are more intuitive
-  // translate(width, 0);
-  // scale(-1, 1);
-  // image(video, 0, 0);
+  translate(width, 0);
+  scale(-1, 1);
+  image(video, 0, 0);
 
   // Draw ellipses at on keypoints of face
   drawKeypoints();
