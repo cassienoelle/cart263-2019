@@ -19,6 +19,7 @@ let centerX, centerY;
 // Pose tracking variables
 let poseNet;
 let poses = [];
+let face = ["leftEar", "leftEye", "nose", "rightEye", "rightEar"];
 
 // preload()
 //
@@ -73,5 +74,29 @@ function draw() {
 
   tint(255, 0, 250);
   image(video, centerX, centerY);
+  drawKeypoints();
 
+
+}
+
+// A function to draw ellipses over the detected keypoints
+function drawKeypoints()  {
+  // Loop through all the poses detected
+  for (let i = 0; i < poses.length; i++) {
+    // For each pose detected, loop through all the keypoints
+    for (let j = 0; j < poses[i].pose.keypoints.length; j++) {
+      // A keypoint is an object describing a body part (like rightArm or leftShoulder)
+      let keypoint = poses[i].pose.keypoints[j];
+      // Loop through face array and
+      // only draw an ellipse if the keypoint is part of the face
+      // and keypoint score is high enough
+      for (let f = 0; f < face.length; f++) {
+        if (keypoint.part === face[f] && keypoint.score > 0.2) {
+          fill(255, 0, 0);
+          noStroke();
+          ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
+        }
+      }
+    }
+  }
 }
