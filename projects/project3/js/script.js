@@ -30,7 +30,7 @@ let b = 255;
 // Music
 let drumTempo;
 let kick, snare, clap;
-let drumPattern;
+let currentSound;
 let stereoPanner;
 // Prevent multiple mousePressed calls
 let pressed = false;
@@ -107,8 +107,8 @@ function modelReady() {
 }
 
 function mousePressed() {
-  console.log(JSON.stringify(poses));
-  console.log(facePositions);
+  // console.log(JSON.stringify(poses));
+  // console.log(facePositions);
 
   if (!pressed) {
     setTimeout(drumBeat, 35);
@@ -126,10 +126,15 @@ function mousePressed() {
 function draw() {
 
   tint(255);
+
+  // Flip video horizontally so
+  // left-right motions are more intuitive
+  translate(width, 0);
+  scale(-1, 1);
   image(video, centerX, centerY);
+
+  // Draw ellipses at on keypoints of face
   drawKeypoints();
-
-
 }
 
 // A function to draw ellipses over the detected keypoints
@@ -161,37 +166,38 @@ function drawKeypoints()  {
 // Tempo controlled by real-time x-distance between face parts
 function drumBeat(continueInterval = true) {
   console.log('called');
-
+  setTempo();
+  console.log('drum tempo: ' + drumTempo);
+  console.log('index: ' + positionIndex);
   // Play sound according to face part, panning left-right
-  // Note: 'right' = 'left' due to mirroring effect of webcam
   switch (faceParts[positionIndex]) {
-    case 'rightEar':
-      stereoPanner.pan = 1;
-      snare.play();
+    case 'leftEar':
+      stereoPanner.pan = -1;
+      currentSound = snare;
       console.log(faceParts[positionIndex] + 'snare');
       break;
 
-    case 'rightEye':
+    case 'leftEye':
       stereoPanner.pan = -0.5;
-      kick.play();
+      currentSound = kick;
       console.log(faceParts[positionIndex] + 'kick');
       break;
 
     case 'nose':
       stereoPanner.pan = 0;
-      clap.play();
+      currentSound = clap;
       console.log(faceParts[positionIndex] + 'clap');
       break;
 
-    case 'leftEye':
+    case 'rightEye':
       stereoPanner.pan = 0.5;
-      kick.play();
+      currentSound = kick;
       console.log(faceParts[positionIndex] + 'kick');
       break;
 
-    case 'leftEar':
-      stereoPanner.pan = -1;
-      snare.play();
+    case 'rightEar':
+      stereoPanner.pan = 1;
+      currentSound = snare;
       console.log(faceParts[positionIndex] + 'snare');
       break;
 
@@ -199,17 +205,18 @@ function drumBeat(continueInterval = true) {
       break;
   }
 
-  setTempo();
-  console.log('drum tempo: ' + drumTempo);
+  currentSound.play();
+  if (continueInterval) {
+    console.log('timeout set!');
+    setTimeout(drumBeat, drumTempo);
+  }
+
 
   positionIndex++;
-  if (positionIndex > facePositions.length) {
+  if (positionIndex >= facePositions.length) {
     positionIndex = 0;
   }
 
-  if (continueInterval) {
-    setTimeout(drumBeat, drumTempo);
-  }
 }
 
 function setTempo() {
@@ -220,7 +227,10 @@ function setTempo() {
     averageDistance += distance;
   }
 
-  averageDistance = (averageDistance / facePositions.length);
+  averageDistance = (averageDistance / facePositions.length) * 2;
+  if (averageDistance < 0) {
+    averageDistance = averageDistance * -1;
+  }
   console.log('average:' + averageDistance);
   drumTempo = averageDistance;
 }
