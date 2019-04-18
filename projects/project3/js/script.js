@@ -19,15 +19,19 @@ let centerX, centerY;
 // Pose tracking variables
 let poseNet;
 let poses = [];
-let faceParts = ["rightEar", "rightEye", "nose", "leftEye", "leftEar"];
+let faceParts = ["leftEar", "leftEye", "nose", "rightEye", "rightEar"];
 let facePositions = [];
 let positionIndex = 0;
+let r = 255;
+let g = 255;
+let b = 255;
 
 
 // Music
 let drumTempo;
 let kick, snare, clap;
 let drumPattern;
+let stereoPanner;
 // Prevent multiple mousePressed calls
 let pressed = false;
 
@@ -88,6 +92,14 @@ function setup() {
     }
   });
 
+  // Setup effects
+  stereoPanner = new Pizzicato.Effects.StereoPanner({
+    pan: 0
+  });
+  // Add effects to drum sounds
+  kick.addEffect(stereoPanner);
+  snare.addEffect(stereoPanner);
+  clap.addEffect(stereoPanner);
 }
 
 function modelReady() {
@@ -99,7 +111,7 @@ function mousePressed() {
   console.log(facePositions);
 
   if (!pressed) {
-    setTimeout(drumBeat, 500);
+    setTimeout(drumBeat, 35);
   } else {
     console.log('already pressed!');
   }
@@ -134,7 +146,7 @@ function drawKeypoints()  {
       for (let f = 0; f < faceParts.length; f++) {
         if (keypoint.part === faceParts[f] && keypoint.score > 0.2) {
           // Draw ellipse at keypoint
-          fill(255, 0, 0);
+          fill(r, g, b);
           noStroke();
           ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
           // Add to facePosition array
@@ -149,30 +161,46 @@ function drawKeypoints()  {
 // Tempo controlled by real-time x-distance between face parts
 function drumBeat(continueInterval = true) {
   console.log('called');
-  console.log('continue');
-  console.log('drum tempo: ' + drumTempo);
 
+  // Play sound according to face part, panning left-right
+  // Note: 'right' = 'left' due to mirroring effect of webcam
   switch (faceParts[positionIndex]) {
-    case 'leftEar' || 'rightEar':
+    case 'rightEar':
+      stereoPanner.pan = 1;
       snare.play();
       console.log(faceParts[positionIndex] + 'snare');
       break;
 
-    case 'leftEye' || 'rightEye':
+    case 'rightEye':
+      stereoPanner.pan = -0.5;
       kick.play();
       console.log(faceParts[positionIndex] + 'kick');
       break;
 
     case 'nose':
+      stereoPanner.pan = 0;
       clap.play();
       console.log(faceParts[positionIndex] + 'clap');
+      break;
+
+    case 'leftEye':
+      stereoPanner.pan = 0.5;
+      kick.play();
+      console.log(faceParts[positionIndex] + 'kick');
+      break;
+
+    case 'leftEar':
+      stereoPanner.pan = -1;
+      snare.play();
+      console.log(faceParts[positionIndex] + 'snare');
       break;
 
     default:
       break;
   }
 
-  drumTempo = setTempo();
+  setTempo();
+  console.log('drum tempo: ' + drumTempo);
 
   positionIndex++;
   if (positionIndex > facePositions.length) {
@@ -192,7 +220,7 @@ function setTempo() {
     averageDistance += distance;
   }
 
-  averageDistance = averageDistance / facePositions.length;
+  averageDistance = (averageDistance / facePositions.length);
   console.log('average:' + averageDistance);
-  return averageDistance;
+  drumTempo = averageDistance;
 }
