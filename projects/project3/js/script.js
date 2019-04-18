@@ -10,8 +10,15 @@ Cassie Smith
 
 ******************/
 
-let canvas, capture;
+// Canvas and camera variables
+let canvas;
+let video;
+let videoWidth, videoHeight;
+let centerX, centerY;
 
+// Pose tracking variables
+let poseNet;
+let poses = [];
 
 // preload()
 //
@@ -28,14 +35,35 @@ function preload() {
 
 function setup() {
 
-  canvas = createCanvas(640,480);
+  // Setup canvas and webcam feed
+  canvas = createCanvas(windowWidth, windowHeight);
   background(0);
-  capture = createCapture(VIDEO);
-  capture.size(640, 480);
-  capture.hide();
+
+  videoWidth = 1000;
+  videoHeight = 750;
+  centerX = (windowWidth - videoWidth)/2;
+  centerY = (windowHeight - videoHeight)/2;
+
+  video = createCapture(VIDEO);
+  video.size(videoWidth, videoHeight);
+  video.hide();
+
+  // Initialize poseNet
+  // Fill poses array with results every time a new pose is detected
+  poseNet = ml5.poseNet(video, modelReady);
+  poseNet.on('pose', results => {
+    poses = results;
+  });
 
 }
 
+function modelReady() {
+  console.log('Model Loaded');
+}
+
+function mousePressed() {
+  console.log(JSON.stringify(poses));
+}
 
 // draw()
 //
@@ -44,6 +72,6 @@ function setup() {
 function draw() {
 
   tint(255, 0, 250);
-  image(capture, 0, 0);
+  image(video, centerX, centerY);
 
 }
