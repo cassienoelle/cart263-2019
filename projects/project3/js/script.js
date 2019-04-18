@@ -51,17 +51,16 @@ function preload() {
 function setup() {
 
   // Setup canvas and webcam feed
-  canvas = createCanvas(windowWidth, windowHeight);
-  background(0);
+  canvas = createCanvas(1000, 750);
 
-  videoWidth = 1000;
-  videoHeight = 750;
-  centerX = (windowWidth - videoWidth)/2;
-  centerY = (windowHeight - videoHeight)/2;
+  // videoWidth = 1000;
+  // videoHeight = 750;
+  // centerX = (windowWidth - videoWidth)/2;
+  // centerY = (windowHeight - videoHeight)/2;
 
-  video = createCapture(VIDEO);
-  video.size(videoWidth, videoHeight);
-  video.hide();
+  // video = createCapture(VIDEO);
+  // video.size(1000, 750);
+  // video.hide();
 
   // Initialize poseNet
   // Fill poses array with results every time a new pose is detected
@@ -124,14 +123,14 @@ function mousePressed() {
 //
 
 function draw() {
-
-  tint(255);
+  background(0);
+  // tint(255);
 
   // Flip video horizontally so
   // left-right motions are more intuitive
-  translate(width, 0);
-  scale(-1, 1);
-  image(video, centerX, centerY);
+  // translate(width, 0);
+  // scale(-1, 1);
+  // image(video, 0, 0);
 
   // Draw ellipses at on keypoints of face
   drawKeypoints();
@@ -206,6 +205,7 @@ function drumBeat(continueInterval = true) {
   }
 
   currentSound.play();
+
   if (continueInterval) {
     console.log('timeout set!');
     setTimeout(drumBeat, drumTempo);
@@ -227,7 +227,7 @@ function setTempo() {
     averageDistance += distance;
   }
 
-  averageDistance = (averageDistance / facePositions.length) * 2;
+  averageDistance = (averageDistance / facePositions.length) * 3;
   if (averageDistance < 0) {
     averageDistance = averageDistance * -1;
   }
