@@ -31,10 +31,14 @@ let confidence;
 let wowEmoji;
 
 // Music
-let synth;
-let frequency = 250;
-let minFrequency = 100;
-let maxFrequency = 500;
+let synthLeft;
+let synthRight;
+let frequencyLeft = 250;
+let minFreqLeft = 165;
+let maxFreqLeft = 130;
+let frequencyRight = 250;
+let minFreqRight = 260;
+let maxFreqRight = 524;
 let drumTempo;
 let kick, snare, clap, acid, grime;
 let drumSounds = [];
@@ -90,11 +94,19 @@ function setup() {
 function setupSounds() {
   // Create synth
   // Create the synth
-  synth = new Pizzicato.Sound({
+  synthLeft = new Pizzicato.Sound({
     source: 'wave',
     options: {
       type: 'sine',
-      frequency: frequency
+      frequency: frequencyLeft
+    }
+  });
+
+  synthRight = new Pizzicato.Sound({
+    source: 'wave',
+    options: {
+      type: 'sine',
+      frequency: frequencyRight
     }
   });
 
@@ -219,17 +231,28 @@ function drawKeypoints()  {
 
 function playTone() {
 
-  for (let i = 0; i < poses.length; i++) {
-    let leftWrist = poses[i].pose.keypoints[9];
-    frequency = map(leftWrist.position.y, 0, height, minFrequency, maxFrequency);
-    console.log('frequency: ' + frequency);
-    synth.frequency = frequency;
+  // let frequencyLeft = 250;
+  // let minFreqLeft = 100;
+  // let maxFreqLeft = 500;
+  // let frequencyRight = 250;
+  // let minFreqRight = 200;
+  // let maxFreqright = 300;
+
+  if (poses.length > 0) {
+    let leftWrist = poses[0].pose.keypoints[9];
+    let rightWrist = poses[0].pose.keypoints[10];
+    frequencyLeft = map(leftWrist.position.y, 0, height, minFreqLeft, maxFreqLeft);
+    frequencyRight = map(rightWrist.position.y, 0, height, minFreqRight, maxFreqRight);
+    synthLeft.frequency = frequencyLeft;
+    synthRight.frequency = frequencyRight;
     // Check if left wrist keypoint is detected
-    if (leftWrist.score > 0.2) {
-      synth.play();
+    synthLeft.play();
+    synthRight.play();
+    if (leftWrist.position.y > height) {
+      synthLeft.pause();
     }
-    else if (leftWrist.score < 0.2) {
-      synth.pause();
+    if (rightWrist.position.y > height) {
+      synthRight.pause();
     }
   }
 
