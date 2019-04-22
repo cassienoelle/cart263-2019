@@ -29,8 +29,9 @@ let confidence;
 
 // Overlay images
 let wowEmoji;
-let numMusicNotes = 50;
+let numMusicNotes = 5;
 let musicNotes = [];
+let musicImage;
 
 // Music
 let leftSynth;
@@ -76,6 +77,7 @@ let pressed = false;
 
 function preload() {
   wowEmoji = loadImage('assets/images/wow-emoji.png');
+  musicImage = loadImage('assets/images/music.png');
 }
 
 
@@ -251,17 +253,18 @@ function playTone() {
     let leftWrist = poses[0].pose.keypoints[9].position;
     let rightWrist = poses[0].pose.keypoints[10].position;
 
-    console.log('left: ' + checkOctave(leftWrist.x));
-    console.log('right: ' + checkOctave(rightWrist.x));
+    // console.log('left: ' + checkOctave(leftWrist.x));
+    // console.log('right: ' + checkOctave(rightWrist.x));
 
     if (checkNote(leftWrist.y) != undefined) {
       leftSynth.play(checkNote(leftWrist.y), checkOctave(leftWrist.x), 1);
+      drawMusic(leftWrist);
     }
     if (checkNote(rightWrist.y) != undefined) {
       rightSynth.play(checkNote(rightWrist.y), checkOctave(rightWrist.x), 2);
+      drawMusic(rightWrist);
     }
 
-    updateTint(leftWrist.y, rightWrist.x);
   }
 }
 
@@ -285,6 +288,15 @@ function checkOctave(keypoint) {
       octave = octaves[i];
       return octave;
     }
+  }
+}
+
+function drawMusic(keypoint) {
+  console.log('draw called');
+  for (let i = 0; i <= numMusicNotes; i++) {
+    musicNotes.push(new MusicNote(musicImage, keypoint.x, keypoint.y,random(-5,5),random(-5,5), 18.75, 50));
+    musicNotes[i].update();
+    musicNotes[i].display();
   }
 }
 

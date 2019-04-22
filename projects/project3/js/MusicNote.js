@@ -26,10 +26,8 @@ class MusicNote {
   }
 
   display() {
-    push();
-    imageMode(CENTER);
+    tint(255, alpha);
     image(this.img,this.x,this.y,this.w,this.h);
-    pop();
   }
 
 }
