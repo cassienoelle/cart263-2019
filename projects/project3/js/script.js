@@ -18,6 +18,34 @@ let r = 255;
 let g = 255;
 let b = 255;
 
+// State and instructions
+let state = {
+  intro: 'INTRO',
+  play: 'PLAY'
+}
+let currentState = state.intro;
+
+let instructions = [
+  'Face The Music.',
+  'When your webcam feed appears:\n'
+  +'\nSlide your chair back a bit,'
+  +' so your hands and arms are in the frame. ' +
+  'Move your hands around to generate music.',
+  'Click the mouse at any time to hear a beat.' +
+  '\nMove your face closer to the camera to slow it down, ' +
+  'or back away to speed it up.',
+  'Finally, What\'s your mood today?'
+];
+let next = 'CLICK TO CONTINUE ▶'
+let index = 0;
+let introSize, introX, introY;
+let nextX, nextY;
+// Images to select mood
+let comedy, tragedy;
+let comedyX, comedyY, tragedyX, tragedyY;
+let imgSize;
+// Control for mousepressed
+let selectMood = false;
 
 // Pose tracking variables
 let poseNet;
@@ -67,6 +95,13 @@ let note;
 // Prevent multiple mousePressed calls
 let pressed = false;
 
+// preload()
+//
+// Preload images
+function preload() {
+  comedy = loadImage('assets/images/comedy.png');
+  tragedy = loadImage('assets/images/tragedy.png');
+}
 
 // setup()
 //
@@ -89,7 +124,6 @@ function setup() {
   video.size(videoWidth, videoHeight);
   video.hide();
 
-
   /*--Start code copied from PoseNet documentation--*/
 
   // Initialize PoseNet
@@ -106,6 +140,8 @@ function setup() {
 
 }
 
+
+
 // setupSound()
 //
 // Set up synth instruments and sounds for drum beat
@@ -118,9 +154,6 @@ function setupSounds() {
   // by left and right hands
   leftSynth = Synth.createInstrument('organ');
   rightSynth = Synth.createInstrument('organ');
-
-  // Set organ scale randomly
-  currentScale = random(minorScales);
 
   // Load drum sounds
   clap = new Pizzicato.Sound({
@@ -170,13 +203,47 @@ function modelReady() {
 //
 // Start drum bean when mouse mouse pressed
 function mousePressed() {
-  if (!pressed) {
-    setTimeout(drumBeat, 35);
-  } else {
-    console.log('already pressed!');
+  // If during intro
+  if (currentState === state.intro) {
+    // Increase index to move through instructions
+    index++;
+    // If end of introduction reached (mood selection)
+    if (selectMood) {
+      // If the mask of comedy is clicked
+      if (mouseX > comedyX - imgSize/2 && mouseX < comedyX + imgSize/2) {
+        if (mouseY > comedyY - imgSize/2 && mouseY < comedyY + imgSize/2) {
+          // Set random organ scale in Major key
+          currentScale = random(majorScales);
+          console.log(currentScale);
+          // Wait one second then start play
+          setTimeout(() => {
+            currentState = state.play;
+          }, 1000);
+        }
+      }
+      else if (mouseX > tragedyX - imgSize/2 && mouseX < tragedyX + imgSize/2) {
+        if (mouseY > tragedyY - imgSize/2 && tragedyY < tragedyY + imgSize/2) {
+          // Set random organ scale in Minor key
+          currentScale = random(minorScales);
+          console.log(currentScale);
+          setTimeout(() => {
+            currentState = state.play;
+          }, 1000);
+        }
+      }
+    }
   }
-  // Prevent from being called more than once
-  pressed = true;
+
+  // If playing, drum beat starts on first click
+  if (currentState === state.play) {
+    if (!pressed) {
+      setTimeout(drumBeat, 35);
+    } else {
+      console.log('already pressed!');
+    }
+    // Prevent from being called more than once
+    pressed = true;
+  }
 }
 
 
@@ -185,17 +252,70 @@ function mousePressed() {
 // Main loop
 function draw() {
   background(0);
-  tint(r, g, b);
 
+  if (currentState === state.intro) {
+    intro();
+  }
+  else if (currentState === state.play) {
+    playMusic();
+  }
+
+}
+
+// intro()
+//
+// Main intro loop with instructions
+function intro() {
+  fill(255);
+  introX = width/5;
+  introY = height/2.5;
+  let s = width * 0.02;
+  // Title is larger
+  if (index === 0) {
+    s = width * 0.04;
+  }
+  // Text size is responsive
+  introSize = constrain(s, 20, 60);
+  textFont('Helvetica');
+  textSize(introSize);
+  text(instructions[index], introX, introY, width/2.5, height);
+
+  if (index < instructions.length - 1) {
+    nextX = width/5;
+    nextY = height/6 * 4;
+    textSize(18);
+    text(next, nextX, nextY);
+  }
+  // Once we arrive at the final instruction
+  // Display the masks of comedy and tragedy to select mood
+  else if (index === instructions.length - 1) {
+    imgSize = 150;
+    comedyX = introX;
+    comedyY = introY + s * 2;
+    tragedyX = comedyX + imgSize;
+    tragedyY = comedyY + s;
+    image(comedy, comedyX, comedyY, imgSize, imgSize);
+    image(tragedy, tragedyX, tragedyY, imgSize, imgSize);
+    selectMood = true;
+  }
+
+}
+
+
+// playMusic()
+//
+// Main play loop
+function playMusic() {
+  // Display webcam video as image on canvas
   // Flip video horizontally so
   // left-right motions are more intuitive
+  tint(r, g, b);
   translate(width, 0);
   scale(-1, 1);
   image(video, 0, 0);
 
   trackFacePoints();
   playTone();
-
 }
 
 // findFacePoints()
