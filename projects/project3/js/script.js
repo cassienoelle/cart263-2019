@@ -14,9 +14,9 @@ AudioSynth, Pizzicato and PoseNet
 let canvas;
 let video;
 let videoWidth, videoHeight;
-let r = 255;
-let g = 255;
-let b = 255;
+let r = 86;
+let g = 200;
+let b = 253;
 
 // State and instructions
 let state = {
@@ -29,8 +29,8 @@ let instructions = [
   'Face The Music.',
   'When your webcam feed appears:\n'
   +'\nSlide your chair back a bit,'
-  +' so your hands and arms are in the frame. ' +
-  'Move your hands around to generate music.',
+  +' so your arms are in the frame. Put your hands up and ' +
+  'move them around to generate music.',
   'Click the mouse at any time to hear a beat.' +
   '\nMove your face closer to the camera to slow it down, ' +
   'or back away to speed it up.',
@@ -214,22 +214,36 @@ function mousePressed() {
         if (mouseY > comedyY - imgSize/2 && mouseY < comedyY + imgSize/2) {
           // Set random organ scale in Major key
           currentScale = random(majorScales);
-          console.log(currentScale);
+          console.log('comedy');
+          // Set tint to rose (happy)
+          r = 255;
+          g = 207;
+          b = 196;
           // Wait one second then start play
           setTimeout(() => {
             currentState = state.play;
           }, 1000);
         }
       }
+      // If the mask of tragedy is clicked
       else if (mouseX > tragedyX - imgSize/2 && mouseX < tragedyX + imgSize/2) {
         if (mouseY > tragedyY - imgSize/2 && tragedyY < tragedyY + imgSize/2) {
           // Set random organ scale in Minor key
           currentScale = random(minorScales);
-          console.log(currentScale);
+          console.log('tragedy');
+          // Set tint to blue (sad)
+          r = 42;
+          g = 136;
+          b = 224;
           setTimeout(() => {
             currentState = state.play;
           }, 1000);
         }
+      }
+      // If another point on the screen is clicked
+      else {
+        // Maintain instructions index so user can click again
+        index = instructions.length - 1;
       }
     }
   }
@@ -309,7 +323,7 @@ function playMusic() {
   // Display webcam video as image on canvas
   // Flip video horizontally so
   // left-right motions are more intuitive
-  tint(r, g, b);
+  tint(r,g,b);
   translate(width, 0);
   scale(-1, 1);
   image(video, 0, 0);
