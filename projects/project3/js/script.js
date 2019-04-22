@@ -18,7 +18,7 @@ let videoWidth, videoHeight;
 // Pose tracking variables
 let poseNet;
 let poses = [];
-let faceParts = ["leftEar", "leftEye", "nose", "rightEye", "rightEar", "leftWrist", "rightWrist"];
+let faceParts = ["leftEar", "leftEye", "nose", "rightEye", "rightEar"];
 let leftX, leftY, rightX, rightY, noseX, noseY, size;
 let facePositions = [];
 let positionIndex = 0;
@@ -29,18 +29,20 @@ let confidence;
 
 // Overlay images
 let wowEmoji;
+let numMusicNotes = 50;
+let musicNotes = [];
 
 // Music
 let leftSynth;
 let rightSynth;
 let drumTempo;
-let kick, snare, clap, acid, grime;
+let space, sniff, pop, click, breath, clap;
 let drumSounds = [];
 let drumPattern = [];
 let currentSound;
 let stereoPanner;
 
-
+// Major pentatonic scales
 const C_MAJOR = ['C','D','E','G','A'];
 const D_MAJOR = ['D','E','F#','A','B'];
 const E_MAJOR = ['E','F#','G#','B','C#'];
@@ -48,7 +50,7 @@ const F_MAJOR = ['F','G','A','C','D'];
 const G_MAJOR = ['G','A','B','D','E'];
 const A_MAJOR = ['A','B','C#','E','F#'];
 const B_MAJOR = ['B','C#','D#','F#','G#'];
-
+// Minor pentatonic scales
 const C_MINOR = ['C','D#','F','G','A#'];
 const D_MINOR = ['D','F','G','A','C'];
 const E_MINOR = ['E','G','A','B','D'];
@@ -56,12 +58,13 @@ const F_MINOR = ['F','G#','A#','C','D#'];
 const G_MINOR = ['G','A#','C','D','F'];
 const A_MINOR = ['A','C','D','E','G'];
 const B_MINOR = ['B','D','E','F#','A'];
-
+// Arrays of scales
 const majorScales = [C_MAJOR, D_MAJOR, E_MAJOR, F_MAJOR, G_MAJOR, A_MAJOR, B_MAJOR];
 const minorScales = [C_MINOR, D_MINOR, E_MINOR, F_MINOR, G_MINOR, A_MINOR, B_MINOR];
-
-let scalesOptions = ['C','D','E','F','G','A','B'];
+// Variable to hold current scale
 let currentScale;
+let octaves = [2,3,4,5];
+let octave;
 
 let note;
 // Prevent multiple mousePressed calls
@@ -115,24 +118,11 @@ function setup() {
 
 function setupSounds() {
   Synth instanceof AudioSynth;
-  leftSynth = Synth.createInstrument('acoustic');
-  rightSynth = Synth.createInstrument('acoustic');
+  Synth.volume = 0.5;
+  leftSynth = Synth.createInstrument('organ');
+  rightSynth = Synth.createInstrument('organ');
 
   // Load drum sounds
-  kick = new Pizzicato.Sound({
-    source: 'file',
-    options: {
-      path: 'assets/sounds/kick.wav'
-    }
-  });
-
-  snare = new Pizzicato.Sound({
-    source: 'file',
-    options: {
-      path: 'assets/sounds/snare.wav'
-    }
-  });
-
   clap = new Pizzicato.Sound({
     source: 'file',
     options: {
@@ -140,17 +130,31 @@ function setupSounds() {
     }
   });
 
-  acid = new Pizzicato.Sound({
+  sniff = new Pizzicato.Sound({
     source: 'file',
     options: {
-      path: 'assets/sounds/acid-one.wav'
+      path: 'assets/sounds/sniff.wav'
     }
   });
 
-  grime = new Pizzicato.Sound({
+  pop = new Pizzicato.Sound({
     source: 'file',
     options: {
-      path: 'assets/sounds/grime-one.wav'
+      path: 'assets/sounds/pop.wav'
+    }
+  });
+
+  click = new Pizzicato.Sound({
+    source: 'file',
+    options: {
+      path: 'assets/sounds/click.wav'
+    }
+  });
+
+  breath = new Pizzicato.Sound({
+    source: 'file',
+    options: {
+      path: 'assets/sounds/breath.wav'
     }
   });
 
@@ -160,7 +164,7 @@ function setupSounds() {
   });
 
   // Enter sounds into array
-  drumSounds = [kick, snare, clap, acid, grime];
+  drumSounds = [pop, click, clap];
   // Add effects to drum sounds
   for (let i = 0; i < drumSounds.length; i++) {
     drumSounds[i].addEffect(stereoPanner);
@@ -168,10 +172,11 @@ function setupSounds() {
 }
 
 function selectDrums() {
-  for (let i = 0; i < 3; i++) {
-    drumPattern[i] = random(drumSounds);
-  }
-  console.log('drumPattern: ' + drumPattern);
+  // for (let i = 0; i < 3; i++) {
+  //   drumPattern[i] = random(drumSounds);
+  // }
+  // console.log('drumPattern: ' + drumPattern);
+  drumPattern = [pop, click, clap];
 }
 
 function modelReady() {
@@ -179,14 +184,14 @@ function modelReady() {
 }
 
 function mousePressed() {
-  console.log(JSON.stringify(poses[0]));
-//   if (!pressed) {
-//     setTimeout(drumBeat, 35);
-//   } else {
-//     console.log('already pressed!');
-//   }
-//   selectDrums();
-//   pressed = true;
+  // console.log(JSON.stringify(poses[0]));
+  if (!pressed) {
+    setTimeout(drumBeat, 35);
+  } else {
+    console.log('already pressed!');
+  }
+  selectDrums();
+  pressed = true;
 }
 
 
@@ -197,7 +202,7 @@ function mousePressed() {
 
 function draw() {
   background(0);
-  tint(255);
+  tint(r, g, b);
 
   // Flip video horizontally so
   // left-right motions are more intuitive
@@ -205,11 +210,12 @@ function draw() {
   scale(-1, 1);
   image(video, 0, 0);
 
-  // Draw ellipses at on keypoints of face
   drawKeypoints();
   playTone();
   // emojiFace();
 }
+
+
 
 // A function to draw ellipses over the detected keypoints
 function drawKeypoints()  {
@@ -223,12 +229,14 @@ function drawKeypoints()  {
       // Loop through face array and
       // only draw an ellipse if the keypoint is part of the face
       // and keypoint score is high enough
+      if (keypoint.score > 0.2) {
+        // Draw ellipse at keypoint
+        fill(r, g, b);
+        noStroke();
+        ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
+      }
       for (let f = 0; f < faceParts.length; f++) {
         if (keypoint.part === faceParts[f] && keypoint.score > 0.2) {
-          // Draw ellipse at keypoint
-          fill(r, g, b);
-          noStroke();
-          ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
           // Add to facePosition array
           facePositions[f] = keypoint.position.x;
         }
@@ -239,24 +247,25 @@ function drawKeypoints()  {
 
 function playTone() {
 
-
   if (poses.length > 0) {
-    let leftWrist = poses[0].pose.keypoints[9].position.y;
-    let rightWrist = poses[0].pose.keypoints[10].position.y;
+    let leftWrist = poses[0].pose.keypoints[9].position;
+    let rightWrist = poses[0].pose.keypoints[10].position;
 
-    console.log('left: ' + checkNote(leftWrist));
-    console.log('right: ' + checkNote(rightWrist));
+    console.log('left: ' + checkOctave(leftWrist.x));
+    console.log('right: ' + checkOctave(rightWrist.x));
 
-    if (checkNote(leftWrist) != undefined) {
-      leftSynth.play(checkNote(leftWrist), 4, 1);
+    if (checkNote(leftWrist.y) != undefined) {
+      leftSynth.play(checkNote(leftWrist.y), checkOctave(leftWrist.x), 1);
     }
-    if (checkNote(rightWrist) != undefined) {
-      rightSynth.play(checkNote(rightWrist), 2, 2);
+    if (checkNote(rightWrist.y) != undefined) {
+      rightSynth.play(checkNote(rightWrist.y), checkOctave(rightWrist.x), 2);
     }
 
-
+    updateTint(leftWrist.y, rightWrist.x);
   }
 }
+
+
 
 
 function checkNote(keypoint) {
@@ -265,6 +274,16 @@ function checkNote(keypoint) {
     if (keypoint > i * h && keypoint < h * (i + 1)) {
       note = currentScale[i];
       return note;
+    }
+  }
+}
+
+function checkOctave(keypoint) {
+  let o = width/4;
+  for (let i = 0; i < octaves.length; i++) {
+    if (keypoint > i * o && keypoint < o * (i + 1)) {
+      octave = octaves[i];
+      return octave;
     }
   }
 }
@@ -299,31 +318,31 @@ function drumBeat(continueInterval = true) {
     case 'leftEar':
       stereoPanner.pan = -1;
       currentSound = drumPattern[0];
-      console.log(faceParts[positionIndex] + 'snare');
+      console.log(faceParts[positionIndex] + 'pop');
       break;
 
     case 'leftEye':
       stereoPanner.pan = -0.5;
       currentSound = drumPattern[1];
-      console.log(faceParts[positionIndex] + 'kick');
+      console.log(faceParts[positionIndex] + 'click');
       break;
 
     case 'nose':
       stereoPanner.pan = 0;
       currentSound = drumPattern[2];
-      console.log(faceParts[positionIndex] + 'clap');
+      console.log(faceParts[positionIndex] + 'space');
       break;
 
     case 'rightEye':
       stereoPanner.pan = 0.5;
       currentSound = drumPattern[1];
-      console.log(faceParts[positionIndex] + 'kick');
+      console.log(faceParts[positionIndex] + 'click');
       break;
 
     case 'rightEar':
       stereoPanner.pan = 1;
       currentSound = drumPattern[0];
-      console.log(faceParts[positionIndex] + 'snare');
+      console.log(faceParts[positionIndex] + 'pop');
       break;
 
     default:
@@ -352,7 +371,7 @@ function setTempo() {
     averageDistance += distance;
   }
 
-  averageDistance = (averageDistance / facePositions.length) * 3;
+  averageDistance = (averageDistance / facePositions.length) * 20;
   if (averageDistance < 0) {
     averageDistance = averageDistance * -1;
   }
