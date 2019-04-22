@@ -29,9 +29,7 @@ let confidence;
 
 // Overlay images
 let wowEmoji;
-let numMusicNotes = 5;
-let musicNotes = [];
-let musicImage;
+
 
 // Music
 let leftSynth;
@@ -77,7 +75,7 @@ let pressed = false;
 
 function preload() {
   wowEmoji = loadImage('assets/images/wow-emoji.png');
-  musicImage = loadImage('assets/images/music.png');
+
 }
 
 
@@ -258,11 +256,9 @@ function playTone() {
 
     if (checkNote(leftWrist.y) != undefined) {
       leftSynth.play(checkNote(leftWrist.y), checkOctave(leftWrist.x), 1);
-      drawMusic(leftWrist);
     }
     if (checkNote(rightWrist.y) != undefined) {
       rightSynth.play(checkNote(rightWrist.y), checkOctave(rightWrist.x), 2);
-      drawMusic(rightWrist);
     }
 
   }
@@ -291,14 +287,6 @@ function checkOctave(keypoint) {
   }
 }
 
-function drawMusic(keypoint) {
-  console.log('draw called');
-  for (let i = 0; i <= numMusicNotes; i++) {
-    musicNotes.push(new MusicNote(musicImage, keypoint.x, keypoint.y,random(-5,5),random(-5,5), 18.75, 50));
-    musicNotes[i].update();
-    musicNotes[i].display();
-  }
-}
 
 function emojiFace() {
   // Diameter of image is width between ears
