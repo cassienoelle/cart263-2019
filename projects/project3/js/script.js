@@ -18,18 +18,23 @@ let videoWidth, videoHeight;
 // Pose tracking variables
 let poseNet;
 let poses = [];
-let faceParts = ["leftEar", "leftEye", "nose", "rightEye", "rightEar"];
+let faceParts = ["leftEar", "leftEye", "nose", "rightEye", "rightEar", "leftWrist", "rightWrist"];
 let leftX, leftY, rightX, rightY, noseX, noseY, size;
 let facePositions = [];
 let positionIndex = 0;
 let r = 255;
 let g = 255;
 let b = 255;
+let confidence;
 
 // Overlay images
 let wowEmoji;
 
 // Music
+let synth;
+let frequency = 250;
+let minFrequency = 100;
+let maxFrequency = 500;
 let drumTempo;
 let kick, snare, clap, acid, grime;
 let drumSounds = [];
@@ -83,6 +88,16 @@ function setup() {
 }
 
 function setupSounds() {
+  // Create synth
+  // Create the synth
+  synth = new Pizzicato.Sound({
+    source: 'wave',
+    options: {
+      type: 'sine',
+      frequency: frequency
+    }
+  });
+
   // Load drum sounds
   kick = new Pizzicato.Sound({
     source: 'file',
@@ -144,14 +159,14 @@ function modelReady() {
 }
 
 function mousePressed() {
-  // console.log(JSON.stringify(poses[0]));
-  // if (!pressed) {
-  //   setTimeout(drumBeat, 35);
-  // } else {
-  //   console.log('already pressed!');
-  // }
-  // selectDrums();
-  // pressed = true;
+  console.log(JSON.stringify(poses[0]));
+//   if (!pressed) {
+//     setTimeout(drumBeat, 35);
+//   } else {
+//     console.log('already pressed!');
+//   }
+//   selectDrums();
+//   pressed = true;
 }
 
 
@@ -166,13 +181,14 @@ function draw() {
 
   // Flip video horizontally so
   // left-right motions are more intuitive
-  translate(width, 0);
-  scale(-1, 1);
+  // translate(width, 0);
+  // scale(-1, 1);
   image(video, 0, 0);
 
   // Draw ellipses at on keypoints of face
   drawKeypoints();
-  emojiFace();
+  playTone();
+  // emojiFace();
 }
 
 // A function to draw ellipses over the detected keypoints
@@ -199,6 +215,24 @@ function drawKeypoints()  {
       }
     }
   }
+}
+
+function playTone() {
+
+  for (let i = 0; i < poses.length; i++) {
+    let leftWrist = poses[i].pose.keypoints[9];
+    frequency = map(leftWrist.position.y, 0, height, minFrequency, maxFrequency);
+    console.log('frequency: ' + frequency);
+    synth.frequency = frequency;
+    // Check if left wrist keypoint is detected
+    if (leftWrist.score > 0.2) {
+      synth.play();
+    }
+    else if (leftWrist.score < 0.2) {
+      synth.pause();
+    }
+  }
+
 }
 
 
