@@ -31,21 +31,38 @@ let confidence;
 let wowEmoji;
 
 // Music
-let synthLeft;
-let synthRight;
-let frequencyLeft = 250;
-let minFreqLeft = 165;
-let maxFreqLeft = 130;
-let frequencyRight = 250;
-let minFreqRight = 150;
-let maxFreqRight = 275;
+let leftSynth;
+let rightSynth;
 let drumTempo;
 let kick, snare, clap, acid, grime;
 let drumSounds = [];
 let drumPattern = [];
 let currentSound;
 let stereoPanner;
-let notes = ['C','C#','D','D#','E','F','F#','G','A','A#','B'];
+
+
+const C_MAJOR = ['C','D','E','G','A'];
+const D_MAJOR = ['D','E','F#','A','B'];
+const E_MAJOR = ['E','F#','G#','B','C#'];
+const F_MAJOR = ['F','G','A','C','D'];
+const G_MAJOR = ['G','A','B','D','E'];
+const A_MAJOR = ['A','B','C#','E','F#'];
+const B_MAJOR = ['B','C#','D#','F#','G#'];
+
+const C_MINOR = ['C','D#','F','G','A#'];
+const D_MINOR = ['D','F','G','A','C'];
+const E_MINOR = ['E','G','A','B','D'];
+const F_MINOR = ['F','G#','A#','C','D#'];
+const G_MINOR = ['G','A#','C','D','F'];
+const A_MINOR = ['A','C','D','E','G'];
+const B_MINOR = ['B','D','E','F#','A'];
+
+const majorScales = [C_MAJOR, D_MAJOR, E_MAJOR, F_MAJOR, G_MAJOR, A_MAJOR, B_MAJOR];
+const minorScales = [C_MINOR, D_MINOR, E_MINOR, F_MINOR, G_MINOR, A_MINOR, B_MINOR];
+
+let scalesOptions = ['C','D','E','F','G','A','B'];
+let currentScale;
+
 let note;
 // Prevent multiple mousePressed calls
 let pressed = false;
@@ -91,12 +108,15 @@ function setup() {
 
   setupSounds();
 
+  currentScale = random(minorScales);
+  console.log(currentScale);
+
 }
 
 function setupSounds() {
   Synth instanceof AudioSynth;
-  synthLeft = Synth.createInstrument('organ');
-  synthRight = Synth.createInstrument('organ');
+  leftSynth = Synth.createInstrument('acoustic');
+  rightSynth = Synth.createInstrument('acoustic');
 
   // Load drum sounds
   kick = new Pizzicato.Sound({
@@ -181,8 +201,8 @@ function draw() {
 
   // Flip video horizontally so
   // left-right motions are more intuitive
-  // translate(width, 0);
-  // scale(-1, 1);
+  translate(width, 0);
+  scale(-1, 1);
   image(video, 0, 0);
 
   // Draw ellipses at on keypoints of face
@@ -219,12 +239,6 @@ function drawKeypoints()  {
 
 function playTone() {
 
-  // let frequencyLeft = 250;
-  // let minFreqLeft = 100;
-  // let maxFreqLeft = 500;
-  // let frequencyRight = 250;
-  // let minFreqRight = 200;
-  // let maxFreqright = 300;
 
   if (poses.length > 0) {
     let leftWrist = poses[0].pose.keypoints[9].position.y;
@@ -234,10 +248,10 @@ function playTone() {
     console.log('right: ' + checkNote(rightWrist));
 
     if (checkNote(leftWrist) != undefined) {
-      synthLeft.play(checkNote(leftWrist), 4, 1);
+      leftSynth.play(checkNote(leftWrist), 4, 1);
     }
     if (checkNote(rightWrist) != undefined) {
-      synthRight.play(checkNote(rightWrist), 2, 2);
+      rightSynth.play(checkNote(rightWrist), 2, 2);
     }
 
 
@@ -247,9 +261,9 @@ function playTone() {
 
 function checkNote(keypoint) {
   let h = height/11;
-  for (let i = 0; i < notes.length; i++) {
+  for (let i = 0; i < currentScale.length; i++) {
     if (keypoint > i * h && keypoint < h * (i + 1)) {
-      note = notes[i];
+      note = currentScale[i];
       return note;
     }
   }
