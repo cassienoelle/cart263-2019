@@ -37,8 +37,8 @@ let frequencyLeft = 250;
 let minFreqLeft = 165;
 let maxFreqLeft = 130;
 let frequencyRight = 250;
-let minFreqRight = 260;
-let maxFreqRight = 524;
+let minFreqRight = 150;
+let maxFreqRight = 275;
 let drumTempo;
 let kick, snare, clap, acid, grime;
 let drumSounds = [];
@@ -98,6 +98,8 @@ function setupSounds() {
     source: 'wave',
     options: {
       type: 'sine',
+      attack: 0.2,
+      release: 0.2,
       frequency: frequencyLeft
     }
   });
@@ -106,6 +108,8 @@ function setupSounds() {
     source: 'wave',
     options: {
       type: 'sine',
+      attack: 0.2,
+      release: 0.2,
       frequency: frequencyRight
     }
   });
@@ -241,8 +245,8 @@ function playTone() {
   if (poses.length > 0) {
     let leftWrist = poses[0].pose.keypoints[9];
     let rightWrist = poses[0].pose.keypoints[10];
-    frequencyLeft = map(leftWrist.position.y, 0, height, minFreqLeft, maxFreqLeft);
-    frequencyRight = map(rightWrist.position.y, 0, height, minFreqRight, maxFreqRight);
+    frequencyLeft = map(leftWrist.position.y, height, 0, minFreqLeft, maxFreqLeft);
+    frequencyRight = map(rightWrist.position.y, height, 0, minFreqRight, maxFreqRight);
     synthLeft.frequency = frequencyLeft;
     synthRight.frequency = frequencyRight;
     // Check if left wrist keypoint is detected
