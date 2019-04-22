@@ -14,22 +14,17 @@ Cassie Smith
 let canvas;
 let video;
 let videoWidth, videoHeight;
+let r = 255;
+let g = 255;
+let b = 255;
+
 
 // Pose tracking variables
 let poseNet;
 let poses = [];
 let faceParts = ["leftEar", "leftEye", "nose", "rightEye", "rightEar"];
-let leftX, leftY, rightX, rightY, noseX, noseY, size;
 let facePositions = [];
 let positionIndex = 0;
-let r = 255;
-let g = 255;
-let b = 255;
-let confidence;
-
-// Overlay images
-let wowEmoji;
-
 
 // Music
 let leftSynth;
@@ -62,30 +57,23 @@ const majorScales = [C_MAJOR, D_MAJOR, E_MAJOR, F_MAJOR, G_MAJOR, A_MAJOR, B_MAJ
 const minorScales = [C_MINOR, D_MINOR, E_MINOR, F_MINOR, G_MINOR, A_MINOR, B_MINOR];
 // Variable to hold current scale
 let currentScale;
-let octaves = [2,3,4,5];
+// Possible octave range
+let octaves = [5,4,3,2];
+// Current octave
 let octave;
-
+// current note
 let note;
+
 // Prevent multiple mousePressed calls
 let pressed = false;
-
-// preload()
-//
-//
-
-function preload() {
-  wowEmoji = loadImage('assets/images/wow-emoji.png');
-
-}
 
 
 // setup()
 //
-//
-
+// Setup canvas, PoseNet, sounds
 function setup() {
   // Set width and height to maintain webcam aspect ratio
-  // for any screen orientation
+  // for either screen orientation
   if (windowWidth >= windowHeight) {
     videoHeight = windowHeight;
     videoWidth = windowHeight / 0.75;
@@ -97,43 +85,48 @@ function setup() {
 
   // Setup canvas and webcam feed
   canvas = createCanvas(videoWidth, videoHeight);
-
   video = createCapture(VIDEO);
   video.size(videoWidth, videoHeight);
   video.hide();
 
-  // Initialize poseNet
+
+  /*--Start code copied from PoseNet documentation--*/
+
+  // Initialize PoseNet
   // Fill poses array with results every time a new pose is detected
   poseNet = ml5.poseNet(video, modelReady);
   poseNet.on('pose', results => {
     poses = results;
   });
 
-  setupSounds();
+  /*--End code copied from PoseNet documentation--*/
 
-  currentScale = random(minorScales);
-  console.log(currentScale);
+  // Setup drum sounds and synth instruments
+  setupSounds();
 
 }
 
+// setupSound()
+//
+// Set up synth instruments and sounds for drum beat
 function setupSounds() {
+  // Instantiate audiosynth
   Synth instanceof AudioSynth;
+  // Lower volume
   Synth.volume = 0.5;
+  // Create two organ instruments to be controlled
+  // by left and right hands
   leftSynth = Synth.createInstrument('organ');
   rightSynth = Synth.createInstrument('organ');
+
+  // Set organ scale randomly
+  currentScale = random(minorScales);
 
   // Load drum sounds
   clap = new Pizzicato.Sound({
     source: 'file',
     options: {
       path: 'assets/sounds/clap.wav'
-    }
-  });
-
-  sniff = new Pizzicato.Sound({
-    source: 'file',
-    options: {
-      path: 'assets/sounds/sniff.wav'
     }
   });
 
@@ -151,55 +144,45 @@ function setupSounds() {
     }
   });
 
-  breath = new Pizzicato.Sound({
-    source: 'file',
-    options: {
-      path: 'assets/sounds/breath.wav'
-    }
-  });
-
-  // Setup effects
+  // Setup stereo pan effect
   stereoPanner = new Pizzicato.Effects.StereoPanner({
     pan: 0
   });
 
-  // Enter sounds into array
-  drumSounds = [pop, click, clap];
+  // Enter sounds into drum pattern array
+  drumPattern = [pop, click, clap];
   // Add effects to drum sounds
   for (let i = 0; i < drumSounds.length; i++) {
-    drumSounds[i].addEffect(stereoPanner);
+    drumPattern[i].addEffect(stereoPanner);
   }
+
 }
 
-function selectDrums() {
-  // for (let i = 0; i < 3; i++) {
-  //   drumPattern[i] = random(drumSounds);
-  // }
-  // console.log('drumPattern: ' + drumPattern);
-  drumPattern = [pop, click, clap];
-}
+/*--Start code copied from PoseNet documentation--*/
 
 function modelReady() {
   console.log('Model Loaded');
 }
 
+/*--End code copied from PoseNet documentation--*/
+
+// mousePressed()
+//
+// Start drum bean when mouse mouse pressed
 function mousePressed() {
-  // console.log(JSON.stringify(poses[0]));
   if (!pressed) {
     setTimeout(drumBeat, 35);
   } else {
     console.log('already pressed!');
   }
-  selectDrums();
+  // Prevent from being called more than once
   pressed = true;
 }
 
 
-
 // draw()
 //
-//
-
+// Main loop
 function draw() {
   background(0);
   tint(r, g, b);
@@ -210,63 +193,59 @@ function draw() {
   scale(-1, 1);
   image(video, 0, 0);
 
-  drawKeypoints();
+  trackFacePoints();
   playTone();
-  // emojiFace();
+
 }
 
-
-
-// A function to draw ellipses over the detected keypoints
-function drawKeypoints()  {
+// findFacePoints()
+//
+// Determines position of face keypoints
+function trackFacePoints()  {
   // Loop through all the poses detected
+  /*---Note: loop structure adapted from PoseNet documentation---*/
   for (let i = 0; i < poses.length; i++) {
-    // console.log('Pose ' + i + poses[i]);
     // For each pose detected, loop through all the keypoints
-    for (let j = 0; j < poses[i].pose.keypoints.length; j++) {
-      // A keypoint is an object describing a body part (like rightArm or leftShoulder)
+    for (let j = 0; j < 4; j++) {
+      // pass keypoint object to variable
       let keypoint = poses[i].pose.keypoints[j];
-      // Loop through face array and
-      // only draw an ellipse if the keypoint is part of the face
-      // and keypoint score is high enough
-      if (keypoint.score > 0.2) {
-        // Draw ellipse at keypoint
-        fill(r, g, b);
-        noStroke();
-        ellipse(keypoint.position.x, keypoint.position.y, 10, 10);
-      }
+      // If keypoint is part of face and confidence score is high enough
       for (let f = 0; f < faceParts.length; f++) {
-        if (keypoint.part === faceParts[f] && keypoint.score > 0.2) {
-          // Add to facePosition array
-          facePositions[f] = keypoint.position.x;
-        }
-      }
+         if (keypoint.part === faceParts[f] && keypoint.score > 0.2) {
+           // Add to facePosition array
+           facePositions[f] = keypoint.position.x;
+         }
+       }
     }
   }
 }
 
+// playTone()
+//
+// Play left and right synths according to position of wrist keypoints
 function playTone() {
+  // Loop through poses detected
+  for (let i = 0; i < poses.length; i++)  {
+    // Select wrist keypoints, pass position to variables
+    let leftWrist = poses[i].pose.keypoints[9].position;
+    let rightWrist = poses[i].pose.keypoints[10].position;
 
-  if (poses.length > 0) {
-    let leftWrist = poses[0].pose.keypoints[9].position;
-    let rightWrist = poses[0].pose.keypoints[10].position;
-
-    // console.log('left: ' + checkOctave(leftWrist.x));
-    // console.log('right: ' + checkOctave(rightWrist.x));
-
+    // If keypoint position detected, play synth
+    // Note determined by y-position and octave determined by x-position
     if (checkNote(leftWrist.y) != undefined) {
-      leftSynth.play(checkNote(leftWrist.y), checkOctave(leftWrist.x), 1);
+      leftSynth.play(checkNote(leftWrist.y), checkOctave(leftWrist.x), 2);
     }
     if (checkNote(rightWrist.y) != undefined) {
       rightSynth.play(checkNote(rightWrist.y), checkOctave(rightWrist.x), 2);
     }
-
   }
 }
 
 
-
-
+// checkNote()
+//
+// Divide canvas into sections by height, each section corresponds to a note
+// Check which section a keypoint is in and return corresponding note
 function checkNote(keypoint) {
   let h = height/11;
   for (let i = 0; i < currentScale.length; i++) {
@@ -277,6 +256,10 @@ function checkNote(keypoint) {
   }
 }
 
+// checkOctave()
+//
+// Divide canvas into sections by width, each section corresponds to an octave
+// Check which section a keypoint is in and return corresponding octave
 function checkOctave(keypoint) {
   let o = width/4;
   for (let i = 0; i < octaves.length; i++) {
@@ -288,94 +271,88 @@ function checkOctave(keypoint) {
 }
 
 
-function emojiFace() {
-  // Diameter of image is width between ears
-  if (poses.length > 0) {
-    leftX = poses[0].pose.keypoints[4].position.x;
-    leftY = poses[0].pose.keypoints[4].position.y;
-    rightX = poses[0].pose.keypoints[5].position.x;
-    rightY = poses[0].pose.keypoints[5].position.y;
-    noseX = poses[0].pose.keypoints[0].position.x;
-    noseY = poses[0].pose.keypoints[0].position.y;
-    size = dist(leftX, leftY, rightX, rightY) * 0.75;
-    push()
-    imageMode(CENTER);
-    image(wowEmoji, noseX, noseY, size, size);
-    pop();
-  }
 
-}
 
+// drumBeat()
+//
 // Play drum sounds corresponding to face parts
 // Tempo controlled by real-time x-distance between face parts
 function drumBeat(continueInterval = true) {
-  console.log('called');
+  // Update tempo
   setTempo();
-  console.log('drum tempo: ' + drumTempo);
-  console.log('index: ' + positionIndex);
-  // Play sound according to face part, panning left-right
+
+  // Set sound according to part of face, panning left-right
+  // Stereo pan effect also moves left to right
   switch (faceParts[positionIndex]) {
     case 'leftEar':
       stereoPanner.pan = -1;
       currentSound = drumPattern[0];
-      console.log(faceParts[positionIndex] + 'pop');
       break;
 
     case 'leftEye':
       stereoPanner.pan = -0.5;
       currentSound = drumPattern[1];
-      console.log(faceParts[positionIndex] + 'click');
       break;
 
     case 'nose':
       stereoPanner.pan = 0;
       currentSound = drumPattern[2];
-      console.log(faceParts[positionIndex] + 'space');
       break;
 
     case 'rightEye':
       stereoPanner.pan = 0.5;
       currentSound = drumPattern[1];
-      console.log(faceParts[positionIndex] + 'click');
       break;
 
     case 'rightEar':
       stereoPanner.pan = 1;
       currentSound = drumPattern[0];
-      console.log(faceParts[positionIndex] + 'pop');
       break;
 
     default:
       break;
   }
-
+  // Play sound
   currentSound.play();
 
+  // Recursively call this function, with updated tempo
   if (continueInterval) {
     console.log('timeout set!');
     setTimeout(drumBeat, drumTempo);
   }
 
+  // Update position index
   positionIndex++;
+  // If end of the array is reached, reset index to zero
   if (positionIndex >= facePositions.length) {
     positionIndex = 0;
   }
 
 }
 
+// setTempo()
+//
+// Sets the drum tempo according to average distance between face keypoint
+// Tempo gets faster the further away you are from the camera
 function setTempo() {
   let averageDistance = 0;
   let distance = 0;
+  // Calculate distance between each point (ears, eyes, nose)
   for (let i = facePositions.length - 1; i > 0; i--) {
     distance = facePositions[i] - facePositions[i - 1];
+    // Add to total
     averageDistance += distance;
   }
 
-  averageDistance = (averageDistance / facePositions.length) * 20;
+  // Divide by total number of face keypoints to find average distance
+  // Multiply by 10 to get a reasonable tempo
+  averageDistance = (averageDistance / facePositions.length) * 10;
   if (averageDistance < 0) {
     averageDistance = averageDistance * -1;
   }
   console.log('average:' + averageDistance);
+  // Constrain so tempo can't get too slow or too fast
   averageDistance = constrain(averageDistance, 75, 1500);
+  // Set drum tempo according to average distance
   drumTempo = averageDistance;
 }
