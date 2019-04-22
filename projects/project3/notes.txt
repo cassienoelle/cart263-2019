@@ -37,3 +37,35 @@ POSES:
 14 - rightKnee
 15 - leftAnkle
 16 - rightAnkle
+
+
+C2
+
+65.41, 73.42, 82.41, 98.00, 110.00, 123.47, 130.81
+
+
+
+synthLeft = new Pizzicato.Sound({
+  source: 'wave',
+  options: {
+    type: 'sine',
+    attack: 0.2,
+    release: 0.2,
+    frequency: frequencyLeft
+  }
+});
+
+synthRight = new Pizzicato.Sound({
+  source: 'wave',
+  options: {
+    type: 'sine',
+    attack: 0.2,
+    release: 0.2,
+    frequency: frequencyRight
+  }
+});
+
+frequencyLeft = map(leftWrist.position.y, height, 0, minFreqLeft, maxFreqLeft);
+frequencyRight = map(rightWrist.position.y, height, 0, minFreqRight, maxFreqRight);
+synthLeft.frequency = frequencyLeft;
+synthRight.frequency = frequencyRight;	

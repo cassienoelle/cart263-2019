@@ -45,6 +45,8 @@ let drumSounds = [];
 let drumPattern = [];
 let currentSound;
 let stereoPanner;
+let notes = ['C','C#','D','D#','E','F','F#','G','A','A#','B'];
+let note;
 // Prevent multiple mousePressed calls
 let pressed = false;
 
@@ -92,27 +94,9 @@ function setup() {
 }
 
 function setupSounds() {
-  // Create synth
-  // Create the synth
-  synthLeft = new Pizzicato.Sound({
-    source: 'wave',
-    options: {
-      type: 'sine',
-      attack: 0.2,
-      release: 0.2,
-      frequency: frequencyLeft
-    }
-  });
-
-  synthRight = new Pizzicato.Sound({
-    source: 'wave',
-    options: {
-      type: 'sine',
-      attack: 0.2,
-      release: 0.2,
-      frequency: frequencyRight
-    }
-  });
+  Synth instanceof AudioSynth;
+  synthLeft = Synth.createInstrument('organ');
+  synthRight = Synth.createInstrument('organ');
 
   // Load drum sounds
   kick = new Pizzicato.Sound({
@@ -243,25 +227,33 @@ function playTone() {
   // let maxFreqright = 300;
 
   if (poses.length > 0) {
-    let leftWrist = poses[0].pose.keypoints[9];
-    let rightWrist = poses[0].pose.keypoints[10];
-    frequencyLeft = map(leftWrist.position.y, height, 0, minFreqLeft, maxFreqLeft);
-    frequencyRight = map(rightWrist.position.y, height, 0, minFreqRight, maxFreqRight);
-    synthLeft.frequency = frequencyLeft;
-    synthRight.frequency = frequencyRight;
-    // Check if left wrist keypoint is detected
-    synthLeft.play();
-    synthRight.play();
-    if (leftWrist.position.y > height) {
-      synthLeft.pause();
-    }
-    if (rightWrist.position.y > height) {
-      synthRight.pause();
-    }
-  }
+    let leftWrist = poses[0].pose.keypoints[9].position.y;
+    let rightWrist = poses[0].pose.keypoints[10].position.y;
 
+    console.log('left: ' + checkNote(leftWrist));
+    console.log('right: ' + checkNote(rightWrist));
+
+    if (checkNote(leftWrist) != undefined) {
+      synthLeft.play(checkNote(leftWrist), 4, 1);
+    }
+    if (checkNote(rightWrist) != undefined) {
+      synthRight.play(checkNote(rightWrist), 2, 2);
+    }
+
+
+  }
 }
 
+
+function checkNote(keypoint) {
+  let h = height/11;
+  for (let i = 0; i < notes.length; i++) {
+    if (keypoint > i * h && keypoint < h * (i + 1)) {
+      note = notes[i];
+      return note;
+    }
+  }
+}
 
 function emojiFace() {
   // Diameter of image is width between ears
