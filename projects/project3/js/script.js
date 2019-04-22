@@ -2,14 +2,14 @@
 
 /*****************
 
-Art has a double face, of expression and illusion,
-just like science has a double face:
-the reality of error and the phantom of truth.
-
+Face The Music
 Cassie Smith
+CART 263 -2019
+
+A movement-based audio interface using your webcam,
+AudioSynth, Pizzicato and PoseNet
 
 ******************/
-
 // Canvas and camera variables
 let canvas;
 let video;
